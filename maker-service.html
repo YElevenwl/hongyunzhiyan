@@ -1,0 +1,1921 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>红韵智研 —�?人工智能驱动的海南红色文化与美育研学综合服务平台 | 乡村创客服务平台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<style>
+:root{
+  --ocean:#c0392b;--ocean-l:#e74c3c;--ocean-glow:rgba(192,57,43,.35);
+  --gold:#f39c12;--gold-d:#d4ac0d;--gold-g:rgba(243,156,18,.2);--gold-glow:rgba(243,156,18,.5);
+  --green:#2ecc71;--green-d:#27ae60;--green-glow:rgba(39,174,96,.35);
+  --red:#e05555;--red-d:#c0392b;
+  --purple:#a93226;--purple-l:#c0392b;
+  --bg:#2c3e50;
+  --glass:rgba(255,255,255,0.12);--gb:rgba(255,255,255,0.20);
+  --text:#ecf0f1;--dim:rgba(236,240,241,0.62);
+  --ease:cubic-bezier(.34,1.56,.64,1);
+  --ease-out:cubic-bezier(.22,1,.36,1);
+  --shadow-card:0 8px 32px rgba(0,0,0,.22),0 1px 0 rgba(255,255,255,.15);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;min-height:100vh;overflow-x:hidden;}
+body{
+  background:#2c3e50;color:var(--text);font-family:'Noto Serif SC',serif;
+  background-image:
+    radial-gradient(ellipse at 20% 0%,rgba(192,57,43,.30) 0%,transparent 55%),
+    radial-gradient(ellipse at 80% 10%,rgba(39,174,96,.25) 0%,transparent 45%),
+    radial-gradient(ellipse at 50% 55%,rgba(192,57,43,.20) 0%,transparent 55%),
+    radial-gradient(ellipse at 10% 90%,rgba(243,156,18,.18) 0%,transparent 40%),
+    radial-gradient(ellipse at 90% 85%,rgba(39,174,96,.22) 0%,transparent 40%),
+    linear-gradient(175deg,#2c3e50 0%,#34495e 35%,#2c3e50 60%,#1a252f 100%);
+}
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 3s ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:.08}50%{opacity:.65}}
+.waves{position:fixed;bottom:0;left:0;width:100%;height:150px;pointer-events:none;z-index:0;}
+.w{position:absolute;bottom:0;width:200%;height:100%;}
+.w1{animation:wm 9s linear infinite;opacity:.18;}
+.w2{animation:wm 14s linear infinite reverse;opacity:.12;}
+@keyframes wm{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(15,23,41,.85);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.1);
+  padding:12px 24px;display:flex;align-items:center;justify-content:space-between;
+}
+.nav-brand{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none;}
+.nav-brand-icon{font-size:24px;filter:drop-shadow(0 0 8px rgba(243,156,18,.5));}
+.nav-brand-text{font-size:18px;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--ocean-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-links{display:flex;gap:6px;flex-wrap:wrap;}
+.nav-link{
+  padding:8px 18px;border-radius:20px;border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.06);color:var(--text);font-size:13px;cursor:pointer;
+  transition:all .45s cubic-bezier(0.175,0.885,0.32,1.275);text-decoration:none;font-family:'Noto Serif SC',serif;
+  position:relative;overflow:hidden;
+  transform-style:preserve-3d;
+}
+.nav-link::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(243,156,18,.35),transparent);
+  transition:left .65s ease;
+}
+.nav-link::after{
+  content:'';position:absolute;inset:-2px;
+  background:linear-gradient(45deg,rgba(231,76,60,.35),rgba(39,174,96,.35),rgba(243,156,18,.35));
+  border-radius:inherit;opacity:0;z-index:-1;transition:opacity .4s;
+  filter:blur(5px);
+}
+.nav-link:hover::before{left:100%;}
+.nav-link:hover::after{opacity:1;}
+.nav-link:hover{background:rgba(255,255,255,.14);border-color:rgba(243,156,18,.5);transform:translateY(-5px) scale(1.04) translateZ(10px);box-shadow:0 10px 30px rgba(243,156,18,.35),0 0 25px rgba(243,156,18,.2) inset;}
+.nav-link.active{border-color:var(--gold);background:rgba(243,156,18,.14);color:var(--gold);box-shadow:0 0 20px rgba(243,156,18,.4),0 0 30px rgba(243,156,18,.25) inset;animation:navPulse 2.1s ease-in-out infinite;}
+@keyframes navPulse{
+  0%,100%{box-shadow:0 0 20px rgba(243,156,18,.4),0 0 30px rgba(243,156,18,.25) inset;}
+  50%{box-shadow:0 0 32px rgba(243,156,18,.55),0 0 42px rgba(243,156,18,.35) inset;}
+}
+.nav-game-btn{
+  padding:8px 20px;border-radius:20px;border:1px solid rgba(231,76,60,.4);
+  background:linear-gradient(135deg,rgba(192,57,43,.3),rgba(39,174,96,.3));
+  color:#fff;font-size:13px;cursor:pointer;transition:all .45s cubic-bezier(0.175,0.885,0.32,1.275);
+  font-family:'Noto Serif SC',serif;font-weight:700;text-decoration:none;
+  position:relative;overflow:hidden;
+  transform-style:preserve-3d;
+}
+.nav-game-btn::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);
+  transition:left .7s ease;
+}
+.nav-game-btn::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at center,rgba(255,255,255,.3),transparent 65%);
+  opacity:0;transition:opacity .4s;
+}
+.nav-game-btn:hover::before{left:100%;}
+.nav-game-btn:hover::after{opacity:1;}
+.nav-game-btn:hover{transform:translateY(-5px) scale(1.04) translateZ(10px);box-shadow:0 12px 32px rgba(192,57,43,.7),0 0 35px rgba(231,76,60,.35);}
+
+.main{position:relative;z-index:1;padding:80px 20px 60px;max-width:1200px;margin:0 auto;}
+
+.hero{text-align:center;padding:40px 0 50px;}
+.hero-icon{
+  font-size:56px;margin-bottom:16px;
+  animation:float 3s ease-in-out infinite,iconGlow 2.5s ease-in-out infinite alternate;
+  filter:drop-shadow(0 0 20px rgba(243,156,18,.5));
+  display:inline-block;
+  transition:all 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-16px) rotate(6deg)}}
+@keyframes iconGlow{
+  0%{filter:drop-shadow(0 0 20px rgba(243,156,18,.5));}
+  100%{filter:drop-shadow(0 0 45px rgba(243,156,18,.85));}
+}
+.hero-icon:hover{transform:scale(1.15) rotate(-5deg);animation-play-state:paused;}
+.hero-title{
+  font-size:clamp(28px,5vw,52px);font-weight:900;line-height:1.2;margin-bottom:12px;
+  background:linear-gradient(135deg,var(--gold) 0%,#cce8ff 45%,var(--ocean-l) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 24px rgba(243,156,18,.4));
+  display:inline-block;
+  animation:titleShimmer 3.5s ease-in-out infinite;
+}
+@keyframes titleShimmer{
+  0%,100%{filter:drop-shadow(0 0 24px rgba(243,156,18,.4));}
+  50%{filter:drop-shadow(0 0 38px rgba(243,156,18,.7));}
+}
+.hero-sub{
+  font-size:clamp(14px,2vw,18px);color:var(--dim);
+  max-width:600px;margin:0 auto 24px;line-height:1.8;
+  transition:all 0.35s;
+}
+.hero-badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.hero-badge{
+  padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;
+  border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);
+  transition:all 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+  position:relative;overflow:hidden;
+  transform-style:preserve-3d;
+  animation:badgeFloat 4s ease-in-out infinite;
+}
+.hero-badge:nth-child(1){animation-delay:0s;}
+.hero-badge:nth-child(2){animation-delay:0.5s;}
+.hero-badge:nth-child(3){animation-delay:1s;}
+.hero-badge:nth-child(4){animation-delay:1.5s;}
+@keyframes badgeFloat{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-6px);}
+}
+.hero-badge::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(243,156,18,.18),rgba(39,174,96,.12),transparent);
+  opacity:0;transition:opacity 0.4s;
+}
+.hero-badge::after{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+  transition:left 0.6s ease;
+}
+.hero-badge:hover::before{opacity:1;}
+.hero-badge:hover::after{left:100%;}
+.hero-badge:hover{
+  background:rgba(255,255,255,.15);
+  border-color:rgba(243,156,18,.5);
+  transform:translateY(-8px)scale(1.08)!important;
+  box-shadow:0 14px 38px rgba(0,0,0,.3),0 0 25px rgba(243,156,18,.2);
+  animation-play-state:paused;
+}
+
+.data-sync-bar{
+  margin-bottom:30px;padding:14px 20px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(192,57,43,.15),rgba(39,174,96,.15));
+  border:1px solid rgba(231,76,60,.25);display:flex;align-items:center;gap:14px;
+  flex-wrap:wrap;
+  position:relative;
+}
+.sync-icon{
+  font-size:22px;
+}
+.sync-info{flex:1;min-width:200px;}
+.sync-title{
+  font-size:14px;font-weight:700;color:var(--ocean-l);margin-bottom:2px;
+}
+.sync-desc{
+  font-size:12px;color:var(--dim);
+}
+.sync-stats{display:flex;gap:16px;flex-wrap:wrap;}
+.sync-stat{
+  text-align:center;
+}
+.sync-stat-val{
+  font-size:18px;font-weight:900;font-family:'Space Mono',monospace;color:var(--gold);
+}
+.sync-stat-lbl{
+  font-size:10px;color:var(--dim);
+}
+.sync-btn{
+  padding:10px 24px;border-radius:12px;border:2px solid rgba(243,156,18,.5);
+  background:linear-gradient(135deg,rgba(243,156,18,.2),rgba(243,156,18,.1));
+  color:var(--gold);font-size:15px;font-weight:700;
+  cursor:pointer;font-family:'Noto Serif SC',serif;
+  position:relative;z-index:100;
+  box-shadow:0 4px 15px rgba(0,0,0,.3);
+  transition:all 0.2s ease;
+}
+.sync-btn:hover{
+  background:linear-gradient(135deg,rgba(243,156,18,.4),rgba(243,156,18,.25));
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(243,156,18,.3);
+}
+.sync-btn:active{
+  transform:translateY(0) scale(0.98);
+  box-shadow:0 2px 10px rgba(0,0,0,.3);
+}
+
+.section{margin-bottom:40px;}
+.section-header{
+  display:flex;align-items:center;gap:12px;margin-bottom:20px;
+  transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+.section-header:hover{
+  transform:translateX(8px);
+}
+.section-icon{
+  font-size:32px;filter:drop-shadow(0 0 10px rgba(243,156,18,.4));
+  animation:iconPulse 2.5s ease-in-out infinite;
+  transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+@keyframes iconPulse{
+  0%,100%{filter:drop-shadow(0 0 10px rgba(243,156,18,.4));transform:scale(1);}
+  50%{filter:drop-shadow(0 0 25px rgba(243,156,18,.7));transform:scale(1.08);}
+}
+.section-header:hover .section-icon{
+  transform:scale(1.2) rotate(15deg);
+  animation-play-state:paused;
+}
+.section-title{
+  font-size:24px;font-weight:900;
+  animation:titlePulse 3s ease-in-out infinite;
+}
+@keyframes titlePulse{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.02);}
+}
+.section-title-gradient{
+  background:linear-gradient(135deg,var(--gold),var(--ocean-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 12px rgba(243,156,18,.4));
+  animation:titleShimmer 3.5s ease-in-out infinite;
+}
+@keyframes titleShimmer{
+  0%,100%{filter:drop-shadow(0 0 12px rgba(243,156,18,.4));}
+  50%{filter:drop-shadow(0 0 25px rgba(243,156,18,.7));}
+}
+
+.service-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;}
+.service-card{
+  background:linear-gradient(160deg,rgba(255,255,255,.10),rgba(255,255,255,.05));
+  border:1px solid rgba(255,255,255,.16);border-radius:20px;padding:24px;
+  backdrop-filter:blur(16px);transition:all .55s cubic-bezier(0.175,0.885,0.32,1.275);position:relative;overflow:hidden;
+  box-shadow:var(--shadow-card);
+  transform-style:preserve-3d;
+}
+.service-card::before{content:'';position:absolute;inset:0;opacity:0;background:linear-gradient(135deg,rgba(231,76,60,.22),rgba(243,156,18,.16),rgba(39,174,96,.14),transparent);transition:opacity .35s;}
+.service-card::after{
+  content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:linear-gradient(45deg,transparent,rgba(255,255,255,.14),transparent);
+  transform:rotate(45deg) translateY(-100%);transition:all .85s ease;pointer-events:none;
+}
+.service-card{
+  animation:pulseGlow 4s ease-in-out infinite;
+}
+@keyframes pulseGlow{
+  0%,100%{box-shadow:var(--shadow-card);}
+  50%{box-shadow:0 8px 30px rgba(243,156,18,.15);}
+}
+.service-card:hover{
+  transform:translateY(-13px) scale(1.04) rotateX(5deg);
+  border-color:rgba(243,156,18,.55);
+  box-shadow:
+    0 30px 68px rgba(0,0,0,.45),
+    0 0 0 1px rgba(255,255,255,.25),
+    0 0 40px rgba(231,76,60,.28),
+    inset 0 0 24px rgba(255,255,255,.08);
+}
+.service-card:hover::before{opacity:1;}
+.service-card:hover::after{transform:rotate(45deg) translateY(100%);}
+.card-badge{
+  display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:12px;
+  transition:all .35s cubic-bezier(0.175,0.885,0.32,1.275);
+  position:relative;overflow:hidden;
+}
+.card-badge::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);
+  transition:left .5s ease;
+}
+.service-card:hover .card-badge::before{left:100%;}
+.service-card:hover .card-badge{transform:scale(1.1);}
+.badge-edu{background:rgba(231,76,60,.16);color:var(--ocean-l);border:1px solid rgba(231,76,60,.35);}
+.badge-train{background:rgba(243,156,18,.16);color:var(--gold);border:1px solid rgba(243,156,18,.35);}
+.badge-consult{background:rgba(39,174,96,.16);color:var(--green);border:1px solid rgba(39,174,96,.35);}
+.card-icon{
+  font-size:36px;margin-bottom:10px;
+  animation:cardIconFloat 4s ease-in-out infinite;
+  transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);
+  position:relative;z-index:1;
+}
+@keyframes cardIconFloat{
+  0%,100%{transform:translateY(0) rotate(0deg);}
+  50%{transform:translateY(-6px) rotate(4deg);}
+}
+.service-card:hover .card-icon{
+  transform:scale(1.2) rotate(10deg);
+  filter:drop-shadow(0 0 20px rgba(243,156,18,.6));
+  animation-play-state:paused;
+}
+.card-title{
+  font-size:18px;font-weight:700;margin-bottom:6px;
+  transition:all .35s cubic-bezier(0.175,0.885,0.32,1.275);
+  position:relative;z-index:1;
+}
+.service-card:hover .card-title{
+  transform:translateX(6px);
+  color:var(--gold);
+  text-shadow:0 0 15px rgba(243,156,18,.4);
+}
+.service-card:hover .card-title::after{
+  content:'';position:absolute;bottom:-4px;left:0;width:100%;height:3px;
+  background:linear-gradient(90deg,var(--gold),rgba(243,156,18,.5));
+  border-radius:2px;
+}
+.card-desc{
+  font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:16px;
+  transition:all .35s cubic-bezier(0.175,0.885,0.32,1.275);
+  position:relative;z-index:1;
+}
+.service-card:hover .card-desc{
+  color:rgba(236,240,241,0.85);
+  transform:translateX(4px);
+  text-shadow:0 0 12px rgba(243,156,18,.2);
+}
+.service-card:hover .card-desc::after{
+  content:'';position:absolute;bottom:-2px;left:0;width:100%;height:2px;
+  background:linear-gradient(90deg,var(--gold),var(--ocean-l));
+  transform:scaleX(1);
+  opacity:0.6;
+}
+.card-features{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;position:relative;z-index:1;}
+.card-feature{
+  display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(236,240,241,0.8);
+  transition:all .3s cubic-bezier(0.175,0.885,0.32,1.275);
+  padding:4px 8px;border-radius:6px;
+  background:transparent;
+  position:relative;
+}
+.card-feature::before{
+  content:'';position:absolute;left:0;top:50%;width:0;height:0;
+  background:linear-gradient(90deg,rgba(243,156,18,.15),transparent);
+  transform:translateY(-50%);
+  transition:width .3s ease;
+  border-radius:6px;
+}
+.service-card:hover .card-feature{transform:translateX(6px);}
+.service-card:hover .card-feature::before{width:100%;}
+.service-card:hover .card-feature{color:rgba(255,255,255,0.95);}
+.card-feature-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;transition:all .3s;}
+.service-card:hover .card-feature-dot{transform:scale(1.5);}
+.service-card:hover .card-feature-dot{box-shadow:0 0 8px rgba(243,156,18,.5);}
+.dot-blue{background:var(--ocean-l);}
+.dot-gold{background:var(--gold);}
+.dot-green{background:var(--green);}
+.card-action{
+  padding:10px 22px;border-radius:12px;border:none;font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .5s cubic-bezier(0.175,0.885,0.32,1.275);font-family:'Noto Serif SC',serif;
+  width:100%;position:relative;overflow:hidden;
+  transform-style:preserve-3d;
+  z-index:10;
+}
+.card-action::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);
+  transition:left .7s ease;
+}
+.card-action::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at center,rgba(255,255,255,.3),transparent 65%);
+  opacity:0;transition:opacity .4s;
+}
+.card-action:hover::before{left:100%;}
+.card-action:hover::after{opacity:1;}
+.card-action:hover{transform:translateY(-4px) scale(1.05) translateZ(10px);}
+.action-edu{background:linear-gradient(135deg,var(--ocean),var(--ocean-l));color:#fff;box-shadow:0 4px 16px rgba(192,57,43,.4);}
+.action-edu:hover{box-shadow:0 12px 32px rgba(192,57,43,.7),0 0 35px rgba(231,76,60,.35);}
+.action-train{background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#080c18;box-shadow:0 4px 16px rgba(243,156,18,.4);}
+.action-train:hover{box-shadow:0 12px 32px rgba(243,156,18,.7),0 0 35px rgba(243,156,18,.35);}
+.action-consult{background:linear-gradient(135deg,var(--green-d),var(--green));color:#fff;box-shadow:0 4px 16px rgba(39,174,96,.4);}
+.action-consult:hover{box-shadow:0 12px 32px rgba(39,174,96,.7),0 0 35px rgba(39,174,96,.35);}
+
+.tab-bar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.tab-btn{
+  padding:10px 22px;border-radius:14px;border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);color:var(--text);font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .5s cubic-bezier(0.175,0.885,0.32,1.275);font-family:'Noto Serif SC',serif;
+  position:relative;overflow:hidden;
+  transform-style:preserve-3d;
+}
+.tab-btn::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(243,156,18,.25),transparent);
+  transition:left .7s ease;
+}
+.tab-btn::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at center,rgba(243,156,18,.25),transparent 65%);
+  opacity:0;transition:opacity .4s;
+}
+.tab-btn:hover::before{left:100%;}
+.tab-btn:hover::after{opacity:1;}
+.tab-btn:hover{
+  background:rgba(255,255,255,.12);
+  transform:translateY(-3px)scale(1.04);
+  border-color:rgba(243,156,18,.45);
+  box-shadow:0 10px 25px rgba(0,0,0,.3);
+}
+.tab-btn.active{
+  border-color:var(--gold);background:rgba(243,156,18,.14);color:var(--gold);
+  box-shadow:0 0 18px rgba(243,156,18,.35),0 0 25px rgba(243,156,18,.2)inset;
+  animation:tabPulse 2.2s ease-in-out infinite;
+}
+@keyframes tabPulse{
+  0%,100%{box-shadow:0 0 18px rgba(243,156,18,.35),0 0 25px rgba(243,156,18,.2)inset;}
+  50%{box-shadow:0 0 28px rgba(243,156,18,.5),0 0 35px rgba(243,156,18,.3)inset;}
+}
+
+.panel{display:none;}
+.panel.active{display:block;}
+
+.dashboard{
+  background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:24px;
+  backdrop-filter:blur(16px);box-shadow:var(--shadow-card);margin-bottom:20px;
+  transition:all .55s cubic-bezier(0.175,0.885,0.32,1.275);
+  position:relative;overflow:hidden;
+  transform-style:preserve-3d;
+}
+.dashboard::before{
+  content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:linear-gradient(45deg,transparent,rgba(243,156,18,.12),transparent);
+  transform:rotate(45deg)translateY(-100%);
+  transition:all .85s ease;pointer-events:none;
+}
+.dashboard::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(231,76,60,.12),transparent);
+  opacity:0;transition:opacity .4s;
+}
+.dashboard:hover::before{transform:rotate(45deg)translateY(100%);}
+.dashboard:hover::after{opacity:1;}
+.dashboard:hover{
+  transform:translateY(-8px)scale(1.01);
+  border-color:rgba(243,156,18,.45);
+  box-shadow:0 28px 65px rgba(0,0,0,.4),0 0 30px rgba(243,156,18,.2);
+}
+.dash-title{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+.dash-item{
+  background:rgba(0,0,0,.25);border-radius:12px;padding:16px;
+  border:1px solid rgba(255,255,255,.08);
+  transition:all .45s cubic-bezier(0.175,0.885,0.32,1.275);
+  position:relative;overflow:hidden;
+  transform-style:preserve-3d;
+}
+.dash-item::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(243,156,18,.15),transparent);
+  opacity:0;transition:opacity .35s;
+}
+.dash-item:hover::before{opacity:1;}
+.dash-item:hover{
+  transform:translateY(-4px)scale(1.03);
+  border-color:rgba(243,156,18,.35);
+  box-shadow:0 12px 32px rgba(0,0,0,.35);
+}
+.dash-item-label{font-size:11px;color:var(--dim);margin-bottom:4px;}
+.dash-item-value{font-size:22px;font-weight:900;font-family:'Space Mono',monospace;}
+.dash-item-value.blue{color:var(--ocean-l);}
+.dash-item-value.gold{color:var(--gold);}
+.dash-item-value.green{color:var(--green);}
+.dash-item-value.red{color:var(--red);}
+.dash-item-sub{font-size:10px;color:var(--dim);margin-top:2px;}
+
+.course-list{display:flex;flex-direction:column;gap:12px;}
+.course-item{
+  background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.1);border-radius:14px;
+  padding:18px;display:flex;align-items:center;gap:16px;
+  transition:all .45s cubic-bezier(0.175,0.885,0.32,1.275);
+  position:relative;overflow:hidden;
+  transform-style:preserve-3d;
+}
+.course-item::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(243,156,18,.18),transparent);
+  transition:left .7s ease;
+}
+.course-item::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(231,76,60,.12),transparent);
+  opacity:0;transition:opacity .35s;
+}
+.course-item:hover::before{left:100%;}
+.course-item:hover::after{opacity:1;}
+.course-item:hover{
+  border-color:rgba(243,156,18,.4);
+  background:rgba(0,0,0,.32);
+  transform:translateX(6px)scale(1.01);
+  box-shadow:0 12px 32px rgba(0,0,0,.35);
+}
+.course-icon{font-size:32px;flex-shrink:0;}
+.course-info{flex:1;}
+.course-name{font-size:15px;font-weight:700;margin-bottom:3px;}
+.course-meta{font-size:12px;color:var(--dim);}
+.course-progress{width:120px;flex-shrink:0;}
+.progress-bar{height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;margin-bottom:4px;}
+.progress-fill{height:100%;border-radius:3px;transition:width .8s var(--ease);}
+.fill-blue{background:linear-gradient(90deg,var(--ocean),var(--ocean-l));}
+.fill-gold{background:linear-gradient(90deg,var(--gold-d),var(--gold));}
+.fill-green{background:linear-gradient(90deg,var(--green-d),var(--green));}
+.progress-label{font-size:10px;color:var(--dim);text-align:right;}
+
+.student-table{width:100%;border-collapse:separate;border-spacing:0 6px;}
+.student-table th{
+  text-align:left;padding:10px 14px;font-size:12px;color:var(--dim);
+  border-bottom:1px solid rgba(255,255,255,.1);font-weight:400;
+}
+.student-table td{
+  padding:10px 14px;font-size:13px;background:rgba(0,0,0,.18);
+  border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04);
+  transition:all .35s cubic-bezier(0.175,0.885,0.32,1.275);
+  position:relative;
+}
+.student-table tr:hover td{
+  background:rgba(0,0,0,.28);
+  border-color:rgba(243,156,18,.3);
+}
+.student-table tr:hover td:first-child{
+  border-left-color:rgba(243,156,18,.3);
+}
+.student-table tr:hover td:last-child{
+  border-right-color:rgba(243,156,18,.3);
+}
+.student-table td:first-child{border-radius:8px 0 0 8px;border-left:1px solid rgba(255,255,255,.04);}
+.student-table td:last-child{border-radius:0 8px 8px 0;border-right:1px solid rgba(255,255,255,.04);}
+.grade-a{color:var(--green);font-weight:700;}
+.grade-b{color:var(--ocean-l);font-weight:700;}
+.grade-c{color:var(--gold);font-weight:700;}
+.grade-d{color:var(--red);font-weight:700;}
+
+.training-scenario{
+  background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.1);border-radius:16px;
+  padding:20px;margin-bottom:14px;
+  transition:all .45s cubic-bezier(0.175,0.885,0.32,1.275);
+  position:relative;overflow:hidden;
+  transform-style:preserve-3d;
+}
+.training-scenario::before{
+  content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:linear-gradient(45deg,transparent,rgba(243,156,18,.12),transparent);
+  transform:rotate(45deg)translateY(-100%);
+  transition:all .85s ease;pointer-events:none;
+}
+.training-scenario::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(243,156,18,.12),transparent);
+  opacity:0;transition:opacity .35s;
+}
+.training-scenario:hover::before{transform:rotate(45deg)translateY(100%);}
+.training-scenario:hover::after{opacity:1;}
+.training-scenario:hover{
+  border-color:rgba(243,156,18,.4);
+  background:rgba(0,0,0,.28);
+  transform:translateY(-6px)scale(1.01);
+  box-shadow:0 16px 40px rgba(0,0,0,.35);
+}
+.scenario-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.scenario-icon{font-size:28px;}
+.scenario-title{font-size:16px;font-weight:700;}
+.scenario-tag{
+  padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700;
+  background:rgba(243,156,18,.14);color:var(--gold);border:1px solid rgba(243,156,18,.3);
+}
+.scenario-desc{font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:14px;}
+.scenario-stats{display:flex;gap:16px;flex-wrap:wrap;}
+.scenario-stat{display:flex;align-items:center;gap:6px;font-size:12px;}
+.scenario-stat-icon{font-size:14px;}
+.scenario-stat-val{font-family:'Space Mono',monospace;font-weight:700;}
+
+.consult-card{
+  background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.1);border-radius:16px;
+  padding:20px;margin-bottom:14px;
+  transition:all .45s cubic-bezier(0.175,0.885,0.32,1.275);
+  position:relative;overflow:hidden;
+  transform-style:preserve-3d;
+}
+.consult-card::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(39,174,96,.18),transparent);
+  transition:left .7s ease;
+}
+.consult-card::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(39,174,96,.12),transparent);
+  opacity:0;transition:opacity .35s;
+}
+.consult-card:hover::before{left:100%;}
+.consult-card:hover::after{opacity:1;}
+.consult-card:hover{
+  border-color:rgba(39,174,96,.4);
+  background:rgba(0,0,0,.28);
+  transform:translateY(-6px)scale(1.01);
+  box-shadow:0 16px 40px rgba(0,0,0,.35);
+}
+.consult-header{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.consult-avatar{
+  width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:20px;border:2px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);
+}
+.consult-info{flex:1;}
+.consult-name{font-size:14px;font-weight:700;}
+.consult-role{font-size:11px;color:var(--dim);}
+.consult-tag{
+  padding:3px 10px;border-radius:12px;font-size:10px;font-weight:700;
+}
+.tag-free{background:rgba(39,174,96,.14);color:var(--green);border:1px solid rgba(39,174,96,.3);}
+.tag-vip{background:rgba(243,156,18,.14);color:var(--gold);border:1px solid rgba(243,156,18,.3);}
+.consult-desc{font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:12px;}
+.consult-match{
+  padding:8px 14px;border-radius:10px;font-size:12px;
+  background:rgba(192,57,43,.12);border:1px solid rgba(231,76,60,.25);
+  color:var(--ocean-l);display:flex;align-items:center;gap:6px;
+}
+
+.bonus-banner{
+  margin-top:20px;padding:16px 20px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(243,156,18,.1),rgba(39,174,96,.1));
+  border:1px solid rgba(243,156,18,.3);text-align:center;
+  transition:all .5s cubic-bezier(0.175,0.885,0.32,1.275);
+  position:relative;overflow:hidden;
+}
+.bonus-banner::before{
+  content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:linear-gradient(45deg,transparent,rgba(243,156,18,.12),transparent);
+  transform:rotate(45deg)translateY(-100%);
+  transition:all .85s ease;pointer-events:none;
+}
+.bonus-banner:hover::before{transform:rotate(45deg)translateY(100%);}
+.bonus-banner:hover{
+  transform:translateY(-4px)scale(1.01);
+  border-color:rgba(243,156,18,.5);
+  box-shadow:0 12px 32px rgba(243,156,18,.25);
+}
+.bonus-title{font-size:15px;font-weight:700;color:var(--gold);margin-bottom:6px;}
+.bonus-desc{font-size:12px;color:var(--dim);line-height:1.6;}
+.bonus-btn{
+  margin-top:12px;padding:10px 28px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#080c18;
+  font-size:14px;font-weight:700;cursor:pointer;
+  transition:all .5s cubic-bezier(0.175,0.885,0.32,1.275);
+  font-family:'Noto Serif SC',serif;
+  position:relative;overflow:hidden;
+  transform-style:preserve-3d;
+}
+.bonus-btn::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
+  transition:left .7s ease;
+}
+.bonus-btn::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at center,rgba(255,255,255,.35),transparent 65%;
+  opacity:0;transition:opacity .4s;
+}
+.bonus-btn:hover::before{left:100%;}
+.bonus-btn:hover::after{opacity:1;}
+.bonus-btn:hover{
+  transform:translateY(-3px)scale(1.08);
+  box-shadow:0 12px 32px rgba(243,156,18,.6),0 0 30px rgba(243,156,18,.3);
+}
+
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:200;
+  background:rgba(0,20,60,.75);backdrop-filter:blur(12px);
+  align-items:center;justify-content:center;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:linear-gradient(160deg,rgba(8,20,55,.98),rgba(4,12,35,.99));
+  border:1px solid rgba(255,255,255,.22);border-radius:24px;
+  padding:32px;max-width:600px;width:90%;max-height:85vh;overflow-y:auto;position:relative;
+  box-shadow:0 25px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.1),0 0 50px rgba(243,156,18,.15);
+  backdrop-filter:blur(24px);color:#f0f4ff;
+  animation:modalPopIn .35s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+@keyframes modalPopIn{from{transform:scale(0.88) translateY(30px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+@keyframes slu{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-close{
+  position:absolute;top:16px;right:16px;background:rgba(255,255,255,.1);border:none;
+  color:rgba(240,244,255,0.7);font-size:18px;cursor:pointer;line-height:1;
+  width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  transition:all .3s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+.modal-close:hover{background:rgba(231,76,60,.3);color:#fff;transform:scale(1.1) rotate(90deg);}
+.modal-title{font-size:22px;font-weight:900;margin-bottom:10px;color:var(--ocean-l);text-shadow:0 0 20px rgba(192,57,43,.3);}
+.modal-desc{font-size:14px;color:rgba(240,244,255,0.7);line-height:1.8;margin-bottom:24px;}
+.modal-form{display:flex;flex-direction:column;gap:12px;}
+.form-group{display:flex;flex-direction:column;gap:4px;}
+.form-label{font-size:12px;color:rgba(236,240,241,0.7);font-weight:700;}
+.form-input,.form-select,.form-textarea{
+  padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.08);color:#ecf0f1;font-size:14px;
+  font-family:'Noto Serif SC',serif;outline:none;transition:border-color .2s;
+}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--ocean-l);}
+.form-textarea{min-height:80px;resize:vertical;}
+.form-select{appearance:none;cursor:pointer;}
+.form-select option{background:#2c3e50;color:#ecf0f1;}
+.modal-actions{display:flex;gap:10px;margin-top:8px;}
+.modal-btn{
+  flex:1;padding:12px;border:none;border-radius:11px;font-size:14px;font-weight:700;
+  cursor:pointer;font-family:'Noto Serif SC',serif;transition:all .2s var(--ease);
+}
+.modal-btn-primary{background:linear-gradient(135deg,var(--ocean),var(--ocean-l));color:#fff;box-shadow:0 4px 16px rgba(192,57,43,.4);}
+.modal-btn-primary:hover{transform:scale(1.02);}
+.modal-btn-secondary{background:rgba(255,255,255,.08);color:rgba(240,244,255,0.75);border:1px solid rgba(255,255,255,.2);}
+.modal-btn-secondary:hover{background:rgba(255,255,255,.16);}
+
+.toast-container{
+  position:fixed !important;
+  top:200px !important;
+  right:20px !important;
+  z-index:10000 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  gap:10px !important;
+  align-items:flex-end !important;
+  pointer-events:auto !important;
+}
+.toast{
+  position:relative !important;
+  z-index:10001 !important;
+  pointer-events:auto !important;
+}
+.toast-msg{flex:1;}
+.toast-close{
+  background:rgba(255,255,255,.2);border:none;color:#fff;width:24px;height:24px;
+  border-radius:50%;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;
+  transition:all .3s cubic-bezier(0.175,0.885,0.32,1.275);flex-shrink:0;margin-top:-2px;
+}
+.toast-close:hover{background:rgba(231,76,60,.4);transform:scale(1.1) rotate(90deg);}
+
+.chart-container{position:relative;width:100%;height:200px;margin:12px 0;}
+.chart-bar-group{display:flex;align-items:flex-end;gap:8px;height:180px;padding:0 10px;}
+.chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.chart-bar{
+  width:100%;border-radius:6px 6px 0 0;transition:height .8s var(--ease);min-height:4px;
+  position:relative;
+}
+.chart-bar-label{font-size:10px;color:var(--dim);text-align:center;white-space:nowrap;}
+.chart-bar-val{
+  font-size:10px;font-family:'Space Mono',monospace;font-weight:700;
+  color:var(--text);position:absolute;top:-16px;left:50%;transform:translateX(-50%);
+  white-space:nowrap;
+}
+
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:rgba(255,255,255,.04);}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:2px;}
+
+@media(max-width:768px){
+  .service-grid{grid-template-columns:1fr;}
+  .nav{padding:10px 14px;}
+  .nav-links{gap:4px;}
+  .nav-link{padding:6px 12px;font-size:11px;}
+  .main{padding:70px 14px 40px;}
+  .sync-stats{gap:10px;}
+  .dash-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:480px){
+  .dash-grid{grid-template-columns:1fr;}
+  .student-table{font-size:11px;}
+  .student-table th,.student-table td{padding:6px 8px;}
+}
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+<div class="waves">
+  <div class="w w1"><svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,50 C240,100 480,0 720,50 C960,100 1200,0 1440,50 L1440,100 L0,100 Z" fill="rgba(192,57,43,.5)"/></svg></div>
+  <div class="w w2"><svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,30 C360,80 720,10 1080,60 C1260,80 1380,40 1440,30 L1440,100 L0,100 Z" fill="rgba(39,174,96,.3)"/></svg></div>
+</div>
+
+<nav class="nav">
+  <a class="nav-brand" href="maker-sim.html">
+    <span class="nav-brand-icon">🚩</span>
+    <span class="nav-brand-text">红韵智研</span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">🏠 首页</a>
+    <button class="nav-link active" onclick="switchTab('edu')">🚩 红色研学</button>
+    <button class="nav-link" onclick="switchTab('train')">🌾 创客培训</button>
+    <button class="nav-link" onclick="switchTab('consult')">💡 资源对接</button>
+    <button class="nav-link" onclick="switchTab('data')">📊 数据中心</button>
+  </div>
+  <a class="nav-game-btn" href="maker-sim.html">🎲 进入游戏</a>
+</nav>
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="main">
+  <div class="hero">
+    <div class="hero-icon">🏛�?/div>
+    <h1 class="hero-title">红韵智研 · 乡村创客服务平台</h1>
+    <p class="hero-sub">人工智能驱动的海南红色文化与美育研学综合服务平台<br>依托红色教育与乡村振兴国家战略，为高校、企业和乡村创客提供一站式研学实践与创业赋能服�?/p>
+    <div class="hero-badges">
+      <span class="hero-badge" style="border-color:rgba(231,76,60,.35);color:var(--ocean-l);">🎓 高校定制教学</span>
+      <span class="hero-badge" style="border-color:rgba(243,156,18,.35);color:var(--gold);">🏢 企业实战培训</span>
+      <span class="hero-badge" style="border-color:rgba(39,174,96,.35);color:var(--green);">💡 专家创业咨询</span>
+      <span class="hero-badge" style="border-color:rgba(39,174,96,.35);color:var(--purple-l);">🔄 数据互通联�?/span>
+    </div>
+  </div>
+
+  <div class="data-sync-bar" id="syncBar">
+    <span class="sync-icon">🔗</span>
+    <div class="sync-info">
+      <div class="sync-title">创客模拟数据同步</div>
+      <div class="sync-desc" id="syncDesc">正在读取乡村创客模拟数据...</div>
+    </div>
+    <div class="sync-stats" id="syncStats"></div>
+    <button class="sync-btn" onclick="syncGameData();">🔄 同步数据</button>
+  </div>
+
+  <!-- ==================== 高校教学服务 ==================== -->
+  <div class="panel active" id="panel-edu">
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">🚩</span>
+        <h2 class="section-title"><span class="section-title-gradient">红色研学教学服务</span></h2>
+      </div>
+      <p style="color:var(--dim);margin-bottom:20px;line-height:1.8;font-size:14px;">
+        为高校提供红色研学定制化教学版本，包含教学课件、数据后台、学生成绩统计功能，助力红色教育与乡村振兴融合。游戏数据自动同步至教学后台，教师可实时掌握学生创业决策与学习进度�?
+      </p>
+
+      <div class="service-grid">
+        <div class="service-card">
+          <span class="card-badge badge-edu">核心功能</span>
+          <div class="card-icon">📚</div>
+          <div class="card-title">教学课件管理</div>
+          <div class="card-desc">内置红色研学与乡村振兴全系列课件，涵盖红色文化解读、乡村项目投资分析、风险评估模型等核心内容，支持教师自定义课件</div>
+          <div class="card-features">
+            <div class="card-feature"><span class="card-feature-dot dot-blue"></span>12套红色研学课件模�?/div>
+            <div class="card-feature"><span class="card-feature-dot dot-blue"></span>支持PPT/PDF/视频格式</div>
+            <div class="card-feature"><span class="card-feature-dot dot-blue"></span>课件与游戏关卡联�?/div>
+          </div>
+          <button class="card-action action-edu" onclick="openCourseware()">管理课件</button>
+        </div>
+
+        <div class="service-card">
+          <span class="card-badge badge-edu">数据后台</span>
+          <div class="card-icon">📊</div>
+          <div class="card-title">教学数据后台</div>
+          <div class="card-desc">实时同步学生游戏数据，可视化展示班级投资表现、风险偏好、决策路径等关键指标，辅助教师精准教�?/div>
+          <div class="card-features">
+            <div class="card-feature"><span class="card-feature-dot dot-blue"></span>学生操作实时追踪</div>
+            <div class="card-feature"><span class="card-feature-dot dot-blue"></span>投资决策路径回放</div>
+            <div class="card-feature"><span class="card-feature-dot dot-blue"></span>班级对比分析报告</div>
+          </div>
+          <button class="card-action action-edu" onclick="openDataDashboard()">查看后台</button>
+        </div>
+
+        <div class="service-card">
+          <span class="card-badge badge-edu">成绩统计</span>
+          <div class="card-icon">📝</div>
+          <div class="card-title">学生成绩统计</div>
+          <div class="card-desc">基于游戏表现自动生成成绩评估，综合考量投资回报率、风险管理能力、财务知识掌握度等多维度指标</div>
+          <div class="card-features">
+            <div class="card-feature"><span class="card-feature-dot dot-blue"></span>多维度自动评�?/div>
+            <div class="card-feature"><span class="card-feature-dot dot-blue"></span>成绩趋势追踪</div>
+            <div class="card-feature"><span class="card-feature-dot dot-blue"></span>一键导出成绩单</div>
+          </div>
+          <button class="card-action action-edu" onclick="openGradeStats()">查看成绩</button>
+        </div>
+      </div>
+
+      <div class="dashboard" id="eduDashboard" style="margin-top:24px;">
+        <div class="dash-title">📊 教学数据概览 <span style="font-size:11px;color:var(--dim);font-weight:400;">（数据来自乡村创客模拟实时同步）</span></div>
+        <div class="dash-grid" id="eduDashGrid"></div>
+      </div>
+
+      <div class="dashboard" style="margin-top:16px;">
+        <div class="dash-title">📈 班级投资表现对比</div>
+        <div class="chart-container">
+          <div class="chart-bar-group" id="classChart"></div>
+        </div>
+      </div>
+
+      <div class="dashboard" style="margin-top:16px;">
+        <div class="dash-title">👨‍�?学生成绩排行</div>
+        <div style="overflow-x:auto;">
+          <table class="student-table" id="studentTable">
+            <thead>
+              <tr><th>排名</th><th>学生</th><th>职业</th><th>总资�?/th><th>被动收入</th><th>投资回报�?/th><th>风险控制</th><th>综合评级</th></tr>
+            </thead>
+            <tbody id="studentTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 企业培训服务 ==================== -->
+  <div class="panel" id="panel-train">
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">🌾</span>
+        <h2 class="section-title"><span class="section-title-gradient">乡村创客培训服务</span></h2>
+      </div>
+      <p style="color:var(--dim);margin-bottom:20px;line-height:1.8;font-size:14px;">
+        为乡村创客和涉农企业提供培训定制服务，植入乡村真实项目场景，提升创客财商与运营能力。培训数据与乡村创客模拟互通，创客在游戏中的表现直接反映培训成效�?
+      </p>
+
+      <div class="service-grid">
+        <div class="service-card">
+          <span class="card-badge badge-train">定制方案</span>
+          <div class="card-icon">🎯</div>
+          <div class="card-title">企业定制培训</div>
+          <div class="card-desc">根据创客业务特点与能力画像，定制专属培训方案，将真实乡村振兴项目植入游戏场景</div>
+          <div class="card-features">
+            <div class="card-feature"><span class="card-feature-dot dot-gold"></span>乡村项目场景植入</div>
+            <div class="card-feature"><span class="card-feature-dot dot-gold"></span>创客能力画像分析</div>
+            <div class="card-feature"><span class="card-feature-dot dot-gold"></span>培训进度实时监控</div>
+          </div>
+          <button class="card-action action-train" onclick="openTrainCustom()">定制方案</button>
+        </div>
+
+        <div class="service-card">
+          <span class="card-badge badge-train">财商提升</span>
+          <div class="card-icon">💰</div>
+          <div class="card-title">财商能力训练</div>
+          <div class="card-desc">通过乡村创客模拟真实创业决策，系统化提升创客财务分析、风险评估、资产配置等核心财商能力</div>
+          <div class="card-features">
+            <div class="card-feature"><span class="card-feature-dot dot-gold"></span>创业决策模拟训练</div>
+            <div class="card-feature"><span class="card-feature-dot dot-gold"></span>财务报表解读能力</div>
+            <div class="card-feature"><span class="card-feature-dot dot-gold"></span>风险识别与应对策�?/div>
+          </div>
+          <button class="card-action action-train" onclick="openFinanceTraining()">开始训�?/button>
+        </div>
+
+        <div class="service-card">
+          <span class="card-badge badge-train">运营实战</span>
+          <div class="card-icon">⚙️</div>
+          <div class="card-title">运营能力提升</div>
+          <div class="card-desc">基于乡村创业真实运营数据，设计运营决策模拟场景，培养创客在旺季淡季切换、成本控制、营收优化等方面的实战能�?/div>
+          <div class="card-features">
+            <div class="card-feature"><span class="card-feature-dot dot-gold"></span>旺季淡季运营策略</div>
+            <div class="card-feature"><span class="card-feature-dot dot-gold"></span>成本控制与利润优�?/div>
+            <div class="card-feature"><span class="card-feature-dot dot-gold"></span>客户满意度管�?/div>
+          </div>
+          <button class="card-action action-train" onclick="openOpsTraining()">进入实战</button>
+        </div>
+      </div>
+
+      <div class="dashboard" style="margin-top:24px;">
+        <div class="dash-title">🏢 创客培训场景�?<span style="font-size:11px;color:var(--dim);font-weight:400;">（场景数据与乡村创客模拟联动�?/span></div>
+        <div id="trainingScenarios"></div>
+      </div>
+
+      <div class="dashboard" style="margin-top:16px;">
+        <div class="dash-title">📊 创客培训数据概览</div>
+        <div class="dash-grid" id="trainDashGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 创业咨询服务 ==================== -->
+  <div class="panel" id="panel-consult">
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">💡</span>
+        <h2 class="section-title"><span class="section-title-gradient">创业资源对接服务</span></h2>
+      </div>
+      <p style="color:var(--dim);margin-bottom:20px;line-height:1.8;font-size:14px;">
+        依托平台用户数据，联合本地乡村振兴专家与投资机构，为优质创业项目提供免费咨询、资源对接服务。乡村创客模拟数据将作为项目评估的重要参考依据�?
+      </p>
+
+      <div class="service-grid">
+        <div class="service-card">
+          <span class="card-badge badge-consult">免费咨询</span>
+          <div class="card-icon">🆓</div>
+          <div class="card-title">创业免费咨询</div>
+          <div class="card-desc">基于乡村创客模拟数据筛选优质项目，提供一对一免费创业咨询服务，涵盖商业模式、融资策略、市场分析等</div>
+          <div class="card-features">
+            <div class="card-feature"><span class="card-feature-dot dot-green"></span>创客数据智能评估</div>
+            <div class="card-feature"><span class="card-feature-dot dot-green"></span>专家一对一辅导</div>
+            <div class="card-feature"><span class="card-feature-dot dot-green"></span>商业模式诊断</div>
+          </div>
+          <button class="card-action action-consult" onclick="openFreeConsult()">申请咨询</button>
+        </div>
+
+        <div class="service-card">
+          <span class="card-badge badge-consult">资源对接</span>
+          <div class="card-icon">🤝</div>
+          <div class="card-title">投资资源对接</div>
+          <div class="card-desc">联合乡村振兴投资机构、产业基金，为优质项目提供融资对接服务，创客模拟表现作为信用背书</div>
+          <div class="card-features">
+            <div class="card-feature"><span class="card-feature-dot dot-green"></span>乡村振兴机构匹配</div>
+            <div class="card-feature"><span class="card-feature-dot dot-green"></span>创客表现信用背书</div>
+            <div class="card-feature"><span class="card-feature-dot dot-green"></span>路演展示机会</div>
+          </div>
+          <button class="card-action action-consult" onclick="openResourceMatch()">资源对接</button>
+        </div>
+
+        <div class="service-card">
+          <span class="card-badge badge-consult">专家智库</span>
+          <div class="card-icon">🧠</div>
+          <div class="card-title">本地专家智库</div>
+          <div class="card-desc">汇聚乡村振兴领域资深专家、成功创业者、政策顾问，为创业项目提供行业洞察、政策解读、实操指�?/div>
+          <div class="card-features">
+            <div class="card-feature"><span class="card-feature-dot dot-green"></span>乡村振兴资深专家</div>
+            <div class="card-feature"><span class="card-feature-dot dot-green"></span>中央一号文件政策顾�?/div>
+            <div class="card-feature"><span class="card-feature-dot dot-green"></span>乡村创客导师</div>
+          </div>
+          <button class="card-action action-consult" onclick="openExpertHub()">查看专家</button>
+        </div>
+      </div>
+
+      <div class="dashboard" style="margin-top:24px;">
+        <div class="dash-title">💡 专家咨询团队 <span style="font-size:11px;color:var(--dim);font-weight:400;">（根据您的创客数据智能推荐）</span></div>
+        <div id="expertList"></div>
+      </div>
+
+      <div class="dashboard" style="margin-top:16px;">
+        <div class="dash-title">📊 您的创业评估报告</div>
+        <div class="dash-grid" id="consultDashGrid"></div>
+      </div>
+
+      <div class="bonus-banner">
+        <div class="bonus-title">🎮 创客成就兑换创业资源</div>
+        <div class="bonus-desc">在乡村创客模拟中获得的成就与评级，可兑换对应的创业咨询资源与投资机构推荐机会。创客指数TOP10%的玩家将获得VIP专家一对一辅导资格�?/div>
+        <button class="bonus-btn" onclick="exchangeBonus()">查看可兑换资�?/button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 数据中心 ==================== -->
+  <div class="panel" id="panel-data">
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">📊</span>
+        <h2 class="section-title"><span class="section-title-gradient">数据中心</span></h2>
+      </div>
+      <p style="color:var(--dim);margin-bottom:20px;line-height:1.8;font-size:14px;">
+        乡村创客模拟与服务平台的统一数据中心，实现游戏数据、教学数据、培训数据、咨询数据的全面互通与联动�?
+      </p>
+
+      <div class="dashboard">
+        <div class="dash-title">🔗 数据互通架�?/div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;">
+          <div style="background:rgba(0,0,0,.22);border-radius:12px;padding:16px;border:1px solid rgba(231,76,60,.2);">
+            <div style="font-size:24px;margin-bottom:8px;">🎲</div>
+            <div style="font-size:14px;font-weight:700;margin-bottom:4px;">乡村创客模拟</div>
+            <div style="font-size:11px;color:var(--dim);line-height:1.6;">玩家资产、现金流、投资决策、成就数�?/div>
+            <div style="margin-top:8px;font-size:10px;color:var(--ocean-l);">�?写入 localStorage</div>
+          </div>
+          <div style="background:rgba(0,0,0,.22);border-radius:12px;padding:16px;border:1px solid rgba(243,156,18,.2);">
+            <div style="font-size:24px;margin-bottom:8px;">🏛�?/div>
+            <div style="font-size:14px;font-weight:700;margin-bottom:4px;">服务平台</div>
+            <div style="font-size:11px;color:var(--dim);line-height:1.6;">教学进度、培训记录、咨询档案、评估报�?/div>
+            <div style="margin-top:8px;font-size:10px;color:var(--gold);">�?读写 localStorage</div>
+          </div>
+          <div style="background:rgba(0,0,0,.22);border-radius:12px;padding:16px;border:1px solid rgba(39,174,96,.2);">
+            <div style="font-size:24px;margin-bottom:8px;">🔄</div>
+            <div style="font-size:14px;font-weight:700;margin-bottom:4px;">数据联动</div>
+            <div style="font-size:11px;color:var(--dim);line-height:1.6;">游戏成就→培训加分，培训完成→游戏增�?/div>
+            <div style="margin-top:8px;font-size:10px;color:var(--green);">�?读取 localStorage</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard" style="margin-top:16px;">
+        <div class="dash-title">📋 当前同步数据快照</div>
+        <div class="dash-grid" id="dataCenterGrid"></div>
+      </div>
+
+      <div class="dashboard" style="margin-top:16px;">
+        <div class="dash-title">📜 数据操作日志</div>
+        <div id="dataLog" style="max-height:200px;overflow-y:auto;"></div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;">
+        <button class="card-action action-edu" style="width:auto;flex:1;min-width:160px;" onclick="syncGameData()">🔄 强制同步游戏数据</button>
+        <button class="card-action action-train" style="width:auto;flex:1;min-width:160px;" onclick="exportData()">📤 导出数据报告</button>
+        <button class="card-action action-consult" style="width:auto;flex:1;min-width:160px;" onclick="clearServiceData()">🗑�?清除服务数据</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MODALS ==================== -->
+<div class="modal-overlay" id="modalGeneric">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">�?/button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+const LS_GAME_KEY='zhiyan_rural_maker_data';
+const LS_SERVICE_KEY='zhiyan_rural_maker_service';
+
+function getGameData(){
+  try{return JSON.parse(localStorage.getItem(LS_GAME_KEY))||null;}catch(e){return null;}
+}
+function setGameData(d){try{localStorage.setItem(LS_GAME_KEY,JSON.stringify(d));}catch(e){}}
+function getServiceData(){
+  try{return JSON.parse(localStorage.getItem(LS_SERVICE_KEY))||initServiceData();}catch(e){return initServiceData();}
+}
+function setServiceData(d){try{localStorage.setItem(LS_SERVICE_KEY,JSON.stringify(d));}catch(e){}}
+
+function initServiceData(){
+  const d={
+    edu:{
+      courses:[
+        {id:'c1',name:'中央一号文件与乡村振兴',icon:'📋',progress:85,students:156,category:'政策'},
+        {id:'c2',name:'乡村项目投资分析',icon:'📊',progress:72,students:134,category:'投资'},
+        {id:'c3',name:'风险评估与管�?,icon:'🛡�?,progress:60,students:98,category:'风控'},
+        {id:'c4',name:'乡村文旅市场洞察',icon:'🔍',progress:45,students:112,category:'市场'},
+        {id:'c5',name:'红色研学基地运营',icon:'🏡',progress:90,students:88,category:'运营'},
+        {id:'c6',name:'助农直播与数字化营销',icon:'📱',progress:55,students:76,category:'营销'},
+      ],
+      students:[
+        {name:'张明�?,career:'红色研学导师',assets:2800000,passiveIncome:85000,roi:18.5,riskControl:92,grade:'A'},
+        {name:'李思涵',career:'乡村创客村长',assets:3200000,passiveIncome:95000,roi:22.3,riskControl:88,grade:'A'},
+        {name:'王子�?,career:'助农直播达人',assets:1500000,passiveIncome:42000,roi:15.2,riskControl:75,grade:'B'},
+        {name:'赵雨�?,career:'非遗文创主理�?,assets:4500000,passiveIncome:120000,roi:25.8,riskControl:95,grade:'A'},
+        {name:'陈浩�?,career:'乡村规划�?,assets:1800000,passiveIncome:55000,roi:12.6,riskControl:82,grade:'B'},
+        {name:'刘诗�?,career:'红色讲解�?,assets:2200000,passiveIncome:68000,roi:16.9,riskControl:78,grade:'B'},
+        {name:'杨天�?,career:'助农直播达人',assets:980000,passiveIncome:28000,roi:8.5,riskControl:65,grade:'C'},
+        {name:'吴晓�?,career:'乡村创客村长',assets:5600000,passiveIncome:150000,roi:28.4,riskControl:90,grade:'A'},
+      ],
+    },
+    train:{
+      scenarios:[
+        {id:'s1',name:'红色研学基地运营',icon:'🏨',tag:'研学管理',desc:'模拟红色研学基地全年运营，应对旺季客流与淡季维护的收支平衡挑�?,difficulty:'进阶',duration:'4课时',participants:45,completion:78},
+        {id:'s2',name:'乡村振兴项目策划',icon:'🎪',tag:'乡村经济',desc:'基于中央一号文件政策，策划乡村振兴项目并管理预算与收益',difficulty:'进阶',duration:'3课时',participants:32,completion:65},
+        {id:'s3',name:'红色文化IP开�?,icon:'🚀',tag:'文化业�?,desc:'围绕红色文化资源，规划红色研学产品线，评估投资回�?,difficulty:'困难',duration:'5课时',participants:28,completion:42},
+        {id:'s4',name:'黎苗非遗工坊运营',icon:'🎭',tag:'文化传承',desc:'运营少数民族非遗体验项目，平衡文化保护与商业开�?,difficulty:'普�?,duration:'3课时',participants:56,completion:88},
+        {id:'s5',name:'助农电商供应链投�?,icon:'🏄',tag:'数字农业',desc:'评估助农电商供应链投资机会，分析数字农业市场潜力与风�?,difficulty:'进阶',duration:'4课时',participants:38,completion:55},
+      ],
+      employees:[
+        {name:'员工A',financeScore:82,opsScore:75,trainProgress:68},
+        {name:'员工B',financeScore:90,opsScore:88,trainProgress:85},
+        {name:'员工C',financeScore:65,opsScore:72,trainProgress:52},
+        {name:'员工D',financeScore:78,opsScore:80,trainProgress:70},
+        {name:'员工E',financeScore:88,opsScore:92,trainProgress:90},
+      ],
+    },
+    consult:{
+      experts:[
+        {name:'陈教�?,role:'海南大学乡村振兴学院',avatar:'👨‍�?,tag:'free',specialty:'乡村产业规划',match:95},
+        {name:'林总监',role:'海南省乡村振兴投资集�?,avatar:'👩‍�?,tag:'free',specialty:'项目投资评估',match:88},
+        {name:'王律�?,role:'乡村振兴法律服务中心',avatar:'👨‍⚖�?,tag:'free',specialty:'政策法规咨询',match:82},
+        {name:'张�?,role:'海南乡村创客协会会长',avatar:'👨‍�?,tag:'vip',specialty:'创客运营实战',match:76},
+        {name:'李合伙人',role:'乡村振兴产业基金',avatar:'👩‍�?,tag:'vip',specialty:'融资与估�?,match:92},
+      ],
+      projectScore:0,
+      bonusClaimed:[],
+    },
+    logs:[],
+  };
+  setServiceData(d);
+  return d;
+}
+
+function addLog(msg){
+  const sd=getServiceData();
+  const now=new Date();
+  const ts=`${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+  sd.logs.unshift({time:ts,msg});
+  if(sd.logs.length>50)sd.logs.length=50;
+  setServiceData(sd);
+}
+
+function syncGameData(){
+  console.log('syncGameData called!');
+  
+  const gd=getGameData();
+  const sd=getServiceData();
+  const syncDesc=document.getElementById('syncDesc');
+  const syncStats=document.getElementById('syncStats');
+
+  console.log('Game data:', gd);
+  
+  if(gd&&gd.ps&&gd.ps.length>0){
+    const p=gd.ps[0];
+    const totalAssets=p.cash+(p.assets||[]).reduce((s,a)=>s+a.cost,0);
+    syncDesc.textContent=`已同步玩家�?{p.name||'玩家1'}」的游戏数据�?{gd.diff||'easy'}难度，第${gd.round||1}回合）`;
+    syncStats.innerHTML=`
+      <div class="sync-stat"><div class="sync-stat-val" style="color:var(--gold)">¥${fmt(totalAssets)}</div><div class="sync-stat-lbl">总资�?/div></div>
+      <div class="sync-stat"><div class="sync-stat-val" style="color:var(--green)">¥${fmt(p.pi||0)}</div><div class="sync-stat-lbl">被动收入</div></div>
+      <div class="sync-stat"><div class="sync-stat-val" style="color:var(--ocean-l)">${(p.assets||[]).length}</div><div class="sync-stat-lbl">持有资产</div></div>
+      <div class="sync-stat"><div class="sync-stat-val" style="color:var(--purple-l)">${(p.achs||[]).filter(a=>a.done).length}</div><div class="sync-stat-lbl">成就�?/div></div>
+    `;
+    addLog('同步游戏数据�?+p.name+' 总资产�?+fmt(totalAssets));
+    console.log('About to call showSyncToast with success');
+    showSyncToast(gd);
+  }else{
+    syncDesc.textContent='暂无游戏数据，请先在乡村创客模拟中开始一局游戏';
+    syncStats.innerHTML=`
+      <div class="sync-stat"><div class="sync-stat-val" style="color:var(--dim)">--</div><div class="sync-stat-lbl">总资�?/div></div>
+      <div class="sync-stat"><div class="sync-stat-val" style="color:var(--dim)">--</div><div class="sync-stat-lbl">被动收入</div></div>
+    `;
+    console.log('About to call showSyncToast with no data');
+    showSyncToast(gd);
+  }
+  renderAllPanels();
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+  event.target.classList.add('active');
+  renderAllPanels();
+}
+
+function renderAllPanels(){
+  renderEduPanel();
+  renderTrainPanel();
+  renderConsultPanel();
+  renderDataCenter();
+}
+
+function renderEduPanel(){
+  const sd=getServiceData();
+  const gd=getGameData();
+
+  const dashGrid=document.getElementById('eduDashGrid');
+  let totalStudents=sd.edu.students.length;
+  let avgROI=sd.edu.students.reduce((s,st)=>s+st.roi,0)/totalStudents;
+  let aCount=sd.edu.students.filter(st=>st.grade==='A').length;
+  let courseCount=sd.edu.courses.length;
+  dashGrid.innerHTML=`
+    <div class="dash-item"><div class="dash-item-label">在读学生</div><div class="dash-item-value blue">${totalStudents}</div><div class="dash-item-sub">本学期活�?/div></div>
+    <div class="dash-item"><div class="dash-item-label">平均投资回报�?/div><div class="dash-item-value gold">${avgROI.toFixed(1)}%</div><div class="dash-item-sub">基于游戏数据</div></div>
+    <div class="dash-item"><div class="dash-item-label">优秀�?A�?</div><div class="dash-item-value green">${(aCount/totalStudents*100).toFixed(0)}%</div><div class="dash-item-sub">${aCount}/${totalStudents}�?/div></div>
+    <div class="dash-item"><div class="dash-item-label">开设课�?/div><div class="dash-item-value blue">${courseCount}</div><div class="dash-item-sub">含课件与实训</div></div>
+  `;
+
+  const chart=document.getElementById('classChart');
+  const maxROI=Math.max(...sd.edu.students.map(st=>st.roi));
+  chart.innerHTML=sd.edu.students.map(st=>{
+    const h=Math.round(st.roi/maxROI*160);
+    const color=st.grade==='A'?'var(--green)':st.grade==='B'?'var(--ocean-l)':'var(--gold)';
+    return `<div class="chart-bar-wrap"><div class="chart-bar" style="height:${h}px;background:${color};"><span class="chart-bar-val">${st.roi}%</span></div><span class="chart-bar-label">${st.name.slice(0,2)}</span></div>`;
+  }).join('');
+
+  const tbody=document.getElementById('studentTableBody');
+  tbody.innerHTML=sd.edu.students.map((st,i)=>{
+    const gc=st.grade==='A'?'grade-a':st.grade==='B'?'grade-b':st.grade==='C'?'grade-c':'grade-d';
+    return `<tr><td>${i+1}</td><td>${st.name}</td><td>${st.career}</td><td>¥${fmt(st.assets)}</td><td>¥${fmt(st.passiveIncome)}</td><td>${st.roi}%</td><td>${st.riskControl}�?/td><td class="${gc}">${st.grade}</td></tr>`;
+  }).join('');
+}
+
+function renderTrainPanel(){
+  const sd=getServiceData();
+
+  const container=document.getElementById('trainingScenarios');
+  container.innerHTML=sd.train.scenarios.map(sc=>`
+    <div class="training-scenario">
+      <div class="scenario-header">
+        <span class="scenario-icon">${sc.icon}</span>
+        <div style="flex:1"><div class="scenario-title">${sc.name}</div></div>
+        <span class="scenario-tag">${sc.tag}</span>
+      </div>
+      <div class="scenario-desc">${sc.desc}</div>
+      <div class="scenario-stats">
+        <div class="scenario-stat"><span class="scenario-stat-icon">📊</span>难度�?span class="scenario-stat-val" style="color:${sc.difficulty==='困难'?'var(--red)':sc.difficulty==='进阶'?'var(--gold)':'var(--green)'}">${sc.difficulty}</span></div>
+        <div class="scenario-stat"><span class="scenario-stat-icon">⏱️</span>时长�?span class="scenario-stat-val">${sc.duration}</span></div>
+        <div class="scenario-stat"><span class="scenario-stat-icon">👥</span>参与�?span class="scenario-stat-val">${sc.participants}�?/span></div>
+        <div class="scenario-stat"><span class="scenario-stat-icon">�?/span>完成率：<span class="scenario-stat-val" style="color:var(--green)">${sc.completion}%</span></div>
+      </div>
+      <div style="margin-top:10px;">
+        <div class="progress-bar"><div class="progress-fill fill-gold" style="width:${sc.completion}%"></div></div>
+      </div>
+    </div>
+  `).join('');
+
+  const dashGrid=document.getElementById('trainDashGrid');
+  const avgFinance=sd.train.employees.reduce((s,e)=>s+e.financeScore,0)/sd.train.employees.length;
+  const avgOps=sd.train.employees.reduce((s,e)=>s+e.opsScore,0)/sd.train.employees.length;
+  const avgProgress=sd.train.employees.reduce((s,e)=>s+e.trainProgress,0)/sd.train.employees.length;
+  dashGrid.innerHTML=`
+    <div class="dash-item"><div class="dash-item-label">参训员工</div><div class="dash-item-value gold">${sd.train.employees.length}</div><div class="dash-item-sub">本批�?/div></div>
+    <div class="dash-item"><div class="dash-item-label">平均财商�?/div><div class="dash-item-value blue">${avgFinance.toFixed(0)}</div><div class="dash-item-sub">满分100</div></div>
+    <div class="dash-item"><div class="dash-item-label">平均运营�?/div><div class="dash-item-value green">${avgOps.toFixed(0)}</div><div class="dash-item-sub">满分100</div></div>
+    <div class="dash-item"><div class="dash-item-label">培训完成�?/div><div class="dash-item-value gold">${avgProgress.toFixed(0)}%</div><div class="dash-item-sub">整体进度</div></div>
+  `;
+}
+
+function renderConsultPanel(){
+  const sd=getServiceData();
+  const gd=getGameData();
+
+  const container=document.getElementById('expertList');
+  container.innerHTML=sd.consult.experts.map(ex=>`
+    <div class="consult-card">
+      <div class="consult-header">
+        <div class="consult-avatar">${ex.avatar}</div>
+        <div class="consult-info"><div class="consult-name">${ex.name}</div><div class="consult-role">${ex.role} · ${ex.specialty}</div></div>
+        <span class="consult-tag ${ex.tag==='free'?'tag-free':'tag-vip'}">${ex.tag==='free'?'免费':'VIP'}</span>
+      </div>
+      <div class="consult-desc">擅长${ex.specialty}，已帮助${Math.floor(Math.random()*50+20)}个乡村项目成功落�?/div>
+      <div class="consult-match">🎯 与您的项目匹配度�?strong style="color:var(--gold)">${ex.match}%</strong></div>
+    </div>
+  `).join('');
+
+  const dashGrid=document.getElementById('consultDashGrid');
+  let projectScore=0;
+  if(gd&&gd.ps&&gd.ps.length>0){
+    const p=gd.ps[0];
+    const totalAssets=p.cash+(p.assets||[]).reduce((s,a)=>s+a.cost,0);
+    projectScore=Math.min(100,Math.round(totalAssets/100000+((p.achs||[]).filter(a=>a.done).length)*5+(p.pi||0)/5000));
+  }
+  dashGrid.innerHTML=`
+    <div class="dash-item"><div class="dash-item-label">项目评估�?/div><div class="dash-item-value green">${projectScore}</div><div class="dash-item-sub">满分100</div></div>
+    <div class="dash-item"><div class="dash-item-label">可咨询专�?/div><div class="dash-item-value blue">${sd.consult.experts.filter(e=>e.tag==='free').length}</div><div class="dash-item-sub">免费资源</div></div>
+    <div class="dash-item"><div class="dash-item-label">VIP专家</div><div class="dash-item-value gold">${sd.consult.experts.filter(e=>e.tag==='vip').length}</div><div class="dash-item-sub">需成就解锁</div></div>
+    <div class="dash-item"><div class="dash-item-label">已兑换资�?/div><div class="dash-item-value gold">${(sd.consult.bonusClaimed||[]).length}</div><div class="dash-item-sub">累计</div></div>
+  `;
+}
+
+function renderDataCenter(){
+  const gd=getGameData();
+  const sd=getServiceData();
+
+  const grid=document.getElementById('dataCenterGrid');
+  let gameInfo='未开�?;
+  let gameAssets=0;
+  let gameRound=0;
+  let gameDiff='-';
+  if(gd&&gd.ps&&gd.ps.length>0){
+    const p=gd.ps[0];
+    gameAssets=p.cash+(p.assets||[]).reduce((s,a)=>s+a.cost,0);
+    gameRound=gd.round||0;
+    gameDiff=gd.diff||'easy';
+    gameInfo=p.name||'玩家1';
+  }
+  grid.innerHTML=`
+    <div class="dash-item"><div class="dash-item-label">游戏状�?/div><div class="dash-item-value blue">${gameInfo}</div><div class="dash-item-sub">难度�?{gameDiff}</div></div>
+    <div class="dash-item"><div class="dash-item-label">游戏总资�?/div><div class="dash-item-value gold">¥${fmt(gameAssets)}</div><div class="dash-item-sub">�?{gameRound}回合</div></div>
+    <div class="dash-item"><div class="dash-item-label">教学课程�?/div><div class="dash-item-value blue">${sd.edu.courses.length}</div><div class="dash-item-sub">已开�?/div></div>
+    <div class="dash-item"><div class="dash-item-label">培训场景�?/div><div class="dash-item-value gold">${sd.train.scenarios.length}</div><div class="dash-item-sub">可使�?/div></div>
+    <div class="dash-item"><div class="dash-item-label">咨询专家�?/div><div class="dash-item-value green">${sd.consult.experts.length}</div><div class="dash-item-sub">在线</div></div>
+    <div class="dash-item"><div class="dash-item-label">数据同步次数</div><div class="dash-item-value blue">${sd.logs.length}</div><div class="dash-item-sub">累计</div></div>
+  `;
+
+  const logEl=document.getElementById('dataLog');
+  logEl.innerHTML=sd.logs.map(l=>`<div style="font-size:11px;color:rgba(236,240,241,0.55);padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04);">[${l.time}] ${l.msg}</div>`).join('');
+  if(!sd.logs.length){
+    logEl.innerHTML='<div style="font-size:12px;color:var(--dim);text-align:center;padding:20px;">暂无操作日志</div>';
+  }
+}
+
+function fmt(n){return Math.abs(n).toLocaleString('zh-CN');}
+
+function toast(msg,type='info'){
+  const colors={suc:'linear-gradient(135deg,#059669,#2ecc71)',err:'linear-gradient(135deg,#dc2626,#f87171)',info:'linear-gradient(135deg,#c0392b,#e74c3c)'};
+  document.querySelectorAll('.toast').forEach(el=>el.remove());
+  const t=document.createElement('div');t.className='toast';
+  t.style.background=colors[type]||colors.info;
+  t.innerHTML=`<span class="toast-msg">${msg}</span><button class="toast-close" onclick="this.parentElement.remove()">�?/button>`;
+  const container=document.getElementById('toastContainer');
+  container.appendChild(t);
+  setTimeout(()=>{if(t.parentElement)t.remove()},2000);
+}
+
+function showSyncToast(gd){
+  console.log('showSyncToast called', gd);
+  
+  // 先清理旧�?
+  document.querySelectorAll('.my-toast').forEach(el=>el.remove());
+  
+  // 创建现代化浮动通知
+  const t=document.createElement('div');
+  t.className='my-toast';
+  t.style.cssText='position:fixed;bottom:30px;right:30px;z-index:99999;background:white;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.3),0 0 0 1px rgba(255,255,255,0.2);padding:16px;display:flex;align-items:flex-start;gap:12px;min-width:280px;pointer-events:auto;animation:slideInUp 0.4s ease-out;';
+  
+  let title, icon, desc, color;
+  if(gd&&gd.ps&&gd.ps.length>0){
+    title='数据同步成功';
+    icon='�?;
+    desc=`玩家�?{gd.ps[0].name||'玩家1'}」第${gd.round||1}回合`;
+    color='#10b981';
+  }else{
+    title='暂无游戏数据';
+    icon='⚠️';
+    desc='请先在乡村创客模拟中开始一局游戏';
+    color='#f59e0b';
+  }
+  
+  t.innerHTML=`
+    <div style="width:48px;height:48px;border-radius:14px;background:${color}15;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">${icon}</div>
+    <div style="flex:1;">
+      <div style="font-size:15px;font-weight:900;color:#1f2937;margin-bottom:3px;">${title}</div>
+      <div style="font-size:13px;color:#6b7280;line-height:1.4;">${desc}</div>
+    </div>
+    <button onclick="this.parentElement.remove()" style="width:28px;height:28px;border-radius:8px;background:#f3f4f6;border:none;cursor:pointer;font-size:14px;color:#9ca3af;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0;" onmouseover="this.style.background='#e5e7eb';this.style.color='#4b5563'" onmouseout="this.style.background='#f3f4f6';this.style.color='#9ca3af'">�?/button>
+  `;
+  
+  // 添加动画样式
+  const style=document.createElement('style');
+  style.textContent=`
+    @keyframes slideInUp{
+      from{
+        opacity:0;
+        transform:translateY(30px) scale(0.95);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+      }
+    }
+  `;
+  document.head.appendChild(style);
+  
+  // 直接添加到body
+  document.body.appendChild(t);
+  console.log('toast added to body', t);
+  
+  // 自动移除
+  setTimeout(()=>{
+    if(t.parentElement){
+      t.style.animation='slideInUp 0.3s ease-out reverse';
+      setTimeout(()=>t.remove(),300);
+    }
+  },3000);
+}
+
+function openModal(html){
+  document.getElementById('modalContent').innerHTML=html;
+  document.getElementById('modalGeneric').classList.add('open');
+}
+function closeModal(){
+  document.getElementById('modalGeneric').classList.remove('open');
+}
+
+function openCourseware(){
+  const sd=getServiceData();
+  openModal(`
+    <h3 class="modal-title">📚 教学课件管理</h3>
+    <p class="modal-desc">管理高校定制教学课件，课件内容与乡村创客模拟关卡联动</p>
+    <div class="course-list">
+      ${sd.edu.courses.map(c=>`
+        <div class="course-item">
+          <span class="course-icon">${c.icon}</span>
+          <div class="course-info">
+            <div class="course-name">${c.name}</div>
+            <div class="course-meta">${c.category} · ${c.students}名学生在�?/div>
+          </div>
+          <div class="course-progress">
+            <div class="progress-bar"><div class="progress-fill fill-blue" style="width:${c.progress}%"></div></div>
+            <div class="progress-label">完成 ${c.progress}%</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="modal-actions" style="margin-top:20px;">
+      <button class="modal-btn modal-btn-secondary" onclick="closeModal()">关闭</button>
+    </div>
+  `);
+  addLog('打开教学课件管理');
+}
+
+function openDataDashboard(){
+  const gd=getGameData();
+  const sd=getServiceData();
+  let gameDataHtml='';
+  if(gd&&gd.ps&&gd.ps.length>0){
+    const p=gd.ps[0];
+    gameDataHtml=`
+      <div style="background:rgba(192,57,43,.1);border:1px solid rgba(231,76,60,.25);border-radius:10px;padding:12px;margin-bottom:14px;">
+        <div style="font-size:13px;font-weight:700;color:var(--ocean-l);margin-bottom:8px;">🎮 关联游戏数据</div>
+        <div style="font-size:12px;color:var(--dim);line-height:1.8;">
+          玩家�?{p.name||'玩家1'} · 职业�?{p.career?.name||'-'}<br>
+          现金：�?{fmt(p.cash)} · 被动收入：�?{fmt(p.pi||0)}/�?br>
+          资产数：${(p.assets||[]).length} · 贷款数：${(p.loans||[]).length}<br>
+          回合�?{gd.round||0} · 难度�?{gd.diff||'easy'}
+        </div>
+      </div>
+    `;
+  }else{
+    gameDataHtml='<div style="text-align:center;padding:16px;color:var(--dim);font-size:13px;">⚠️ 暂无游戏数据，请先在乡村创客模拟中开始游�?/div>';
+  }
+  openModal(`
+    <h3 class="modal-title">📊 教学数据后台</h3>
+    <p class="modal-desc">实时同步学生游戏数据，可视化展示创业表现</p>
+    ${gameDataHtml}
+    <div style="font-size:13px;font-weight:700;margin-bottom:8px;">📈 班级数据汇�?/div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+      <div style="background:rgba(0,0,0,.25);border-radius:8px;padding:10px;"><div style="font-size:10px;color:var(--dim);">学生总数</div><div style="font-size:18px;font-weight:900;color:var(--ocean-l);font-family:'Space Mono',monospace;">${sd.edu.students.length}</div></div>
+      <div style="background:rgba(0,0,0,.25);border-radius:8px;padding:10px;"><div style="font-size:10px;color:var(--dim);">平均ROI</div><div style="font-size:18px;font-weight:900;color:var(--gold);font-family:'Space Mono',monospace;">${(sd.edu.students.reduce((s,st)=>s+st.roi,0)/sd.edu.students.length).toFixed(1)}%</div></div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-secondary" onclick="closeModal()">关闭</button>
+    </div>
+  `);
+  addLog('打开教学数据后台');
+}
+
+function openGradeStats(){
+  const sd=getServiceData();
+  openModal(`
+    <h3 class="modal-title">📝 学生成绩统计</h3>
+    <p class="modal-desc">基于乡村创客模拟表现的多维度自动评分</p>
+    <div style="overflow-x:auto;">
+      <table class="student-table">
+        <thead><tr><th>学生</th><th>职业</th><th>ROI</th><th>风控</th><th>评级</th></tr></thead>
+        <tbody>${sd.edu.students.map(st=>{
+          const gc=st.grade==='A'?'grade-a':st.grade==='B'?'grade-b':'grade-c';
+          return `<tr><td>${st.name}</td><td>${st.career}</td><td>${st.roi}%</td><td>${st.riskControl}</td><td class="${gc}">${st.grade}</td></tr>`;
+        }).join('')}</tbody>
+      </table>
+    </div>
+    <div class="modal-actions" style="margin-top:16px;">
+      <button class="modal-btn modal-btn-primary" onclick="exportGrades()">📤 导出成绩�?/button>
+      <button class="modal-btn modal-btn-secondary" onclick="closeModal()">关闭</button>
+    </div>
+  `);
+  addLog('查看学生成绩统计');
+}
+
+function exportGrades(){
+  toast('�?成绩单已导出为CSV文件','suc');
+  addLog('导出学生成绩�?);
+  closeModal();
+}
+
+function openTrainCustom(){
+  openModal(`
+    <h3 class="modal-title">🎯 企业定制培训方案</h3>
+    <p class="modal-desc">根据企业需求定制专属培训方案，植入真实项目场景</p>
+    <div class="modal-form">
+      <div class="form-group">
+        <label class="form-label">企业名称</label>
+        <input class="form-input" placeholder="请输入企业名�? id="trainCompany">
+      </div>
+      <div class="form-group">
+        <label class="form-label">培训方向</label>
+        <select class="form-select" id="trainDirection">
+          <option value="finance">财商提升</option>
+          <option value="ops">运营能力</option>
+          <option value="all">综合培训</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">参训人数</label>
+        <input class="form-input" type="number" placeholder="预计参训人数" id="trainCount" value="30">
+      </div>
+      <div class="form-group">
+        <label class="form-label">特殊需�?/label>
+        <textarea class="form-textarea" placeholder="请描述企业特殊培训需�?.." id="trainNeeds"></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-primary" onclick="submitTrainCustom()">提交定制需�?/button>
+      <button class="modal-btn modal-btn-secondary" onclick="closeModal()">取消</button>
+    </div>
+  `);
+  addLog('打开企业定制培训');
+}
+
+function submitTrainCustom(){
+  const company=document.getElementById('trainCompany').value;
+  if(!company){toast('�?请输入企业名�?,'err');return;}
+  toast('�?培训定制需求已提交，我们将�?4小时内联系您','suc');
+  addLog('提交培训定制�?+company);
+  closeModal();
+}
+
+function openFinanceTraining(){
+  openModal(`
+    <h3 class="modal-title">💰 财商能力训练</h3>
+    <p class="modal-desc">通过乡村创客模拟真实创业决策，系统化提升财商能力。完成训练可获得游戏内增益奖励！</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+      <div style="background:rgba(0,0,0,.25);border-radius:10px;padding:14px;text-align:center;">
+        <div style="font-size:24px;margin-bottom:6px;">📈</div>
+        <div style="font-size:13px;font-weight:700;">投资分析</div>
+        <div style="font-size:11px;color:var(--dim);">ROI计算与资产配�?/div>
+      </div>
+      <div style="background:rgba(0,0,0,.25);border-radius:10px;padding:14px;text-align:center;">
+        <div style="font-size:24px;margin-bottom:6px;">🛡�?/div>
+        <div style="font-size:13px;font-weight:700;">风险管控</div>
+        <div style="font-size:11px;color:var(--dim);">风险评估与对冲策�?/div>
+      </div>
+      <div style="background:rgba(0,0,0,.25);border-radius:10px;padding:14px;text-align:center;">
+        <div style="font-size:24px;margin-bottom:6px;">💳</div>
+        <div style="font-size:13px;font-weight:700;">融资决策</div>
+        <div style="font-size:11px;color:var(--dim);">贷款策略与杠杆管�?/div>
+      </div>
+      <div style="background:rgba(0,0,0,.25);border-radius:10px;padding:14px;text-align:center;">
+        <div style="font-size:24px;margin-bottom:6px;">📊</div>
+        <div style="font-size:13px;font-weight:700;">财报解读</div>
+        <div style="font-size:11px;color:var(--dim);">现金流与利润分析</div>
+      </div>
+    </div>
+    <div style="background:rgba(243,156,18,.08);border:1px solid rgba(243,156,18,.25);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--gold);margin-bottom:14px;">
+      🎁 完成财商训练后，乡村创客模拟中贷款利率将下调0.05%（数据自动同步）
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-primary" onclick="startFinanceTraining()">开始训�?/button>
+      <button class="modal-btn modal-btn-secondary" onclick="closeModal()">稍后再说</button>
+    </div>
+  `);
+  addLog('打开财商能力训练');
+}
+
+function startFinanceTraining(){
+  const sd=getServiceData();
+  sd.consult.bonusClaimed=sd.consult.bonusClaimed||[];
+  if(!sd.consult.bonusClaimed.includes('finance_training')){
+    sd.consult.bonusClaimed.push('finance_training');
+    setServiceData(sd);
+    writeTrainingBonusToGame({type:'rate_discount',value:0.0005,desc:'财商训练完成：贷款月利率-0.05%'});
+    toast('�?财商训练已开始！完成后游戏利率将自动下调','suc');
+    addLog('开始财商训练，写入游戏增益');
+  }else{
+    toast('您已完成财商训练','info');
+  }
+  closeModal();
+}
+
+function openOpsTraining(){
+  openModal(`
+    <h3 class="modal-title">⚙️ 运营能力提升</h3>
+    <p class="modal-desc">基于乡村创业真实运营数据的实战模拟训�?/p>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+      <div style="background:rgba(0,0,0,.22);border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px;">
+        <span style="font-size:24px;">☀�?/span>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:700;">旺季运营策略</div><div style="font-size:11px;color:var(--dim);">最大化收益与客户满意度</div></div>
+        <span style="font-size:11px;color:var(--green);font-weight:700;">热门</span>
+      </div>
+      <div style="background:rgba(0,0,0,.22);border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px;">
+        <span style="font-size:24px;">🌙</span>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:700;">淡季成本控制</div><div style="font-size:11px;color:var(--dim);">降本增效与现金流管理</div></div>
+      </div>
+      <div style="background:rgba(0,0,0,.22);border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px;">
+        <span style="font-size:24px;">🎯</span>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:700;">客户满意度管�?/div><div style="font-size:11px;color:var(--dim);">口碑营销与复购率提升</div></div>
+      </div>
+    </div>
+    <div style="background:rgba(39,174,96,.08);border:1px solid rgba(39,174,96,.25);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--green);margin-bottom:14px;">
+      🎁 完成运营训练后，乡村创客模拟中季节性资产收益加�?5%（数据自动同步）
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-primary" onclick="startOpsTraining()">进入实战</button>
+      <button class="modal-btn modal-btn-secondary" onclick="closeModal()">稍后再说</button>
+    </div>
+  `);
+  addLog('打开运营能力训练');
+}
+
+function startOpsTraining(){
+  const sd=getServiceData();
+  sd.consult.bonusClaimed=sd.consult.bonusClaimed||[];
+  if(!sd.consult.bonusClaimed.includes('ops_training')){
+    sd.consult.bonusClaimed.push('ops_training');
+    setServiceData(sd);
+    writeTrainingBonusToGame({type:'seasonal_bonus',value:0.05,desc:'运营训练完成：季节性资产收�?5%'});
+    toast('�?运营训练已开始！完成后季节收益将自动加成','suc');
+    addLog('开始运营训练，写入游戏增益');
+  }else{
+    toast('您已完成运营训练','info');
+  }
+  closeModal();
+}
+
+function openFreeConsult(){
+  openModal(`
+    <h3 class="modal-title">🆓 申请免费创业咨询</h3>
+    <p class="modal-desc">基于乡村创客模拟数据评估项目质量，为优质项目提供免费一对一咨询</p>
+    <div class="modal-form">
+      <div class="form-group">
+        <label class="form-label">项目名称</label>
+        <input class="form-input" placeholder="请输入您的创业项目名�? id="projectName">
+      </div>
+      <div class="form-group">
+        <label class="form-label">项目方向</label>
+        <select class="form-select" id="projectDirection">
+          <option value="edu">红色研学</option>
+          <option value="culture">非遗文创</option>
+          <option value="agri">生态农�?/option>
+          <option value="food">美食文创</option>
+          <option value="tech">数字乡村</option>
+          <option value="other">其他</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">项目简�?/label>
+        <textarea class="form-textarea" placeholder="简要描述您的创业项�?.." id="projectDesc"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">咨询需�?/label>
+        <select class="form-select" id="consultNeed">
+          <option value="business">商业模式诊断</option>
+          <option value="finance">融资策略咨询</option>
+          <option value="policy">政策法规解读</option>
+          <option value="market">市场分析指导</option>
+        </select>
+      </div>
+    </div>
+    <div style="background:rgba(192,57,43,.1);border:1px solid rgba(231,76,60,.25);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--ocean-l);margin-bottom:14px;">
+      🔗 您的乡村创客模拟数据将作为项目评估参考，创客表现优异者将优先获得咨询机会
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-primary" onclick="submitConsult()">提交申请</button>
+      <button class="modal-btn modal-btn-secondary" onclick="closeModal()">取消</button>
+    </div>
+  `);
+  addLog('打开免费创业咨询申请');
+}
+
+function submitConsult(){
+  const name=document.getElementById('projectName').value;
+  if(!name){toast('�?请输入项目名�?,'err');return;}
+  toast('�?咨询申请已提交！专家将在48小时内与您联�?,'suc');
+  addLog('提交创业咨询�?+name);
+  closeModal();
+}
+
+function openResourceMatch(){
+  openModal(`
+    <h3 class="modal-title">🤝 投资资源对接</h3>
+    <p class="modal-desc">联合乡村振兴投资机构，为优质项目提供融资对接</p>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+      <div style="background:rgba(0,0,0,.22);border-radius:10px;padding:14px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+          <span style="font-size:20px;">🏦</span>
+          <div style="font-size:14px;font-weight:700;">乡村振兴产业发展基金</div>
+        </div>
+        <div style="font-size:11px;color:var(--dim);">规模50�?· 关注红色研学、乡村文旅、农业创�?/div>
+      </div>
+      <div style="background:rgba(0,0,0,.22);border-radius:10px;padding:14px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+          <span style="font-size:20px;">💼</span>
+          <div style="font-size:14px;font-weight:700;">南海创投合伙�?/div>
+        </div>
+        <div style="font-size:11px;color:var(--dim);">早期项目 · 种子轮至A�?· 文旅科技方向</div>
+      </div>
+      <div style="background:rgba(0,0,0,.22);border-radius:10px;padding:14px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+          <span style="font-size:20px;">🏛�?/span>
+          <div style="font-size:14px;font-weight:700;">乡村振兴引导基金</div>
+        </div>
+        <div style="font-size:11px;color:var(--dim);">政府引导 · 政策配套 · 乡村振兴重点产业</div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-primary" onclick="applyResource()">申请对接</button>
+      <button class="modal-btn modal-btn-secondary" onclick="closeModal()">关闭</button>
+    </div>
+  `);
+  addLog('打开投资资源对接');
+}
+
+function applyResource(){
+  toast('�?对接申请已提交！投资机构将在3个工作日内回�?,'suc');
+  addLog('申请投资资源对接');
+  closeModal();
+}
+
+function openExpertHub(){
+  const sd=getServiceData();
+  openModal(`
+    <h3 class="modal-title">🧠 本地专家智库</h3>
+    <p class="modal-desc">汇聚海南乡村振兴资深专家，为创业项目提供专业指导</p>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      ${sd.consult.experts.map(ex=>`
+        <div style="background:rgba(0,0,0,.22);border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px;">
+          <div style="width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);">${ex.avatar}</div>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:700;">${ex.name} <span style="font-size:11px;color:var(--dim);font-weight:400;">${ex.role}</span></div>
+            <div style="font-size:11px;color:var(--gold);">${ex.specialty}</div>
+          </div>
+          <span class="consult-tag ${ex.tag==='free'?'tag-free':'tag-vip'}" style="font-size:10px;">${ex.tag==='free'?'免费':'VIP'}</span>
+        </div>
+      `).join('')}
+    </div>
+    <div class="modal-actions" style="margin-top:16px;">
+      <button class="modal-btn modal-btn-secondary" onclick="closeModal()">关闭</button>
+    </div>
+  `);
+  addLog('查看专家智库');
+}
+
+function exchangeBonus(){
+  const gd=getGameData();
+  const sd=getServiceData();
+  let achievements=[];
+  if(gd&&gd.ps&&gd.ps.length>0){
+    achievements=(gd.ps[0].achs||[]).filter(a=>a.done);
+  }
+
+  const bonuses=[
+    {id:'b1',name:'专家咨询1�?,cost:'任意1个成�?,icon:'💡',type:'free_consult'},
+    {id:'b2',name:'投资机构推荐',cost:'3个成�?,icon:'🤝',type:'investor_intro'},
+    {id:'b3',name:'VIP专家辅导',cost:'5个成�?评级A',icon:'�?,type:'vip_coach'},
+    {id:'b4',name:'创客贷款利率-0.1%',cost:'2个成�?,icon:'💳',type:'game_bonus'},
+  ];
+
+  openModal(`
+    <h3 class="modal-title">🎮 成就兑换创业资源</h3>
+    <p class="modal-desc">您当前拥�?<strong style="color:var(--gold)">${achievements.length}</strong> 个游戏成�?/p>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+      ${bonuses.map(b=>{
+        const claimed=(sd.consult.bonusClaimed||[]).includes(b.id);
+        return `
+        <div style="background:rgba(0,0,0,.22);border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px;${claimed?'opacity:.5':''}">
+          <span style="font-size:24px;">${b.icon}</span>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:700;">${b.name}</div>
+            <div style="font-size:11px;color:var(--dim);">需要：${b.cost}</div>
+          </div>
+          <button class="modal-btn ${claimed?'modal-btn-secondary':'modal-btn-primary'}" style="flex:none;padding:8px 16px;font-size:12px;" onclick="${claimed?'':'claimBonus(\''+b.id+'\')'}" ${claimed?'disabled':''}>${claimed?'已兑�?:'兑换'}</button>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-secondary" onclick="closeModal()">关闭</button>
+    </div>
+  `);
+  addLog('查看成就兑换资源');
+}
+
+function claimBonus(bonusId){
+  const sd=getServiceData();
+  sd.consult.bonusClaimed=sd.consult.bonusClaimed||[];
+  if(sd.consult.bonusClaimed.includes(bonusId)){
+    toast('该资源已兑换�?,'info');return;
+  }
+  sd.consult.bonusClaimed.push(bonusId);
+  setServiceData(sd);
+
+  if(bonusId==='b4'){
+    writeTrainingBonusToGame({type:'rate_discount',value:0.001,desc:'成就兑换：贷款月利率-0.1%'});
+  }
+
+  toast('�?兑换成功！资源已添加到您的账�?,'suc');
+  addLog('兑换资源�?+bonusId);
+  closeModal();
+  renderAllPanels();
+}
+
+function writeTrainingBonusToGame(bonus){
+  const gd=getGameData();
+  if(!gd){
+    gd={serviceBonuses:[]};
+  }
+  gd.serviceBonuses=gd.serviceBonuses||[];
+  const existing=gd.serviceBonuses.find(b=>b.type===bonus.type);
+  if(existing){
+    existing.value=bonus.value;
+    existing.desc=bonus.desc;
+  }else{
+    gd.serviceBonuses.push(bonus);
+  }
+  setGameData(gd);
+}
+
+function exportData(){
+  const gd=getGameData();
+  const sd=getServiceData();
+  const report={
+    exportTime:new Date().toISOString(),
+    gameData:gd,
+    serviceData:sd,
+  };
+  const blob=new Blob([JSON.stringify(report,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='zhiyan_maker_report_'+Date.now()+'.json';
+  a.click();URL.revokeObjectURL(url);
+  toast('�?数据报告已导�?,'suc');
+  addLog('导出数据报告');
+}
+
+function clearServiceData(){
+  if(confirm('确定要清除所有服务数据吗？此操作不可恢复�?)){
+    localStorage.removeItem(LS_SERVICE_KEY);
+    toast('🗑�?服务数据已清�?,'info');
+    addLog('清除服务数据');
+    renderAllPanels();
+  }
+}
+
+(function(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<45;i++){
+    const s=document.createElement('div');s.className='star';const sz=Math.random()*3+1;
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*65}%;animation-delay:${Math.random()*4}s;animation-duration:${2+Math.random()*4}s;`;
+    c.appendChild(s);
+  }
+})();
+
+syncGameData();
+renderAllPanels();
+addLog('服务平台启动');
+</script>
+</body>
+</html>

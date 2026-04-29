@@ -1,0 +1,2325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>红韵智研 —— 人工智能驱动的海南红色文化与美育研学综合服务平台 | 乡村创客模拟</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<style>
+/* =====================================================
+   CSS VARIABLES & RESET
+===================================================== */
+:root{
+  --ocean:#c0392b;--ocean-l:#e74c3c;--ocean-glow:rgba(192,57,43,.35);
+  --gold:#f39c12;--gold-d:#d4ac0d;--gold-g:rgba(243,156,18,.2);--gold-glow:rgba(243,156,18,.5);
+  --green:#2ecc71;--green-d:#27ae60;--green-glow:rgba(39,174,96,.35);
+  --red:#e05555;--red-d:#c0392b;
+  --purple:#a93226;--purple-l:#c0392b;
+  --bg:#2c3e50;
+  --glass:rgba(255,255,255,0.12);--gb:rgba(255,255,255,0.20);
+  --text:#ecf0f1;--dim:rgba(236,240,241,0.62);
+  --ease:cubic-bezier(.34,1.56,.64,1);
+  --ease-out:cubic-bezier(.22,1,.36,1);
+  --shadow-card:0 8px 32px rgba(0,0,0,.22),0 1px 0 rgba(255,255,255,.15);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;min-height:100vh;overflow-x:hidden;}
+body{
+  padding-top:60px;
+  background:#2c3e50;
+  color:var(--text);
+  font-family:'Noto Serif SC',serif;
+  background-image:
+    radial-gradient(ellipse at 20% 0%,  rgba(192,57,43,.30) 0%,transparent 55%),
+    radial-gradient(ellipse at 80% 10%, rgba(39,174,96,.25) 0%,transparent 45%),
+    radial-gradient(ellipse at 50% 55%, rgba(192,57,43,.20) 0%,transparent 55%),
+    radial-gradient(ellipse at 10% 90%, rgba(243,156,18,.18) 0%,transparent 40%),
+    radial-gradient(ellipse at 90% 85%, rgba(39,174,96,.22) 0%,transparent 40%),
+    linear-gradient(175deg,#2c3e50 0%,#34495e 35%,#2c3e50 60%,#1a252f 100%);
+}
+
+/* =====================================================
+   AMBIENT — STARS & WAVES (reduced count for perf)
+===================================================== */
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 3s ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:.08}50%{opacity:.65}}
+.waves{position:fixed;bottom:0;left:0;width:100%;height:150px;pointer-events:none;z-index:0;}
+.w{position:absolute;bottom:0;width:200%;height:100%;}
+.w1{animation:wm 9s linear infinite;opacity:.18;}
+.w2{animation:wm 14s linear infinite reverse;opacity:.12;}
+@keyframes wm{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* =====================================================
+   SCREEN SYSTEM
+===================================================== */
+.screen{display:none;position:relative;z-index:1;min-height:100vh;}
+.screen.active{display:flex;}
+
+/* =====================================================
+   INTRO SCREEN
+===================================================== */
+#si{flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;}
+.logo{
+  font-size:clamp(32px,6vw,70px);font-weight:900;
+  background:linear-gradient(135deg,var(--gold) 0%,#ffe0cc 45%,var(--ocean-l) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 28px rgba(243,156,18,.5));line-height:1.15;margin-bottom:14px;
+  display:inline-block;animation:logoShimmer 3.2s ease-in-out infinite;
+}
+@keyframes logoShimmer{
+  0%,100%{filter:drop-shadow(0 0 28px rgba(243,156,18,.5));transform:scale(1);}
+  50%{filter:drop-shadow(0 0 45px rgba(243,156,18,.8));transform:scale(1.02);}
+}
+/* 【修改点4】普通文字上调：sub/desc字号、颜色改为亮色，在深海背景清晰可读 */
+.sub{
+  font-size:clamp(12px,1.8vw,16px);color:rgba(236,240,241,0.75);letter-spacing:5px;text-transform:uppercase;margin-bottom:48px;
+  animation:subPulse 3s ease-in-out infinite;
+}
+@keyframes subPulse{
+  0%,100%{opacity:.9;transform:scale(1);}
+  50%{opacity:1;transform:scale(1.01);}
+}
+.desc{
+  max-width:460px;line-height:1.9;color:rgba(236,240,241,0.75);font-size:16px;margin-bottom:40px;
+  transition:all .35s;
+}
+.btn-main{
+  padding:16px 52px;font-size:19px;font-family:'Noto Serif SC',serif;font-weight:700;
+  background:linear-gradient(135deg,var(--ocean),var(--ocean-l));
+  border:none;border-radius:50px;color:#fff;cursor:pointer;
+  box-shadow:0 8px 32px rgba(192,57,43,.5),0 0 0 1px rgba(255,255,255,.12);
+  transition:all .5s cubic-bezier(0.175,0.885,0.32,1.275);
+  position:relative;overflow:hidden;
+  transform-style:preserve-3d;
+}
+.btn-main::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);
+  transition:left .7s ease;
+}
+.btn-main::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at center,rgba(255,255,255,.3),transparent 65%);
+  opacity:0;transition:opacity .4s;
+}
+.btn-main:hover::before{left:100%;}
+.btn-main:hover::after{opacity:1;}
+.btn-main:hover{transform:translateY(-7px) scale(1.05) translateZ(15px);box-shadow:0 24px 65px rgba(192,57,43,.75),0 0 40px rgba(231,76,60,.35);}
+.btn-main:active{transform:scale(.96);}
+.psrow{display:flex;gap:14px;margin-bottom:36px;align-items:center;}
+.psl{color:rgba(236,240,241,0.7);font-size:14px;}
+.psbtn{
+  width:44px;height:44px;border-radius:50%;border:2px solid var(--gb);
+  background:var(--glass);color:var(--text);font-size:17px;cursor:pointer;
+  transition:all .45s cubic-bezier(0.175,0.885,0.32,1.275);display:flex;align-items:center;justify-content:center;
+  font-family:'Space Mono',monospace;position:relative;overflow:hidden;
+}
+.psbtn::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle,rgba(243,156,18,.25),transparent);
+  opacity:0;transition:opacity .35s;
+}
+.psbtn:hover::before{opacity:1;}
+.psbtn:hover{
+  transform:scale(1.15) translateY(-3px);
+  border-color:rgba(243,156,18,.5);
+  box-shadow:0 8px 24px rgba(0,0,0,.3),0 0 20px rgba(243,156,18,.2);
+}
+.psbtn.sel{
+  border-color:var(--gold);background:rgba(243,156,18,.18);color:var(--gold);
+  box-shadow:0 0 18px rgba(243,156,18,.45),0 0 30px rgba(243,156,18,.25) inset;
+  animation:psbtnPulse 2.5s ease-in-out infinite;
+}
+@keyframes psbtnPulse{
+  0%,100%{box-shadow:0 0 18px rgba(243,156,18,.45),0 0 30px rgba(243,156,18,.25) inset;}
+  50%{box-shadow:0 0 28px rgba(243,156,18,.7),0 0 40px rgba(243,156,18,.4) inset;}
+}
+
+/* =====================================================
+   CAREER SCREEN
+===================================================== */
+#sc{flex-direction:column;align-items:center;padding:36px 20px 100px;}
+/* 【修改点5】标题字号18→20px */
+.ct{font-size:22px;font-weight:700;text-align:center;margin-bottom:6px;color:var(--text);}
+.cs{color:var(--dim);text-align:center;margin-bottom:10px;font-size:16px;}
+/* Newbie tip */
+.newbie-tip{
+  max-width:600px;margin:0 auto 20px;padding:10px 16px;
+  background:rgba(243,156,18,.08);border:1px solid rgba(243,156,18,.25);
+  border-radius:12px;font-size:14px;color:var(--dim);text-align:center;
+}
+.newbie-tip span{color:var(--gold);font-weight:700;}
+.cptabs{display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap;justify-content:center;}
+.cptab{padding:8px 18px;border-radius:20px;border:1px solid var(--gb);background:var(--glass);cursor:pointer;color:var(--text);font-size:14px;transition:all .2s;font-family:'Noto Serif SC',serif;}
+.cptab.active{border-color:var(--gold);background:rgba(243,156,18,.15);color:var(--gold);}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:14px;max-width:960px;width:100%;}
+/* 【修改点6】career卡片：半透明深蓝色，适配深色背景 */
+.ccard{
+  background:linear-gradient(160deg,rgba(255,255,255,.10),rgba(255,255,255,.05));
+  border:1px solid rgba(255,255,255,.16);border-radius:18px;padding:22px;
+  cursor:pointer;transition:all .55s cubic-bezier(0.175,0.885,0.32,1.275);backdrop-filter:blur(16px);
+  position:relative;overflow:hidden;
+  box-shadow:var(--shadow-card);
+  transform-style:preserve-3d;
+}
+.ccard::before{content:'';position:absolute;inset:0;opacity:0;background:linear-gradient(135deg,rgba(231,76,60,.25),rgba(243,156,18,.15),transparent);transition:opacity .35s;}
+.ccard::after{
+  content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:linear-gradient(45deg,transparent,rgba(255,255,255,.14),transparent);
+  transform:rotate(45deg) translateY(-100%);transition:all .85s ease;pointer-events:none;
+}
+.ccard:hover{
+  transform:translateY(-12px) scale(1.04) rotateX(5deg);
+  border-color:rgba(243,156,18,.55);
+  box-shadow:
+    0 28px 65px rgba(243,156,18,.30),
+    0 0 0 1px rgba(255,255,255,.22),
+    0 10px 22px rgba(0,0,0,.42),
+    0 0 35px rgba(231,76,60,.25),
+    inset 0 0 20px rgba(255,255,255,.08);
+}
+.ccard:hover::before{opacity:1;}
+.ccard:hover::after{transform:rotate(45deg) translateY(100%);}
+.ccard.sel{
+  border-color:var(--gold);transform:translateY(-10px) scale(1.03);
+  box-shadow:
+    0 30px 68px rgba(243,156,18,.45),
+    0 0 0 2px var(--gold),
+    inset 0 0 24px rgba(243,156,18,.20),
+    0 0 45px rgba(243,156,18,.30);
+  animation:cardPulse 2.2s ease-in-out infinite;
+}
+@keyframes cardPulse{
+  0%,100%{box-shadow:0 30px 68px rgba(243,156,18,.45),0 0 0 2px var(--gold),inset 0 0 24px rgba(243,156,18,.20);}
+  50%{box-shadow:0 30px 68px rgba(243,156,18,.60),0 0 0 3px var(--gold),inset 0 0 30px rgba(243,156,18,.28);}
+}
+.ccard.sel::before{opacity:1;}
+.ci{font-size:40px;margin-bottom:10px;}
+/* 【修改点7】职业名字号17→20px */
+.cn{font-size:20px;font-weight:700;margin-bottom:4px;}
+.cbuff{font-size:12px;color:var(--gold);margin-bottom:14px;background:rgba(243,156,18,.10);border:1px solid rgba(243,156,18,.22);border-radius:8px;padding:4px 11px;display:inline-block;}
+.cstats{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.cst{background:rgba(0,0,0,.28);border-radius:7px;padding:8px 10px;}
+/* 【修改点8】职业数据标签10→12px，值14→15px */
+.cstl{font-size:12px;color:var(--dim);margin-bottom:2px;}
+.cstv{font-size:15px;font-family:'Space Mono',monospace;font-weight:700;}
+.cstv.inc{color:var(--green)}.cstv.exp{color:var(--red)}.cstv.gld{color:var(--gold)}
+.ccbtn{
+  margin-top:26px;padding:14px 44px;border:none;border-radius:50px;
+  background:linear-gradient(135deg,var(--ocean),var(--ocean-l));
+  color:#fff;font-size:16px;font-weight:700;cursor:pointer;
+  font-family:'Noto Serif SC',serif;transition:all .5s cubic-bezier(0.175,0.885,0.32,1.275);
+  box-shadow:0 8px 22px rgba(192,57,43,.4);display:block;margin-left:auto;margin-right:auto;
+  position:relative;overflow:hidden;
+  transform-style:preserve-3d;
+}
+.ccbtn::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);
+  transition:left .7s ease;
+}
+.ccbtn::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at center,rgba(255,255,255,.25),transparent 65%);
+  opacity:0;transition:opacity .4s;
+}
+.ccbtn:hover::before{left:100%;}
+.ccbtn:hover::after{opacity:1;}
+.ccbtn:hover{transform:translateY(-6px) scale(1.06) translateZ(12px);box-shadow:0 22px 52px rgba(192,57,43,.75),0 0 30px rgba(231,76,60,.3);}
+.ccbtn:active{transform:scale(.96);}
+.ccbtn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+
+/* =====================================================
+   GAME SCREEN LAYOUT
+===================================================== */
+#sg{flex-direction:column;}
+.glayout{display:grid;grid-template-rows:auto 1fr auto;min-height:100vh;max-width:1380px;margin:0 auto;width:100%;padding:14px;gap:14px;}
+
+/* Status bar */
+/* 【修改点9】ptab改回深色玻璃，适配深海蓝背景 */
+.sbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.back-btn,.undo-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:8px;padding:6px 12px;cursor:pointer;transition:all .2s;color:var(--text);font-size:12px;display:flex;align-items:center;gap:4px;}
+.back-btn:hover,.undo-btn:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3);}
+.back-btn:active,.undo-btn:active{transform:scale(.96);}
+/* 醒目的返回和撤销按钮 */
+.action-btns{display:flex;gap:12px;margin-bottom:15px;}
+.action-btn{display:flex;align-items:center;gap:8px;padding:12px 20px;border-radius:12px;border:2px solid;cursor:pointer;transition:all .25s;font-size:14px;font-weight:600;}
+.action-icon{font-size:18px;}
+.action-text{font-size:14px;}
+.back-action{background:linear-gradient(135deg,rgba(59,130,246,.2),rgba(37,99,235,.3));border-color:#3b82f6;color:#60a5fa;}
+.back-action:hover{background:linear-gradient(135deg,rgba(59,130,246,.35),rgba(37,99,235,.45));box-shadow:0 4px 20px rgba(59,130,246,.4);transform:translateY(-2px);}
+.undo-action{background:linear-gradient(135deg,rgba(243,156,18,.2),rgba(245,158,11,.3));border-color:#f59e0b;color:#f39c12;}
+.undo-action:hover{background:linear-gradient(135deg,rgba(243,156,18,.35),rgba(245,158,11,.45));box-shadow:0 4px 20px rgba(243,156,18,.4);transform:translateY(-2px);}
+.action-btn:active{transform:scale(.96) translateY(0);}
+.ptab{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:11px;padding:8px 14px;cursor:pointer;transition:all .2s;backdrop-filter:blur(14px);display:flex;align-items:center;gap:8px;}
+.ptab.active{border-color:var(--gold);background:rgba(243,156,18,.14);box-shadow:0 0 10px rgba(243,156,18,.28);}
+.ptabi{font-size:20px;}.ptabinfo{font-size:12px;}
+.ptabn{font-weight:700;font-size:13px;color:var(--text);}.ptabc{color:var(--gold);font-family:'Space Mono',monospace;font-size:11px;}
+/* Phase indicator */
+.phase-pill{margin-left:auto;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:700;background:rgba(192,57,43,.20);border:1px solid rgba(231,76,60,.40);color:var(--ocean-l);font-family:'Noto Serif SC',serif;}
+
+/* Main 2-col grid */
+.gmain{display:grid;grid-template-columns:1fr 340px;gap:14px;min-height:0;}
+@media(max-width:860px){.gmain{grid-template-columns:1fr;}.spanel{display:none;}}
+
+/* =====================================================
+   BOARD
+===================================================== */
+/* 【修改点10】棋盘容器改回深色半透明玻璃，适配深海蓝背景 */
+.bwrap{
+  background:rgba(5,15,40,.55);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:24px;padding:18px;
+  backdrop-filter:blur(18px);display:flex;align-items:center;justify-content:center;
+  flex-direction:column;
+  overflow:hidden;position:relative;
+  box-shadow:0 24px 64px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.1);
+  perspective:1400px;
+}
+.bwrap::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(192,57,43,.12) 0%,transparent 60%);
+  pointer-events:none;
+}
+.bgrid{display:grid;gap:3px;width:100%;max-width:680px;transform:rotateX(5deg);transform-style:preserve-3d;}
+.bcell{
+  border-radius:8px;padding:4px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;position:relative;
+  transition:all .22s var(--ease);min-height:64px;font-size:12px;text-align:center;
+  /* 【修改点11】min-height 58→64px（约+10%），整体格子稍大 */
+  border:1px solid rgba(255,255,255,.1);
+  cursor:default;
+}
+.bcell:not(.tcent):hover{
+  transform:scale(1.05) translateZ(4px);
+  border-color:rgba(255,255,255,.28);
+  box-shadow:0 4px 12px rgba(0,0,0,.35);
+  z-index:5;
+}
+.bcell.ts{background:linear-gradient(135deg,rgba(243,156,18,.32),rgba(243,156,18,.12));border-color:rgba(243,156,18,.45);}
+.bcell.tp{background:linear-gradient(135deg,rgba(39,174,96,.30),rgba(39,174,96,.12));border-color:rgba(39,174,96,.45);}
+.bcell.to{background:linear-gradient(135deg,rgba(192,57,43,.34),rgba(192,57,43,.12));border-color:rgba(192,57,43,.45);}
+.bcell.tm{background:linear-gradient(135deg,rgba(255,152,0,.32),rgba(255,152,0,.12));border-color:rgba(255,152,0,.45);}
+.bcell.te{background:linear-gradient(135deg,rgba(224,85,85,.32),rgba(224,85,85,.12));border-color:rgba(224,85,85,.45);}
+.bcell.tpo{background:linear-gradient(135deg,rgba(39,174,96,.32),rgba(39,174,96,.12));border-color:rgba(39,174,96,.45);}
+.bcell.ti{background:linear-gradient(135deg,rgba(100,100,100,.18),rgba(50,50,50,.1));border-color:rgba(100,100,100,.28);}
+.bcell.tcent{background:transparent;border:none;}
+.bcell.cur{animation:pcell 1s ease-in-out infinite;z-index:8;}
+@keyframes pcell{
+  0%,100%{box-shadow:0 0 0 0 rgba(243,156,18,0),0 0 0 0 rgba(243,156,18,0);transform:scale(1)}
+  50%{box-shadow:0 0 0 4px rgba(243,156,18,.6),0 0 18px rgba(243,156,18,.35);transform:scale(1.09)}
+}
+/* 【修改点12】格子图标16px，名字9px→10px，编号色更亮 */
+.cico{font-size:16px;line-height:1;}
+.cnam{font-size:10px;line-height:1.2;color:rgba(236,240,241,0.72);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.cnum{font-size:8px;color:rgba(255,255,255,.32);position:absolute;top:2px;left:3px;font-family:'Space Mono',monospace;}
+/* 【修改点13】棋子尺寸放大20%：13px→16px，宽高由布局决定用font-size控制 */
+.pawn{position:absolute;font-size:16px;z-index:10;pointer-events:none;transition:all .38s var(--ease);filter:drop-shadow(0 2px 6px rgba(0,0,0,.7));}
+.bcenter{display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:14px;border:1px dashed rgba(255,255,255,.12);padding:14px;gap:8px;}
+.bctit{font-size:clamp(17px,2.5vw,23px);font-weight:900;background:linear-gradient(135deg,var(--gold),var(--ocean-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;}
+.bcrd{font-size:13px;color:var(--dim);}
+.fbar-wrap{width:100%;max-width:180px;}
+.fbar-lbl{font-size:11px;color:var(--dim);margin-bottom:3px;display:flex;justify-content:space-between;}
+.fbar{height:7px;background:rgba(255,255,255,.12);border-radius:4px;overflow:hidden;}
+.ffill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--ocean),var(--green));transition:width .8s var(--ease);}
+/* Board legend */
+.blegend{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:6px;}
+.bleg{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--dim);}
+.bleg-dot{width:9px;height:9px;border-radius:2px;}
+
+/* =====================================================
+   SIDE PANEL
+===================================================== */
+.spanel{display:flex;flex-direction:column;gap:11px;}
+/* 【修改点14】侧边pcard改回深色半透明玻璃 */
+.pcard{
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:15px;
+  backdrop-filter:blur(16px);
+  box-shadow:0 4px 20px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.08);
+  transition:all .55s cubic-bezier(0.175,0.885,0.32,1.275);
+  position:relative;overflow:hidden;
+  transform-style:preserve-3d;
+}
+.pcard::before{
+  content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:linear-gradient(45deg,transparent,rgba(243,156,18,.12),transparent);
+  transform:rotate(45deg)translateY(-100%);
+  transition:all .85s ease;pointer-events:none;
+}
+.pcard::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(231,76,60,.15),transparent);
+  opacity:0;transition:opacity .4s;
+}
+.pcard:hover::before{transform:rotate(45deg)translateY(100%);}
+.pcard:hover::after{opacity:1;}
+.pcard:hover{
+  transform:translateY(-6px)scale(1.02);
+  border-color:rgba(243,156,18,.45);
+  box-shadow:0 18px 50px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.12),0 0 30px rgba(243,156,18,.2);
+}
+/* 【修改点15】面板标题12→14px */
+.ptitle{font-size:14px;color:var(--dim);margin-bottom:11px;letter-spacing:1px;text-transform:uppercase;}
+/* 【修改点16】现金流行字号12→14px；值13→15px */
+.cfrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
+.cfl{font-size:14px;}.cfv{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;}
+.cfv.p{color:var(--green)}.cfv.n{color:var(--red)}.cfv.g{color:var(--gold)}
+.cfdiv{height:1px;background:rgba(255,255,255,.1);margin:7px 0;}
+.netrow{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;border-radius:9px;background:rgba(39,174,96,.10);border:1px solid rgba(39,174,96,.30);margin-top:3px;}
+.netrow.neg{background:rgba(224,85,85,.10);border-color:rgba(224,85,85,.30);}
+/* 【修改点17】净现金流标签12→14px，值15→16px */
+.netl{font-size:14px;font-weight:700;}.netv{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;}
+.netv.p{color:var(--green)}.netv.n{color:var(--red)}
+/* Asset filter */
+.afilter{display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap;}
+.afbtn{
+  padding:4px 11px;border-radius:12px;border:1px solid var(--gb);background:transparent;color:var(--dim);font-size:11px;cursor:pointer;font-family:'Noto Serif SC',serif;
+  transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);
+  position:relative;overflow:hidden;
+}
+.afbtn::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(243,156,18,.25),transparent);
+  transition:left .6s ease;
+}
+.afbtn:hover::before{left:100%;}
+.afbtn:hover{
+  background:rgba(255,255,255,.08);
+  border-color:rgba(243,156,18,.45);
+  color:var(--text);
+  transform:translateY(-2px)scale(1.05);
+  box-shadow:0 6px 16px rgba(0,0,0,.25);
+}
+.afbtn.active{border-color:var(--ocean-l);background:rgba(231,76,60,.14);color:var(--ocean-l);}
+.alist{display:flex;flex-direction:column;gap:5px;max-height:150px;overflow-y:auto;}
+.aitem{
+  background:rgba(0,0,0,.28);border-radius:7px;padding:8px 10px;
+  display:flex;justify-content:space-between;align-items:center;
+  animation:assetIn .4s var(--ease) forwards;
+  transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);
+  border:1px solid transparent;
+  position:relative;overflow:hidden;
+}
+.aitem::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(39,174,96,.15),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.aitem:hover::before{opacity:1;}
+.aitem:hover{
+  background:rgba(0,0,0,.35);
+  border-color:rgba(39,174,96,.35);
+  transform:translateX(4px)scale(1.01);
+  box-shadow:0 8px 20px rgba(0,0,0,.3);
+}
+@keyframes assetIn{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
+/* 【修改点18】资产名/收益字号11→13px */
+.ain{font-size:13px;}.air{font-size:13px;font-family:'Space Mono',monospace;color:var(--green);}
+.noast{font-size:13px;color:var(--dim);text-align:center;padding:10px;}
+/* Achievement mini list */
+.achlist{display:flex;flex-direction:column;gap:5px;max-height:100px;overflow-y:auto;}
+.achitem{display:flex;align-items:center;gap:8px;font-size:12px;padding:4px 0;}
+.ach-ico{font-size:15px;width:20px;text-align:center;}
+.ach-lbl{color:var(--dim);flex:1;}
+.ach-lbl.done{color:var(--green);font-weight:700;}
+.ach-done{font-size:10px;color:var(--gold);}
+
+/* =====================================================
+   GAME CONTROLS
+===================================================== */
+.gctrl{display:flex;gap:11px;justify-content:center;flex-wrap:wrap;padding:6px 0;align-items:center;}
+/* 【修改点19】按钮文字14→15px */
+.cb{
+  padding:13px 26px;border:none;border-radius:50px;cursor:pointer;font-family:'Noto Serif SC',serif;font-size:15px;font-weight:700;
+  transition:all .5s cubic-bezier(0.175,0.885,0.32,1.275);
+  position:relative;overflow:hidden;
+  transform-style:preserve-3d;
+}
+.cb::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);
+  transition:left .7s ease;
+}
+.cb::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at center,rgba(255,255,255,.25),transparent 65%);
+  opacity:0;transition:opacity .4s;
+}
+.cb:hover::before{left:100%;}
+.cb:hover::after{opacity:1;}
+.cb:disabled{opacity:.38;cursor:not-allowed;transform:none!important;}
+.cb-dice{background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#080c18;box-shadow:0 4px 18px rgba(243,156,18,.4);}
+.cb-dice:not(:disabled):hover{
+  transform:translateY(-4px)scale(1.08);
+  box-shadow:0 14px 35px rgba(243,156,18,.7),0 0 30px rgba(243,156,18,.35);
+}
+/* 【修改点20】贷款按钮改为可见的深蓝色背景 */
+.cb-loan{background:linear-gradient(135deg,#1e3a5f,#2563a0);color:#fff;border:1px solid rgba(231,76,60,.35);box-shadow:0 4px 14px rgba(0,60,160,.3);}
+.cb-loan:not(:disabled):hover{
+  transform:translateY(-4px)scale(1.06);
+  background:linear-gradient(135deg,#254d7a,#2e77c3);
+  box-shadow:0 14px 35px rgba(0,60,160,.55);
+}
+.cb-end{background:linear-gradient(135deg,var(--ocean),var(--ocean-l));color:#fff;box-shadow:0 4px 14px rgba(192,57,43,.3);}
+.cb-end:not(:disabled):hover{
+  transform:translateY(-4px)scale(1.07);
+  box-shadow:0 14px 35px rgba(192,57,43,.6),0 0 30px rgba(231,76,60,.35);
+}
+/* Dice widget */
+.dicewr{width:58px;height:58px;perspective:300px;}
+.diceface{
+  width:58px;height:58px;background:linear-gradient(135deg,#fff,#d8d8d8);
+  border-radius:11px;display:flex;align-items:center;justify-content:center;
+  font-size:30px;font-family:'Space Mono',monospace;font-weight:700;color:#080c18;
+  box-shadow:0 4px 12px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.85);
+  transition:box-shadow .2s;
+}
+.droll{animation:drollA .7s var(--ease);}
+@keyframes drollA{
+  0%{transform:rotateX(0)rotateY(0)scale(1)}
+  25%{transform:rotateX(180deg)rotateY(90deg)scale(1.06)}
+  50%{transform:rotateX(360deg)rotateY(180deg)scale(1)}
+  75%{transform:rotateX(540deg)rotateY(270deg)scale(1.06)}
+  100%{transform:rotateX(720deg)rotateY(360deg)scale(1)}
+}
+
+/* =====================================================
+   MODALS
+===================================================== */
+.moverlay{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,20,60,.65);backdrop-filter:blur(8px);align-items:flex-end;justify-content:center;}
+.moverlay.open{display:flex;}
+.modal{
+  background:linear-gradient(180deg,rgba(8,20,55,.97),rgba(4,12,35,.99));
+  border:1px solid rgba(255,255,255,.18);border-bottom:none;
+  border-radius:28px 28px 0 0;padding:30px;max-width:500px;width:100%;
+  animation:slu .38s var(--ease);max-height:88vh;overflow-y:auto;position:relative;
+  box-shadow:0 -16px 80px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.12);
+  backdrop-filter:blur(20px);
+  color:#f0f4ff;
+}
+@keyframes slu{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+.mtit{font-size:21px;font-weight:700;margin-bottom:7px;color:#f0f4ff;}
+.mdesc{font-size:13px;color:rgba(240,244,255,0.6);margin-bottom:21px;line-height:1.6;}
+.mbadge{display:inline-block;padding:3px 11px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:10px;}
+.blow{background:rgba(46,204,154,.16);color:#34D399;border:1px solid rgba(46,204,154,.35);}
+.bmed{background:rgba(255,152,0,.16);color:#FF9800;border:1px solid rgba(255,152,0,.35);}
+.bhig{background:rgba(248,113,113,.16);color:#F87171;border:1px solid rgba(248,113,113,.35);}
+.istats{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:21px;}
+.istat{background:rgba(0,0,0,.35);border-radius:11px;padding:11px;}
+.istl{font-size:10px;color:rgba(240,244,255,0.55);margin-bottom:3px;}
+.istv{font-size:17px;font-family:'Space Mono',monospace;font-weight:700;color:#f0f4ff;}
+.mact{display:flex;gap:11px;}
+/* 【修改点21】投资按钮主色：#2563eb，hover:#1d4ed8，文字白色#fff */
+.binvest{
+  flex:1;padding:13px;border:none;border-radius:11px;font-size:15px;font-weight:700;
+  font-family:'Noto Serif SC',serif;cursor:pointer;
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  color:#ffffff;transition:all .2s var(--ease);
+  box-shadow:0 4px 16px rgba(37,99,235,.4);
+}
+.binvest:hover{transform:scale(1.02);background:linear-gradient(135deg,#1d4ed8,#1e40af);box-shadow:0 6px 20px rgba(37,99,235,.5);}
+/* 【修改点22】移除binvest的disabled样式导致的黑化；若需禁用用.binvest-disabled */
+.binvest-disabled{opacity:.42;cursor:not-allowed;transform:none!important;filter:grayscale(.3);}
+/* 【修改点23】贷款按钮专用橙色（区分投资按钮） */
+.binvest-loan{
+  flex:1;padding:13px;border:none;border-radius:11px;font-size:15px;font-weight:700;
+  font-family:'Noto Serif SC',serif;cursor:pointer;
+  background:linear-gradient(135deg,#d97706,#b45309);
+  color:#ffffff;transition:all .2s var(--ease);
+  box-shadow:0 4px 16px rgba(217,119,6,.4);
+}
+.binvest-loan:hover{transform:scale(1.02);background:linear-gradient(135deg,#b45309,#92400e);}
+.bskip{padding:13px 22px;border:1px solid rgba(255,255,255,.22);border-radius:11px;font-size:14px;cursor:pointer;background:rgba(255,255,255,.08);color:rgba(240,244,255,0.75);font-family:'Noto Serif SC',serif;transition:all .2s;}
+.bskip:hover{background:rgba(255,255,255,.16);color:#f0f4ff;}
+.mclose{position:absolute;top:14px;right:14px;background:none;border:none;color:rgba(240,244,255,0.5);font-size:22px;cursor:pointer;line-height:1;}
+.mclose:hover{color:#f0f4ff;}
+
+/* Event modal */
+.evico{font-size:60px;text-align:center;margin-bottom:14px;}
+.eveff{padding:11px 14px;border-radius:11px;font-size:14px;font-weight:700;text-align:center;margin-bottom:21px;}
+.evp{background:rgba(46,204,154,.12);border:1px solid rgba(46,204,154,.28);color:var(--green);}
+.evn{background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.28);color:var(--red);}
+.evne{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:var(--dim);}
+
+/* Settlement */
+.srows{display:flex;flex-direction:column;gap:7px;margin-bottom:18px;}
+.srow{display:flex;justify-content:space-between;padding:9px 11px;border-radius:7px;background:rgba(0,0,0,.3);}
+.srl{font-size:13px;color:rgba(240,244,255,0.75);}.srv{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:#f0f4ff;}
+.stot{background:linear-gradient(135deg,rgba(46,204,154,.12),rgba(192,57,43,.12));border:1px solid rgba(46,204,154,.28);}
+.fdann{text-align:center;padding:14px;border-radius:11px;background:linear-gradient(135deg,rgba(243,156,18,.12),rgba(46,204,154,.12));border:1px solid rgba(243,156,18,.38);margin-bottom:18px;animation:gp 2s ease-in-out infinite;}
+@keyframes gp{0%,100%{box-shadow:0 0 0 0 rgba(243,156,18,0)}50%{box-shadow:0 0 20px rgba(243,156,18,.38)}}
+.fdtit{font-size:17px;font-weight:700;color:var(--gold);}
+
+/* Loan modal */
+.loanopts{display:flex;flex-direction:column;gap:9px;margin-bottom:18px;}
+.lopt{background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.15);border-radius:9px;padding:11px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:all .2s var(--ease);}
+.lopt:hover{border-color:var(--ocean);background:rgba(192,57,43,.15);transform:translateX(3px);}
+.lopti{font-size:12px;color:rgba(240,244,255,0.8);}.loptv{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--ocean-l);}
+
+/* Log */
+/* 【修改点24】日志文字改白色系适配深背景 */
+.glog{max-height:110px;overflow-y:auto;}
+.loge{font-size:11px;color:rgba(236,240,241,0.55);padding:2px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.loge.lp{color:#5ee8b0;}.loge.ln{color:#f08080;}.loge.le{color:#7fb3f5;}
+
+/* Turn banner */
+.tbanner{
+  position:fixed;top:18px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--gold-d),var(--gold));
+  color:#080c18;padding:7px 22px;border-radius:50px;font-weight:700;font-size:14px;
+  z-index:50;pointer-events:none;
+  animation:bani .45s var(--ease) forwards, bglow 2s ease-in-out infinite alternate;
+}
+@keyframes bani{from{opacity:0;transform:translateX(-50%) translateY(-18px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+@keyframes bglow{from{box-shadow:0 0 18px rgba(243,156,18,.55)}to{box-shadow:0 0 28px rgba(243,156,18,.8)}}
+
+/* 【修改点25】Toast改为右上角显示，3秒消失 */
+.toast{
+  position:fixed;top:20px;right:20px;
+  transform:none;
+  padding:11px 20px;border-radius:14px;color:#fff;font-size:14px;font-weight:700;
+  z-index:300;pointer-events:none;white-space:nowrap;
+  animation:toastInR .3s var(--ease) forwards, toastOutR .4s forwards 2.6s;
+  font-family:'Noto Serif SC',serif;
+  box-shadow:0 6px 24px rgba(0,0,0,.4);
+  max-width:320px;
+  white-space:normal;
+  line-height:1.4;
+}
+@keyframes toastInR{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+@keyframes toastOutR{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(40px)}}
+
+/* =====================================================
+   WIN SCREEN
+===================================================== */
+#sw{flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px;}
+.wtit{font-size:clamp(32px,8vw,76px);font-weight:900;background:linear-gradient(135deg,var(--gold) 0%,#fff 50%,var(--green) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:7px;}
+.wsub{font-size:17px;color:var(--dim);margin-bottom:28px;}
+.cert{background:linear-gradient(135deg,rgba(243,156,18,.08),rgba(46,204,154,.08));border:2px solid rgba(243,156,18,.38);border-radius:18px;padding:28px 36px;max-width:460px;width:100%;margin-bottom:20px;position:relative;overflow:hidden;}
+.cert::before{content:'🏆';position:absolute;font-size:110px;opacity:.05;top:50%;left:50%;transform:translate(-50%,-50%);}
+.certlbl{font-size:11px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;}
+.certn{font-size:26px;font-weight:700;margin-bottom:3px;}
+.certc{font-size:15px;color:var(--dim);margin-bottom:18px;}
+.certstats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.certst{background:rgba(0,0,0,.28);border-radius:9px;padding:10px;}
+.certstl{font-size:10px;color:var(--dim);}.certstv{font-size:16px;font-family:'Space Mono',monospace;font-weight:700;color:var(--gold);}
+.rating{display:inline-block;padding:6px 20px;border-radius:20px;font-size:13px;font-weight:700;background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#080c18;margin-top:4px;}
+#cc{position:fixed;inset:0;pointer-events:none;z-index:200;}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:rgba(255,255,255,.04);}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:2px;}
+
+@keyframes floatUp{
+  0%{opacity:1;transform:translateY(0) scale(1);}
+  60%{opacity:1;transform:translateY(-40px) scale(1.1);}
+  100%{opacity:0;transform:translateY(-70px) scale(.8);}
+}
+@keyframes pburst{
+  0%{opacity:1;transform:translate(0,0) scale(1);}
+  100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0);}
+}
+
+/* ── 难度选择按钮 ── */
+.diffrow{display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap;justify-content:center;}
+.difflbl{color:rgba(236,240,241,0.7);font-size:14px;}
+.diffbtn{
+  padding:8px 20px;border-radius:20px;border:2px solid var(--gb);
+  background:var(--glass);color:var(--text);font-size:14px;cursor:pointer;
+  transition:all .45s cubic-bezier(0.175,0.885,0.32,1.275);
+  font-family:'Noto Serif SC',serif;font-weight:700;
+  position:relative;overflow:hidden;
+  transform-style:preserve-3d;
+}
+.diffbtn::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
+  transition:left .6s ease;
+}
+.diffbtn::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at center,rgba(255,255,255,.15),transparent 65%);
+  opacity:0;transition:opacity .4s;
+}
+.diffbtn:hover::before{left:100%;}
+.diffbtn:hover::after{opacity:1;}
+.diffbtn:hover{
+  transform:translateY(-3px)scale(1.06);
+  box-shadow:0 8px 22px rgba(0,0,0,.3);
+}
+.diffbtn.sel.easy-sel{
+  border-color:#2ecc71;background:rgba(39,174,96,.18);color:#2ecc71;
+  box-shadow:0 0 18px rgba(39,174,96,.45),0 0 30px rgba(39,174,96,.25) inset;
+  animation:diffbtnPulseGreen 2.2s ease-in-out infinite;
+}
+.diffbtn.sel.normal-sel{
+  border-color:#f39c12;background:rgba(243,156,18,.18);color:#f39c12;
+  box-shadow:0 0 18px rgba(243,156,18,.45),0 0 30px rgba(243,156,18,.25) inset;
+  animation:diffbtnPulseGold 2.2s ease-in-out infinite;
+}
+.diffbtn.sel.hard-sel{
+  border-color:#f87171;background:rgba(248,113,113,.18);color:#f87171;
+  box-shadow:0 0 18px rgba(248,113,113,.45),0 0 30px rgba(248,113,113,.25) inset;
+  animation:diffbtnPulseRed 2.2s ease-in-out infinite;
+}
+@keyframes diffbtnPulseGreen{
+  0%,100%{box-shadow:0 0 18px rgba(39,174,96,.45),0 0 30px rgba(39,174,96,.25) inset;}
+  50%{box-shadow:0 0 28px rgba(39,174,96,.7),0 0 40px rgba(39,174,96,.4) inset;}
+}
+@keyframes diffbtnPulseGold{
+  0%,100%{box-shadow:0 0 18px rgba(243,156,18,.45),0 0 30px rgba(243,156,18,.25) inset;}
+  50%{box-shadow:0 0 28px rgba(243,156,18,.7),0 0 40px rgba(243,156,18,.4) inset;}
+}
+@keyframes diffbtnPulseRed{
+  0%,100%{box-shadow:0 0 18px rgba(248,113,113,.45),0 0 30px rgba(248,113,113,.25) inset;}
+  50%{box-shadow:0 0 28px rgba(248,113,113,.7),0 0 40px rgba(248,113,113,.4) inset;}
+}
+#diff-desc{font-size:12px;color:rgba(236,240,241,0.55);margin-bottom:24px;min-height:18px;}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" style="position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(44,62,80,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.1);padding:12px 20px;">
+  <div style="max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+    <a href="index.html" style="text-decoration:none;display:flex;align-items:center;gap:8px;">
+      <span style="font-size:24px;">🚩</span>
+      <span style="font-size:20px;font-weight:900;background:linear-gradient(135deg,var(--gold),#ffe0cc,var(--ocean-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">红韵智研</span>
+    </a>
+    <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
+      <a href="index.html" style="text-decoration:none;color:rgba(236,240,241,0.62);font-size:14px;transition:color 0.3s;" onmouseover="this.style.color='#f39c12'" onmouseout="this.style.color='rgba(236,240,241,0.62)'">🏠 首页</a>
+      <a href="maker-sim.html" style="text-decoration:none;color:#f39c12;font-size:14px;font-weight:700;">🎮 创业实训</a>
+      <a href="maker-service.html" style="text-decoration:none;color:rgba(236,240,241,0.62);font-size:14px;transition:color 0.3s;" onmouseover="this.style.color='#f39c12'" onmouseout="this.style.color='rgba(236,240,241,0.62)'">🏛️ 服务平台</a>
+    </div>
+  </div>
+</nav>
+
+<!-- AMBIENT -->
+<div id="stars"></div>
+<div class="waves">
+  <div class="w w1"><svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,50 C240,100 480,0 720,50 C960,100 1200,0 1440,50 L1440,100 L0,100 Z" fill="rgba(192,57,43,.5)"/></svg></div>
+  <div class="w w2"><svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,30 C360,80 720,10 1080,60 C1260,80 1380,40 1440,30 L1440,100 L0,100 Z" fill="rgba(39,174,96,.3)"/></svg></div>
+</div>
+
+<!-- ===================== INTRO ===================== -->
+<div class="screen active" id="si">
+  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 20px;text-align:center;">
+    <div style="font-size:52px;margin-bottom:18px;filter:drop-shadow(0 0 18px rgba(243,156,18,.6));animation:bounce 2s ease-in-out infinite">🚩</div>
+    <h1 class="logo">红韵智研</h1>
+    <p class="sub">人工智能驱动的海南红色文化与美育研学综合服务平台</p>
+    <p class="desc" style="font-size:18px;margin-bottom:8px;">乡村创客模拟</p>
+    <p class="desc">在红色文化与乡村振兴的交汇处，<br>用智慧与勇气实现创业梦想。<br>当您的被动收入超越月支出，您就赢了！</p>
+    <div class="psrow">
+      <span class="psl">玩家人数：</span>
+      <button class="psbtn sel" data-n="1" onclick="selP(1)">1</button>
+      <button class="psbtn" data-n="2" onclick="selP(2)">2</button>
+      <button class="psbtn" data-n="3" onclick="selP(3)">3</button>
+      <button class="psbtn" data-n="4" onclick="selP(4)">4</button>
+    </div>
+    <div class="diffrow">
+      <span class="difflbl">难度：</span>
+      <button class="diffbtn sel easy-sel" data-d="easy" onclick="selDiffBtn('easy');this.classList.add('sel','easy-sel');document.querySelectorAll('.diffbtn').forEach(b=>{if(b!==this){b.classList.remove('sel','easy-sel','normal-sel','hard-sel');}})">🌱 普通</button>
+      <button class="diffbtn normal-sel" data-d="normal" onclick="selDiffBtn('normal');this.classList.add('sel','normal-sel');document.querySelectorAll('.diffbtn').forEach(b=>{if(b!==this){b.classList.remove('sel','easy-sel','normal-sel','hard-sel');}})">📈 进阶</button>
+      <button class="diffbtn hard-sel" data-d="hard" onclick="selDiffBtn('hard');this.classList.add('sel','hard-sel');document.querySelectorAll('.diffbtn').forEach(b=>{if(b!==this){b.classList.remove('sel','easy-sel','normal-sel','hard-sel');}})">🔥 困难</button>
+    </div>
+    <p id="diff-desc">新手友好·小额散户视角</p>
+    <div class="newbie-tip" style="max-width:460px;margin:0 auto 20px;">
+      <span>难度影响融资成本</span>：普通难度对标乡村创业扶持贷（月息0.25%-0.5%），进阶难度为信用贷水平（月息0.7%-1.0%），困难难度接近民间融资（月息1.0%-1.5%），越难越贴近乡村创业真实压力！
+    </div>
+    <button class="btn-main" onclick="goCareer()">开始游戏 🎲</button>
+    <a href="maker-service.html" style="display:inline-block;margin-top:14px;padding:10px 28px;border-radius:50px;border:1px solid rgba(243,156,18,.35);background:rgba(243,156,18,.1);color:var(--gold);font-size:14px;font-weight:700;text-decoration:none;transition:all .25s var(--ease);font-family:'Noto Serif SC',serif;" onmouseover="this.style.background='rgba(243,156,18,.2)';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(243,156,18,.1)';this.style.transform='none'">🏛️ 服务平台</a>
+    <p style="margin-top:20px;font-size:11px;color:rgba(255,255,255,.22)">点击任意处启动音效 · 1-4人本地对战</p>
+  </div>
+</div>
+
+<!-- ===================== CAREER ===================== -->
+<div class="screen" id="sc" style="flex-direction:column;align-items:center;">
+  <div style="position:relative;z-index:2;width:100%;max-width:960px;margin-top:16px;">
+    <h2 class="ct">选择职业</h2>
+    <p class="cs">职业决定起始资金与特殊能力</p>
+    <div class="newbie-tip">💡 <span>新手推荐：</span>红色研学导师（红色加成）/ 乡村创客村长（稳定收益）/ 生态农业种植户（低风险）/ 乡村电商运营师（被动收入加成）</div>
+    <div class="cptabs" id="cptabs"></div>
+    <div class="cgrid" id="cgrid"></div>
+    <div style="text-align:center"><button class="ccbtn" id="ccbtn" disabled onclick="confirmC()">请为所有玩家选择职业</button></div>
+  </div>
+</div>
+
+<!-- ===================== GAME ===================== -->
+<div class="screen" id="sg" style="flex-direction:column;">
+  <div class="glayout">
+    <!-- Status bar -->
+    <div class="sbar" id="sbar">
+      <span class="phase-pill" id="phasePill">掷骰子阶段</span>
+    </div>
+    <!-- Main area -->
+    <div class="gmain">
+      <!-- Board -->
+      <div class="bwrap">
+        <div style="width:100%;max-width:700px;">
+          <div class="bgrid" id="bgrid"></div>
+          <div class="blegend">
+            <div class="bleg"><div class="bleg-dot" style="background:rgba(192,57,43,.6)"></div>投资机会</div>
+            <div class="bleg"><div class="bleg-dot" style="background:rgba(255,152,0,.6)"></div>市场波动</div>
+            <div class="bleg"><div class="bleg-dot" style="background:rgba(39,174,96,.6)"></div>政策红利</div>
+            <div class="bleg"><div class="bleg-dot" style="background:rgba(248,113,113,.6)"></div>额外支出</div>
+            <div class="bleg"><div class="bleg-dot" style="background:rgba(46,204,154,.6)"></div>发薪日</div>
+          </div>
+        </div>
+      </div>
+      <!-- Side panel -->
+      <div class="spanel">
+        <!-- Cashflow -->
+        <div class="pcard">
+          <div class="ptitle">💰 月度现金流</div>
+          <div class="cfrow"><span class="cfl">月薪收入</span><span class="cfv p" id="cfi">¥0</span></div>
+          <div class="cfrow"><span class="cfl">被动收入</span><span class="cfv p" id="cfpa">¥0</span></div>
+          <div class="cfdiv"></div>
+          <div class="cfrow"><span class="cfl">生活支出</span><span class="cfv n" id="cfex">¥0</span></div>
+          <div class="cfrow"><span class="cfl">贷款利息支出 <span style="font-size:11px;color:var(--dim);">(等额本息)</span></span><span class="cfv n" id="cflo">¥0</span></div>
+          <div class="cfdiv"></div>
+          <div class="netrow" id="netrow"><span class="netl">净现金流</span><span class="netv p" id="cfne">¥0</span></div>
+          <div class="newbie-tip" id="cashflow-warning" style="display:none;margin-top:8px;padding:8px 12px;">
+            <span style="color:#f08080;">⚠️ 现金流预警</span>：利息支出占被动收入超50%！乡村创业项目因利息压力倒闭比例高，建议优先还款！
+          </div>
+        </div>
+        <!-- Assets with filter -->
+        <div class="pcard">
+          <div class="ptitle">📊 持有资产</div>
+          <div class="afilter">
+            <button class="afbtn active" data-af="all" onclick="filterAssets('all')">全部</button>
+            <button class="afbtn" data-af="low" onclick="filterAssets('low')">稳健</button>
+            <button class="afbtn" data-af="medium" onclick="filterAssets('medium')">成长</button>
+            <button class="afbtn" data-af="high" onclick="filterAssets('high')">机会</button>
+          </div>
+          <div class="alist" id="alist"><p class="noast">暂无资产<br><small>落在机会格可购买</small></p></div>
+        </div>
+        <!-- Achievements -->
+        <div class="pcard">
+          <div class="ptitle">🏅 成就进度</div>
+          <div class="achlist" id="achlist"></div>
+        </div>
+        <!-- Log -->
+        <div class="pcard">
+          <div class="ptitle">📋 游戏日志</div>
+          <div class="glog" id="glog"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Controls -->
+    <div class="gctrl">
+      <div class="action-btns">
+        <button class="action-btn back-action" onclick="goBackPage()" title="返回上一页">
+          <span class="action-icon">←</span>
+          <span class="action-text">返回</span>
+        </button>
+        <button class="action-btn undo-action" onclick="undoAction()" title="撤销上一步操作">
+          <span class="action-icon">↩</span>
+          <span class="action-text">撤销</span>
+        </button>
+        <a href="index.html" class="action-btn" style="background:linear-gradient(135deg,rgba(192,57,43,.2),rgba(192,57,43,.3));border-color:rgba(192,57,43,.5);color:#e74c3c;text-decoration:none;" title="返回首页">
+          <span class="action-icon">🏠</span>
+          <span class="action-text">首页</span>
+        </a>
+        <a href="maker-service.html" class="action-btn" style="background:linear-gradient(135deg,rgba(243,156,18,.2),rgba(245,158,11,.3));border-color:#f59e0b;color:#f39c12;text-decoration:none;" title="进入服务平台">
+          <span class="action-icon">🏛️</span>
+          <span class="action-text">服务平台</span>
+        </a>
+      </div>
+      <div class="dicewr"><div class="diceface" id="dface">🎲</div></div>
+      <button class="cb cb-dice" id="broll" onclick="rollDice()">掷骰子</button>
+      <button class="cb cb-loan" id="bloan" onclick="openLoan()">申请贷款 💳</button>
+      <button class="cb cb-end" id="bend" disabled onclick="endTurn()">结束回合 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== WIN ===================== -->
+<div class="screen" id="sw" style="flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 20px;">
+  <canvas id="cc"></canvas>
+  <div style="position:relative;z-index:2;">
+    <div style="font-size:68px;margin-bottom:14px;animation:bounce 1s ease-in-out infinite">🏆</div>
+    <h1 class="wtit">创业成功！</h1>
+    <p class="wsub">恭喜您在红色乡村实现了创业梦想</p>
+    <div class="cert">
+      <p class="certlbl">🚩 乡村创客证书</p>
+      <h3 class="certn" id="wn">-</h3>
+      <p class="certc" id="wc">-</p>
+      <div class="certstats" id="wst"></div>
+      <div class="rating" id="wrating">-</div>
+    </div>
+    <button class="btn-main" onclick="resetGame()">再来一局 🔄</button>
+  </div>
+</div>
+
+<!-- ===================== MODALS ===================== -->
+<div class="moverlay" id="mopp"><div class="modal"><div id="moppc"></div></div></div>
+<div class="moverlay" id="mmkt"><div class="modal"><button class="mclose" onclick="cm('mmkt')">✕</button><div id="mmktc"></div></div></div>
+<div class="moverlay" id="mset"><div class="modal"><button class="mclose" onclick="cm('mset')">✕</button><div id="msetc"></div></div></div>
+<div class="moverlay" id="mloan">
+  <div class="modal" style="position:relative">
+    <h3 class="mtit">💳 申请贷款</h3>
+    <p class="mdesc">贷款月息 <strong style="color:#f39c12">1%</strong>，到期可续贷，请量力而行</p>
+    <div class="loanopts" id="lopts"></div>
+  </div>
+</div>
+
+
+<!-- ===================== JAVASCRIPT ===================== -->
+<script>
+// =====================================================
+// DIFFICULTY SYSTEM — 现实投资逻辑 (Real Investment Logic)
+// 参考依据：LPR利率4.35%~5.85%（中国人民银行），房产交易税费2%，创业成本1.5%，金融投资手续费0.5%
+// =====================================================
+const DIFFICULTIES={
+  easy:{
+    name:'普通',icon:'🌱',
+    // 贷款：额度=总资产60%，年利率3%，10%概率拒绝
+    loanRatio:0.6, loanRate:0.03, loanRejectChance:0.10,
+    // 收益波动：-5%~20%（普通理财/房产年化参考）
+    returnMin:-0.05, returnMax:0.20,
+    // 单次投资≤现金50%，低风险资产无持有成本
+    maxInvestRatio:0.50,
+    // 市场事件触发率20%，仅正向/轻度负向
+    eventRate:0.20,
+    // 交易成本（0=无）
+    tradeCostProperty:0, tradeCostShop:0, tradeCostFinance:0,
+    // 持有成本/回合（0=无）
+    holdCost:0,
+    // 通关：被动收入≥支出
+    winConditionAssets:0, winConditionCashflow:0,
+    label:'新手友好·乡村创业起步',
+  },
+  normal:{
+    name:'进阶',icon:'📈',
+    // 贷款：额度=总资产40%，年利率4%，30%拒绝，提前还需1%违约金
+    loanRatio:0.40, loanRate:0.04, loanRejectChance:0.30,
+    earlyRepayPenalty:0.01,
+    // 收益波动：-15%~30%（实体创业/文旅真实区间）
+    returnMin:-0.15, returnMax:0.30,
+    // 高收益(≥20%)伴随20%风险惩罚
+    highReturnThreshold:0.20, highReturnPenaltyRate:0.20,
+    maxInvestRatio:1.0,
+    // 市场事件触发率40%，含利率/监管事件
+    eventRate:0.40,
+    // 交易成本（参考现实：房产2%，开店1.5%，金融0.5%）
+    tradeCostProperty:0.02, tradeCostShop:0.015, tradeCostFinance:0.005,
+    // 文旅旺淡季：旺季+10%，淡季-10%
+    seasonalEffect:0.10,
+    holdCost:0,
+    winConditionAssets:0, winConditionCashflow:0,
+    label:'中小投资者·含交易成本与季节影响',
+  },
+  hard:{
+    name:'困难',icon:'🔥',
+    // 贷款：额度=总资产20%，LPR浮动计息4.35%~5.85%年利率，50%拒绝，逾期罚息日息0.05%
+    loanRatio:0.20, loanRejectChance:0.50,
+    loanRateMin:0.0435, loanRateMax:0.0585, // 年利率（LPR浮动）
+    overdueRate:0.0005, // 日息0.05%
+    // 收益波动：-30%~40%（高风险创业/资本市场）
+    returnMin:-0.30, returnMax:0.40,
+    // 高收益(≥30%)伴随40%风险惩罚
+    highReturnThreshold:0.30, highReturnPenaltyRate:0.40,
+    maxInvestRatio:1.0,
+    // 市场事件触发率60%，含黑天鹅
+    eventRate:0.60,
+    // 交易成本
+    tradeCostProperty:0.02, tradeCostShop:0.015, tradeCostFinance:0.005,
+    // 持有成本：资产价值1%/回合（物业费/租金/管理费）
+    holdCost:0.01,
+    // 大额投资(≥500万)需分3回合建仓
+    bigInvestThreshold:5000000, bigInvestStages:3,
+    // 通关：总资产≥1亿，且连续3回合正现金流
+    winConditionAssets:100000000, winConditionCashflow:3,
+    seasonalEffect:0.10,
+    label:'专业投资者·LPR计息+黑天鹅+严格通关',
+  }
+};
+
+// =====================================================
+// GAME DATA
+// =====================================================
+const CAREERS=[
+  {id:'red_tutor', name:'红色研学导师', income:80000, expense:45000, cash:120000, buff:'红色资产收益+5%', icon:'🚩',bt:'hi_b',bv:.05, loanType:'edu',loanDesc:'教育专项扶持贷，利率下调0.1%',loanMod:-0.001,loanRatioMod:0.05},
+  {id:'rural_maker', name:'乡村创客村长', income:100000, expense:65000, cash:160000, buff:'低风险项目免1次亏损', icon:'🌾',bt:'low_s',bv:1, loanType:'rural',loanDesc:'涉农普惠贷，利率持平基准',loanMod:0,loanRatioMod:0},
+  {id:'artisan', name:'非遗文创主理人', income:70000, expense:40000, cash:110000, buff:'文创类资产收益+6%', icon:'🎭',bt:'craf',bv:.06, loanType:'culture',loanDesc:'文化传承贷，利率下调0.05%',loanMod:-0.0005,loanRatioMod:0.05},
+  {id:'streamer', name:'助农直播达人', income:90000, expense:60000, cash:140000, buff:'市场事件正面效果+20%', icon:'📱',bt:'med_b',bv:.03, loanType:'credit',loanDesc:'轻资产信用贷，利率上调0.1%',loanMod:0.001,loanRatioMod:-0.10},
+  {id:'planner', name:'乡村规划师', income:95000, expense:55000, cash:135000, buff:'中风险项目收益+4%', icon:'🗺️',bt:'med_b',bv:.04, loanType:'rural',loanDesc:'乡村规划专项贷，利率持平基准',loanMod:0,loanRatioMod:0.05},
+  {id:'farmer', name:'生态农业种植户', income:55000, expense:32000, cash:95000, buff:'低风险农业收益+4%', icon:'🌱',bt:'low_s',bv:.04, loanType:'rural',loanDesc:'涉农普惠贷，利率持平基准',loanMod:0,loanRatioMod:0},
+  {id:'guide', name:'红色讲解员', income:65000, expense:38000, cash:105000, buff:'红色资产收益+8%', icon:'🎤',bt:'hi_b',bv:.08, loanType:'edu',loanDesc:'教育专项扶持贷，利率下调0.1%',loanMod:-0.001,loanRatioMod:0.05},
+  {id:'agri_tech', name:'农业科技指导员', income:85000, expense:48000, cash:130000, buff:'高科技农业资产收益+5%', icon:'🔬',bt:'med_b',bv:.05, loanType:'tech',loanDesc:'农业科技贷，利率下调0.05%',loanMod:-0.0005,loanRatioMod:0.08},
+  {id:'ecom_operator', name:'乡村电商运营师', income:75000, expense:42000, cash:115000, buff:'电商渠道收入+10%被动收入', icon:'🛒',bt:'med_b',bv:.05, loanType:'ecom',loanDesc:'农村电商贷，利率持平基准',loanMod:0,loanRatioMod:0.10},
+];
+
+// 投资标的增加现实属性：首付比例、持有成本、类型（property/shop/finance）
+// 参考：住宅首付30%，商铺50%，文旅地产40%；持有成本/回合根据难度扣除
+const ASSETS={
+  stable:[
+    {name:'红色记忆展览馆', cost:300000, mr:16000, risk:'low', icon:'🏛️', desc:'稳定爱国主义教育补贴', type:'property', downPayRatio:0.30, propType:'教育基地', holdDesc:'场馆维护费'},
+    {name:'助农生态采摘园', cost:400000, mr:22000, risk:'low', icon:'🍎', desc:'周末亲子客流稳定', type:'property', downPayRatio:0.30, propType:'农业资产', holdDesc:'农资维护费', seasonal:true},
+    {name:'黎锦非遗工坊', cost:350000, mr:18000, risk:'low', icon:'🧵', desc:'对接智研琼州课程', type:'shop', downPayRatio:0.50, propType:'文化商铺', holdDesc:'租金与材料'},
+  ],
+  growth:[
+    {name:'沉浸式红色剧本杀', cost:250000, mr:[6000,35000], risk:'medium', icon:'📜', desc:'深受年轻人喜爱的研学新形态', type:'shop', downPayRatio:0.50, propType:'娱乐商铺', holdDesc:'剧本更新及租金'},
+    {name:'乡村创客露营地', cost:200000, mr:[5000,40000], risk:'medium', icon:'⛺', desc:'淡旺季收益波动大', type:'property', downPayRatio:0.40, propType:'文旅地产', holdDesc:'场地租金', seasonal:true},
+  ],
+  opportunity:[
+    {name:'乡村振兴示范综合体', cost:1000000, mr:85000, bonus:400000, risk:'high', icon:'🏘️', desc:'获取政府千万级基建补贴', type:'property', downPayRatio:0.40, propType:'综合地产', holdDesc:'高额运营费'},
+    {name:'全省研学物资供应链', cost:800000, mr:65000, bonus:200000, risk:'high', icon:'🚚', desc:'垄断下游平台物资供应', type:'finance', downPayRatio:1.0, propType:'供应链投资', holdDesc:'仓储物流费'},
+  ]
+};
+
+// 市场事件——按难度分级
+// 普通：正向/轻度负向；进阶：含利率/监管；困难：含黑天鹅/行业周期
+const EVTS={
+  boom:    {name:'红游旺季来临',  icon:'☀️', eff:20000,   pos:true,  desc:'建党节/国庆节到来，客流暴增+2万',           diffMin:'easy'},
+  viral:   {name:'研学课程获省奖',  icon:'🏆', eff:25000,   pos:true,  desc:'课程获教育厅推广，创收+2.5万',           diffMin:'easy'},
+  pol:     {name:'乡村振兴补贴',  icon:'📜', eff:15000,   pos:true,  desc:'落实中央一号文件，发放补贴+1.5万',        diffMin:'easy'},
+  rain:    {name:'强降雨台风天',  icon:'🌧️', eff:-15000,  pos:false, desc:'极端天气导致研学活动取消-1.5万',          diffMin:'easy'},
+  regulate:{name:'研学资质严查',  icon:'📋', eff:-20000,  pos:false, desc:'部分项目因资质不全停业整顿，损失2万',   diffMin:'normal'},
+  blackswan:{name:'⚡ 资金链断裂',icon:'🦢', eff:-80000,  pos:false, desc:'助农项目回款逾期，损失8万，高风险收益腰斩', diffMin:'hard', special:'blackswan'},
+};
+
+// 棋盘格定义（保持原版不变）
+const BCELLS=[
+  {id:0, t:'s', name:'创业孵化园',       icon:'🚀',desc:'领取创业扶持金¥10,000'},
+  {id:1, t:'o', name:'红色记忆展览馆',   icon:'🏛️',ag:'stable',     ai:0},
+  {id:2, t:'m', name:'市场波动',         icon:'📊',ev:'rnd'},
+  {id:3, t:'o', name:'黎锦非遗工坊',     icon:'🧵',ag:'stable',     ai:2},
+  {id:4, t:'e', name:'场馆维护',         icon:'🔧',amt:20000,  desc:'场馆维护费-2万'},
+  {id:5, t:'o', name:'助农生态采摘园',   icon:'🍎',ag:'stable',     ai:1},
+  {id:6, t:'po',name:'乡村振兴补贴',     icon:'📜',amt:30000,  desc:'落实中央一号文件+3万'},
+  {id:7, t:'m', name:'红游旺季',         icon:'☀️',ev:'boom'},
+  {id:8, t:'p', name:'项目结算日',       icon:'💰',desc:'月度结算'},
+  {id:9, t:'o', name:'红色剧本杀',       icon:'📜',ag:'growth',     ai:0},
+  {id:10,t:'i', name:'研学淡季',         icon:'😴',desc:'淡季停摆，暂停一轮'},
+  {id:11,t:'o', name:'乡村创客露营地',   icon:'⛺',ag:'growth',     ai:1},
+  {id:12,t:'e', name:'装修升级',         icon:'🏗️',amt:35000, desc:'场馆装修-3.5万'},
+  {id:13,t:'m', name:'台风天',           icon:'🌧️',ev:'rain'},
+  {id:14,t:'o', name:'乡村振兴示范综合体',icon:'🏘️',ag:'opportunity',ai:0},
+  {id:15,t:'po',name:'研学课程获省奖',   icon:'🏆',amt:50000, desc:'课程获教育厅推广+5万'},
+  {id:16,t:'p', name:'项目结算日',       icon:'💰',desc:'月度结算'},
+  {id:17,t:'m', name:'研学课程获奖',     icon:'🏆',ev:'viral'},
+  {id:18,t:'o', name:'全省研学物资供应链',icon:'🚚',ag:'opportunity',ai:1},
+  {id:19,t:'e', name:'师资培训',         icon:'📚',amt:25000, desc:'培训支出-2.5万'},
+  {id:20,t:'po',name:'红色教育基地补贴', icon:'🚩',amt:40000, desc:'教育基地补贴+4万'},
+  {id:21,t:'o', name:'助农生态采摘园',   icon:'🍎',ag:'stable',     ai:1},
+  {id:22,t:'m', name:'政策调整',         icon:'⚖️',ev:'rnd'},
+  {id:23,t:'i', name:'项目延期',         icon:'⏰',desc:'工程延期，等待下轮'},
+  {id:24,t:'p', name:'项目结算日',       icon:'💰',desc:'月度结算'},
+  {id:25,t:'o', name:'红色剧本杀',       icon:'📜',ag:'growth',     ai:0},
+  {id:26,t:'e', name:'年度保险',         icon:'🛡️',amt:15000, desc:'年度保险费-1.5万'},
+  {id:27,t:'m', name:'研学资质严查',     icon:'📋',ev:'regulate'},
+  {id:28,t:'po',name:'助农补贴',         icon:'🌾',amt:45000, desc:'涉农补贴+4.5万'},
+  {id:29,t:'o', name:'乡村振兴示范综合体',icon:'🏘️',ag:'opportunity',ai:0,hr:true},
+];
+
+const EVTKEYS=Object.keys(EVTS);
+const PICONS=['🙂','😎','🤩','🥸'];
+
+const ACHIEVEMENTS=[
+  {id:'first_profit',  name:'初次盈利',   desc:'月净现金流为正',        icon:'💹', reward:10000,  done:false},
+  {id:'first_asset',   name:'初入投资',   desc:'购买第一项资产',        icon:'📦', reward:5000,   done:false},
+  {id:'three_stable',  name:'稳健投资者', desc:'持有3个稳健型资产',     icon:'🏅', reward:30000,  done:false},
+  {id:'unlock_hidden', name:'探索者',     desc:'解锁隐藏标的',         icon:'🔓', reward:50000,  done:false},
+  {id:'ten_rounds',    name:'持久战',     desc:'坚持10回合',           icon:'⏳', reward:20000,  done:false},
+  {id:'diversified',   name:'多元配置',   desc:'持有3种不同类型资产',   icon:'🌈', reward:40000,  done:false},
+  {id:'cashflow_pos',  name:'正向现金流', desc:'连续3回合净现金流为正', icon:'💰', reward:50000,  done:false},
+];
+
+// =====================================================
+// AUDIO ENGINE
+// =====================================================
+let actx=null;
+function ga(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();return actx;}
+function beep(f=440,d=.15,t='sine',v=.25){
+  try{const c=ga();const o=c.createOscillator();const g=c.createGain();o.connect(g);g.connect(c.destination);o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+d);o.start(c.currentTime);o.stop(c.currentTime+d);}catch(e){}
+}
+function sDice(){[0,.05,.1,.15,.2].forEach((t,i)=>setTimeout(()=>beep(200+i*40,.07,'square',.18),t*1000));}
+function sMove(){beep(580,.07,'sine',.12);}
+function sOpp(){[0,.1,.2].forEach((t,i)=>setTimeout(()=>beep([523,659,784][i],.14,'sine',.22),t*1000));}
+function sInc(){[0,.13].forEach((t,i)=>setTimeout(()=>beep([659,784][i],.18,'sine',.28),t*1000));}
+function sBuy(){[0,.1,.2].forEach((t,i)=>setTimeout(()=>beep([440,523,659][i],.15,'sine',.3),t*1000));}
+function sExp(){beep(200,.28,'sawtooth',.18);}
+function sLoan(){beep(330,.2,'square',.2);setTimeout(()=>beep(262,.15,'square',.15),150);}
+function sWin(){[[523,0],[659,.15],[784,.3],[1047,.5],[784,.7],[1047,.9]].forEach(([f,t])=>setTimeout(()=>beep(f,.24,'sine',.28),t*1000));}
+function sPay(){[523,587,659,698,784].forEach((f,i)=>setTimeout(()=>beep(f,.11,'sine',.23),i*75));}
+function sAlt(){[0,.13].forEach((t,i)=>setTimeout(()=>beep([300,250][i],.18,'sawtooth',.22),t*1000));}
+function sAch(){[0,.1,.2,.3].forEach((t,i)=>setTimeout(()=>beep([784,880,1047,1175][i],.15,'sine',.28),t*1000));}
+
+// =====================================================
+// STATE
+// =====================================================
+let np=1,selC={},cpIdx=0,G=null,assetFilter='all',selDiff='easy';
+
+function selP(n){np=n;document.querySelectorAll('.psbtn').forEach(b=>b.classList.toggle('sel',+b.dataset.n===n));}
+function selDiffBtn(d){selDiff=d;document.querySelectorAll('.diffbtn').forEach(b=>b.classList.toggle('sel',b.dataset.d===d));updateDiffDesc();}
+function updateDiffDesc(){
+  const d=DIFFICULTIES[selDiff];
+  const el=document.getElementById('diff-desc');
+  if(el)el.textContent=d.label;
+}
+function goCareer(){beep(523,.08);selC={};cpIdx=0;showS('sc');buildCS();}
+
+function buildCS(){
+  const tabs=document.getElementById('cptabs');tabs.innerHTML='';
+  for(let i=0;i<np;i++){
+    const b=document.createElement('button');b.className='cptab'+(i===0?' active':'');
+    b.textContent=`玩家${i+1} ${PICONS[i]}`;b.onclick=()=>setCP(i);tabs.appendChild(b);
+  }
+  renderCG();updCBtn();
+}
+function setCP(i){cpIdx=i;document.querySelectorAll('.cptab').forEach((b,j)=>b.classList.toggle('active',j===i));renderCG();}
+function renderCG(){
+  const g=document.getElementById('cgrid');g.innerHTML='';
+  CAREERS.forEach(c=>{
+    const taken=Object.entries(selC).some(([pi,sc])=>sc.id===c.id&&+pi!==cpIdx);
+    const mine=selC[cpIdx]?.id===c.id;
+    const d=document.createElement('div');d.className='ccard'+(mine?' sel':'');d.style.opacity=taken?.4:1;
+    // 计算基准融资利率（普通难度基准）
+    const baseLoanRate=0.03/12; // 年利率3%转月利率
+    const careerMod=c.loanMod||0;
+    const finalRate=(baseLoanRate+careerMod)*100;
+    const loanRateText=finalRate.toFixed(2)+'%/月';
+    const loanDescHtml=c.loanDesc?`<div class="cbuff" style="background:rgba(37,99,235,.1);border-color:rgba(59,130,246,.25);color:#7fb3f5;">💼 ${c.loanDesc}</div>`:'';
+    d.innerHTML=`<div class="ci">${c.icon}</div><div class="cn">${c.name}</div><div class="cbuff">${c.buff}</div>${loanDescHtml}<div class="cstats"><div class="cst"><div class="cstl">月薪</div><div class="cstv inc">¥${fs(c.income)}</div></div><div class="cst"><div class="cstl">月支出</div><div class="cstv exp">¥${fs(c.expense)}</div></div><div class="cst"><div class="cstl">起始资金</div><div class="cstv gld">¥${fs(c.cash)}</div></div><div class="cst"><div class="cstl">基准融资利率</div><div class="cstv gld">${loanRateText}</div></div></div>`;
+    if(!taken)d.onclick=()=>{selC[cpIdx]=c;renderCG();updCBtn();beep(440,.07);};
+    g.appendChild(d);
+  });
+}
+function updCBtn(){
+  const btn=document.getElementById('ccbtn');const ok=[...Array(np)].every((_,i)=>selC[i]);
+  btn.disabled=!ok;btn.textContent=ok?'确认选择，开始游戏 🚀':`请为所有玩家选择职业 (${Object.keys(selC).length}/${np})`;
+}
+function confirmC(){
+  beep(700,.18);initG();buildBoard();renderG();showS('sg');
+  const diff=DIFFICULTIES[G.diff];
+  log(`游戏开始！难度：${diff.icon}${diff.name} · ${diff.label} 🌴`,'le');
+  banner(`${G.ps[0].career.icon} ${G.ps[0].career.name} 的回合`);
+}
+
+// =====================================================
+// GAME INIT
+// =====================================================
+function initG(){
+  const achs=ACHIEVEMENTS.map(a=>({...a,done:false}));
+  G={
+    ps:[...Array(np)].map((_,i)=>({
+      id:i,name:`玩家${i+1}`,career:selC[i],
+      cash:selC[i].cash,assets:[],loans:[],pos:0,
+      shUsed:false,pi:0,
+      achs:achs.map(a=>({...a})),
+      negCashFlowStreak:0, // 连续负现金流回合数
+      posCashFlowStreak:0, // 连续正现金流回合数（困难通关条件）
+      pendingInvest:null,  // 困难模式大额建仓：{asset, stagesLeft}
+      rateModifier:1,      // 利率调整倍数（进阶/困难利率事件）
+      creditMod:1,         // 信用评级影响贷款额度倍数
+      suspendedRounds:0,   // 黑天鹅/停摆：高风险资产收益冻结回合数
+    })),
+    cur:0,round:1,phase:'roll',won:false,
+    diff:selDiff, // 当前难度
+    season: Math.random()>0.5?'peak':'off', // 旺季/淡季（每3回合切换）
+  };
+}
+
+// =====================================================
+// DIFFICULTY HELPERS
+// =====================================================
+function getDiff(){return DIFFICULTIES[G.diff];}
+
+// 计算贷款可用额度（现实约束：总资产*比例*信用系数）
+function getLoanLimit(p){
+  const d=getDiff();
+  const totalAssets=p.cash+p.assets.reduce((s,a)=>s+a.cost,0);
+  const existing=p.loans.reduce((s,l)=>s+l.amount,0);
+  const careerRatioMod=p.career.loanRatioMod||0;
+  const max=Math.floor(totalAssets*(d.loanRatio+careerRatioMod)*(p.creditMod||1));
+  return Math.max(0, max-existing);
+}
+
+// 计算贷款月利率（考虑难度+职业融资属性）
+function getLoanMonthRate(d, career){
+  let baseRate=0;
+  if(G.diff==='hard'){
+    // 困难模式：LPR浮动利率
+    baseRate=(d.loanRateMin+Math.random()*(d.loanRateMax-d.loanRateMin))/12;
+  }else if(d.loanRate){
+    // 普通/进阶模式：固定年利率
+    baseRate=d.loanRate/12;
+  }
+  // 职业利率调整
+  const careerMod=career?(career.loanMod||0):0;
+  return Math.max(0, baseRate+careerMod);
+}
+
+// 计算交易成本（进阶/困难）
+function getTradeCost(asset){
+  const d=getDiff();
+  if(!d.tradeCostProperty)return 0;
+  if(asset.type==='property')return Math.round(asset.cost*d.tradeCostProperty);
+  if(asset.type==='shop')return Math.round(asset.cost*d.tradeCostShop);
+  if(asset.type==='finance')return Math.round(asset.cost*d.tradeCostFinance);
+  return 0;
+}
+
+// 获取季节标签
+function getSeason(){
+  if(!G)return 'peak';
+  const cycle=Math.floor((G.round-1)/3)%2;
+  return cycle===0?'peak':'off';
+}
+
+// 季节对资产收益的影响（进阶/困难）
+function getSeasonalMod(asset){
+  const d=getDiff();if(!d.seasonalEffect||!asset.seasonal)return 1;
+  const s=getSeason();
+  return s==='peak'?1+d.seasonalEffect:1-d.seasonalEffect;
+}
+
+// =====================================================
+// BOARD BUILD (10×5 outer ring)
+// =====================================================
+const GC=10,GR=5;
+function outerRing(){
+  const r=[];
+  for(let c=0;c<GC;c++)r.push({r:0,c});
+  for(let row=1;row<GR;row++)r.push({r:row,c:GC-1});
+  for(let c=GC-2;c>=0;c--)r.push({r:GR-1,c});
+  for(let row=GR-2;row>0;row--)r.push({r:row,c:0});
+  return r;
+}
+let bpos=[];
+function buildBoard(){
+  const ring=outerRing();
+  bpos=BCELLS.map((_,i)=>ring[Math.floor(i*ring.length/BCELLS.length)]);
+  const grid=document.getElementById('bgrid');
+  grid.style.gridTemplateColumns=`repeat(${GC},1fr)`;
+  grid.style.gridTemplateRows=`repeat(${GR},1fr)`;
+  grid.innerHTML='';
+  const cells={};
+  for(let r=0;r<GR;r++)for(let c=0;c<GC;c++){
+    const d=document.createElement('div');d.style.gridRow=r+1;d.style.gridColumn=c+1;
+    d.className='bcell tcent';d.id=`gc${r}-${c}`;grid.appendChild(d);cells[`${r}-${c}`]=d;
+  }
+  const cent=document.createElement('div');cent.className='bcenter';
+  cent.style.cssText=`grid-column:2/${GC};grid-row:2/${GR};`;
+  const diff=DIFFICULTIES[selDiff];
+  cent.innerHTML=`<div class="bctit">红韵智研<br>乡村创客模拟</div><div style="font-size:11px;color:var(--gold);margin-bottom:2px">${diff.icon} ${diff.name}难度</div><div class="bcrd" id="bcrd">第 1 回合</div><div style="font-size:9px;color:rgba(236,240,241,0.5);max-width:140px;text-align:center;margin:4px auto 8px;line-height:1.4;">💰 融资规则贴合乡村创业现实：教育/涉农专项融资成本更低，轻资产融资成本更高</div><div class="fbar-wrap"><div class="fbar-lbl"><span>创业自由进度</span><span id="fpct">0%</span></div><div class="fbar"><div class="ffill" id="ffill" style="width:0%"></div></div></div>`;
+  grid.appendChild(cent);
+  const tmap={s:'ts',p:'tp',o:'to',m:'tm',e:'te',po:'tpo',i:'ti'};
+  BCELLS.forEach((cell,i)=>{
+    const pos=bpos[i];const d=cells[`${pos.r}-${pos.c}`];if(!d)return;
+    d.className=`bcell ${tmap[cell.t]||'tcent'}`;d.id=`bc${i}`;
+    d.innerHTML=`<span class="cnum">${i}</span><span class="cico">${cell.icon}</span><span class="cnam">${cell.name}</span>`;
+    d.title=cell.name+(cell.desc?'\n'+cell.desc:'');
+  });
+}
+
+// =====================================================
+// RENDER
+// =====================================================
+function renderG(){renderSbar();renderSide();renderPawns();updCtrl();updFbar();}
+
+function renderSbar(){
+  const bar=document.getElementById('sbar');const pill=document.getElementById('phasePill');
+  bar.innerHTML='';
+  G.ps.forEach((p,i)=>{
+    const t=document.createElement('div');t.className='ptab'+(i===G.cur?' active':'');
+    const neg=p.negCashFlowStreak>0?`<span style="color:#f08080;font-size:10px">⚠️负流${p.negCashFlowStreak}回</span>`:'';
+    t.innerHTML=`<span class="ptabi">${p.career.icon}</span><div class="ptabinfo"><div class="ptabn">${p.name} ${p.career.name}</div><div class="ptabc">现金 ¥${fmt(p.cash)} · 被动 ¥${fmt(p.pi)}/月 ${neg}</div></div>`;
+    bar.appendChild(t);
+  });
+  const season=getSeason();
+  const seasonTag=G.diff!=='easy'?`<span style="font-size:11px;margin-left:6px;color:${season==='peak'?'#2ecc71':'#7fb3f5'}">${season==='peak'?'☀️旺季':'🌙淡季'}</span>`:'';
+  const newPill=document.createElement('span');newPill.className='phase-pill';newPill.id='phasePill';
+  const phases={roll:'🎲 掷骰子阶段',action:'⚡ 事件处理',end:'✅ 可结束回合'};
+  newPill.innerHTML=`${phases[G.phase]||''}${seasonTag}`;
+  bar.appendChild(newPill);
+}
+
+function renderSide(){
+  const p=G.ps[G.cur];
+  const li=p.loans.reduce((s,l)=>s+l.mi,0);
+  // 困难模式持有成本（资产总价值*1%/回合）
+  const d=getDiff();
+  const holdCost=d.holdCost?Math.round(p.assets.reduce((s,a)=>s+a.cost,0)*d.holdCost):0;
+  const net=p.career.income+p.pi-p.career.expense-li-holdCost;
+  document.getElementById('cfi').textContent=`¥${fmt(p.career.income)}`;
+  document.getElementById('cfpa').textContent=`¥${fmt(p.pi)}`;
+  document.getElementById('cfex').textContent=`¥${fmt(p.career.expense)}`;
+  document.getElementById('cflo').textContent=`¥${fmt(li+holdCost)}${holdCost?` (含持有成本¥${fmt(holdCost)})`:''}`;
+  document.getElementById('cfne').textContent=`${net>=0?'+':''}¥${fmt(net)}`;
+  document.getElementById('cfne').className=`netv ${net>=0?'p':'n'}`;
+  document.getElementById('netrow').className=`netrow${net<0?' neg':''}`;
+  // 现金流预警：利息支出占被动收入超50%
+  const warningEl=document.getElementById('cashflow-warning');
+  if(warningEl){
+    const interestRatio=p.pi>0?li/p.pi:0;
+    if(interestRatio>0.5&&li>0){
+      warningEl.style.display='block';
+    }else{
+      warningEl.style.display='none';
+    }
+  }
+  renderAssets(p);renderAchs(p);
+}
+
+function filterAssets(f){
+  assetFilter=f;document.querySelectorAll('.afbtn').forEach(b=>b.classList.toggle('active',b.dataset.af===f));
+  if(G)renderAssets(G.ps[G.cur]);
+}
+
+function renderAssets(p){
+  const al=document.getElementById('alist');
+  const visible=assetFilter==='all'?p.assets:p.assets.filter(a=>a.risk===assetFilter);
+  if(!visible.length){
+    al.innerHTML=p.assets.length?`<p class="noast">此类别暂无资产</p>`:`<p class="noast">暂无资产<br><small>落在机会格可购买</small></p>`;
+  }else{
+    al.innerHTML=visible.map(a=>{
+      const d=getDiff();
+      const holdCostPerAsset=d.holdCost?Math.round(a.cost*d.holdCost):0;
+      const seasMod=getSeasonalMod(a);
+      const mr=getMR(a,p);
+      const holdTip=holdCostPerAsset?`<span style="color:#f08080;font-size:10px"> -¥${fmt(holdCostPerAsset)}/回</span>`:'';
+      const seasTip=a.seasonal&&d.seasonalEffect?`<span style="font-size:10px;color:${getSeason()==='peak'?'#2ecc71':'#7fb3f5'}"> ${getSeason()==='peak'?'☀️+10%':'🌙-10%'}</span>`:'';
+      return `<div class="aitem"><span class="ain">${a.icon} ${a.name}${seasTip}</span><span class="air">+¥${fmt(mr)}${holdTip}</span></div>`;
+    }).join('');
+  }
+}
+
+function renderAchs(p){
+  const al=document.getElementById('achlist');if(!p)return;
+  al.innerHTML=p.achs.map(a=>`<div class="achitem"><span class="ach-ico">${a.icon}</span><span class="ach-lbl ${a.done?'done':''}">${a.name}：${a.desc}</span>${a.done?`<span class="ach-done">+¥${fs(a.reward)}</span>`:''}</div>`).join('');
+}
+
+function renderPawns(){
+  document.querySelectorAll('.pawn').forEach(e=>e.remove());
+  document.querySelectorAll('.bcell.cur').forEach(e=>e.classList.remove('cur'));
+  G.ps.forEach((p,i)=>{
+    const el=document.getElementById(`bc${p.pos}`);if(!el)return;
+    el.classList.add('cur');const pn=document.createElement('div');pn.className='pawn';pn.textContent=PICONS[i];
+    pn.style.cssText=`top:${2+i*13}px;right:2px;`;el.appendChild(pn);
+  });
+}
+
+function updCtrl(){
+  document.getElementById('broll').disabled=G.phase!=='roll';
+  document.getElementById('bend').disabled=G.phase!=='end';
+  document.getElementById('bloan').disabled=G.phase==='action';
+  const pill=document.getElementById('phasePill');
+  if(pill){const phases={roll:'🎲 掷骰子阶段',action:'⚡ 事件处理',end:'✅ 可结束回合'};
+    const season=getSeason();const d=getDiff();
+    const seasonTag=G.diff!=='easy'?`<span style="font-size:11px;margin-left:6px;color:${season==='peak'?'#2ecc71':'#7fb3f5'}">${season==='peak'?'☀️旺季':'🌙淡季'}</span>`:'';
+    pill.innerHTML=`${phases[G.phase]||''}${seasonTag}`;
+  }
+}
+
+function updFbar(){
+  const p=G.ps[G.cur];const d=getDiff();
+  let pct=0;
+  if(d.winConditionAssets>0){
+    // 困难：进度=总资产/通关条件资产
+    const total=p.cash+p.assets.reduce((s,a)=>s+a.cost,0);
+    pct=Math.min(100,Math.round(total/d.winConditionAssets*100));
+  }else{
+    pct=Math.min(100,Math.round(p.pi/p.career.expense*100));
+  }
+  document.getElementById('ffill').style.width=pct+'%';
+  document.getElementById('fpct').textContent=pct+'%';
+  document.getElementById('bcrd').textContent=`第 ${G.round} 回合`;
+}
+
+// =====================================================
+// DICE & MOVEMENT
+// =====================================================
+function rollDice(){
+  if(G.phase!=='roll')return;
+  saveState(); // 保存状态以便撤销
+  const face=document.getElementById('dface');face.classList.add('droll');
+  document.getElementById('broll').disabled=true;
+  setTimeout(()=>{
+    const r=Math.floor(Math.random()*6)+1;
+    face.textContent=['⚀','⚁','⚂','⚃','⚄','⚅'][r-1];
+    face.classList.remove('droll');log(`🎲 ${G.ps[G.cur].name} 掷出 ${r} 点`);moveP(r);
+  },720);
+}
+
+function moveP(steps){
+  const p=G.ps[G.cur];const target=(p.pos+steps)%BCELLS.length;let cur=p.pos;
+  function step(){
+    cur=(cur+1)%BCELLS.length;p.pos=cur;renderPawns();sMove();
+    if(cur!==target)setTimeout(step,300);
+    else{G.phase='action';updCtrl();setTimeout(()=>trigCell(cur),420);}
+  }
+  step();
+}
+
+// =====================================================
+// CELL EVENTS
+// =====================================================
+function trigCell(pos){
+  const cell=BCELLS[pos];const p=G.ps[G.cur];
+  log(`📍 ${p.name} 落在「${cell.name}」`);
+  switch(cell.t){
+    case 's':  p.cash+=10000;sInc();floatCash(10000);log('🌴 起点补贴 +¥10,000','lp');toast('领取创业扶持金 +¥10,000','suc');allowEnd();break;
+    case 'p':  doSettle();break;
+    case 'o':  doOpp(cell);break;
+    case 'm':  doMkt(cell);break;
+    case 'e':  doExp(cell);break;
+    case 'po': doPol(cell);break;
+    case 'i':  doIdle(cell);break;
+    default:   allowEnd();
+  }
+  renderG();
+}
+
+function doExp(cell){
+  saveState(); // 保存状态以便撤销
+  const p=G.ps[G.cur];
+  if(p.career.bt==='low_s'&&!p.shUsed){
+    p.shUsed=true;log(`🛡️ 特能：免除本次额外支出！`,'lp');toast('🛡️ 职业特能：免除支出！','suc');beep(880,.18);
+  }else{
+    p.cash-=cell.amt;floatCash(-cell.amt);log(`💸 ${cell.desc} -¥${fmt(cell.amt)}`,'ln');sExp();toast(`${cell.desc} -¥${fmt(cell.amt)}`,'err');
+  }
+  allowEnd();
+}
+
+function doPol(cell){
+  saveState(); // 保存状态以便撤销
+  const p=G.ps[G.cur];p.cash+=cell.amt;floatCash(cell.amt);
+  log(`🎉 ${cell.desc} +¥${fmt(cell.amt)}`,'lp');sInc();toast(`🎉 ${cell.desc} +¥${fmt(cell.amt)}`,'suc');allowEnd();
+}
+
+function doIdle(cell){saveState();log(`😴 ${cell.desc||'本回合停止行动'}`,'le');sAlt();toast('😴 '+(cell.desc||'本回合停止行动'),'info');allowEnd();}
+
+// =====================================================
+// MARKET EVENT — 按难度过滤事件池
+// =====================================================
+function doMkt(cell){
+  saveState(); // 保存状态以便撤销
+  const p=G.ps[G.cur];const d=getDiff();
+
+  // 多人合作事件（15%概率）
+  if(np>1&&Math.random()<.15){
+    const shareAmt=15000;G.ps.forEach(op=>{op.cash+=shareAmt;});floatCash(shareAmt);
+    log(`🤝 合作机会！所有玩家均获 +¥${fmt(shareAmt)}`,'lp');sInc();
+    document.getElementById('mmktc').innerHTML=`<div class="evico">🤝</div><h3 class="mtit">乡村创客合作机会</h3><div class="eveff evp">多方联动，所有玩家均获得 +¥${fmt(shareAmt)} 联合红利！</div><div class="mact"><button class="binvest" onclick="cm('mmkt');allowEnd()">太棒了！🎉</button></div>`;
+    document.getElementById('mmkt').classList.add('open');renderG();return;
+  }
+
+  // 按难度过滤事件
+  const diffOrder={easy:0,normal:1,hard:2};
+  const curDiffLevel=diffOrder[G.diff];
+  let availableKeys=EVTKEYS.filter(k=>{
+    const ev=EVTS[k];
+    const minLevel=diffOrder[ev.diffMin||'easy'];
+    const eventRate=d.eventRate||0.2;
+    // 高触发率难度允许更多负向事件
+    if(minLevel>curDiffLevel)return false;
+    if(G.diff==='easy'&&!ev.pos&&ev.eff<-20000)return false; // 普通模式无重度负向
+    return true;
+  });
+
+  let ek;
+  if(cell.ev==='rnd'){
+    ek=availableKeys[Math.floor(Math.random()*availableKeys.length)];
+  }else{
+    ek=availableKeys.includes(cell.ev)?cell.ev:availableKeys[Math.floor(Math.random()*availableKeys.length)];
+  }
+  if(!EVTS[ek])ek='boom';
+  const ev=EVTS[ek];let eff=ev.eff;
+
+  // 职业加成
+  if(ev.pos&&p.career.bt==='hi_b')eff=Math.round(eff*(1+p.career.bv));
+  if(ev.pos&&(p.career.bt==='med_b'||p.career.bt==='craf'))eff=Math.round(eff*1.02);
+  // 新手加成（普通模式前5回合）
+  if(G.diff==='easy'&&G.round<=5&&ev.pos)eff=Math.round(eff*1.2);
+  // 困难模式后期负向加强
+  if(G.diff==='hard'&&G.round>=16&&!ev.pos)eff=Math.round(eff*1.2);
+
+  let extraDesc='';
+
+  // 处理特殊事件
+  if(ev.special==='rate_up'){
+    // 利率上调：贷款利息本回合+50%（进阶/困难）
+    p.rateModifier=1.5;
+    extraDesc='（贷款利息本回合+50%）';
+    log(`🏦 央行利率上调，贷款成本上升！`,'ln');
+    setTimeout(()=>{if(G&&G.ps[G.cur])G.ps[G.cur].rateModifier=1;},500);
+  }else if(ev.special==='credit_down'){
+    // 信用下调：本回合贷款额度-30%
+    p.creditMod=(p.creditMod||1)*0.7;
+    extraDesc='（贷款额度本回合-30%）';
+    log(`⚠️ 信用评级下调，贷款额度减少！`,'ln');
+  }else if(ev.special==='blackswan'){
+    // 黑天鹅：除金额损失外，高风险资产收益本回合腰斩
+    p.suspendedRounds=1;
+    extraDesc='（高风险资产本回合收益腰斩）';
+    log(`🦢 黑天鹅！高风险资产收益暂停1回合`,'ln');
+  }else if(ev.special==='suspend'){
+    // 项目停摆：高风险资产收益本回合归零
+    p.suspendedRounds=1;
+    extraDesc='（高风险项目收益暂停1回合）';
+    log(`🚫 项目停摆审查，高风险收益暂停`,'ln');
+  }else if(eff!==0){
+    p.cash+=eff;floatCash(eff);
+  }
+
+  const isPos=eff>=0&&!ev.special?.includes('down')&&!ev.special?.includes('up');
+  if(isPos)sInc();else sExp();
+  log(`📊 ${ev.name} ${eff>0?'+':eff<0?'':''} ${eff!==0?'¥'+fmt(eff):''}${extraDesc}`,isPos?'lp':'ln');
+
+  document.getElementById('mmktc').innerHTML=`
+    <div class="evico">${ev.icon}</div>
+    <h3 class="mtit">${ev.name}</h3>
+    <div class="eveff ${eff>0?'evp':eff<0?'evn':'evne'}">${ev.desc}${extraDesc}${G.diff==='easy'&&G.round<=5&&ev.pos?' (新手加成×1.2)':''}</div>
+    <div style="font-size:11px;color:rgba(236,240,241,0.5);text-align:center;margin-bottom:14px;">难度：${DIFFICULTIES[G.diff].icon}${DIFFICULTIES[G.diff].name} · 触发率${Math.round((d.eventRate||0.2)*100)}%</div>
+    <div class="mact"><button class="binvest" onclick="cm('mmkt');allowEnd()">了解了 👍</button></div>`;
+  document.getElementById('mmkt').classList.add('open');renderG();
+}
+
+// =====================================================
+// SETTLEMENT — 含持有成本、负现金流惩罚、连续正流奖励
+// =====================================================
+function doSettle(){
+  saveState(); // 保存状态以便撤销
+  const p=G.ps[G.cur];const d=getDiff();
+  const li=p.loans.reduce((s,l)=>s+Math.round(l.mi*(p.rateModifier||1)),0);
+  // 持有成本（困难模式：资产总价值1%/回合）
+  const holdCost=d.holdCost?Math.round(p.assets.reduce((s,a)=>s+a.cost,0)*d.holdCost):0;
+  const totIn=p.career.income+p.pi;const totEx=p.career.expense+li+holdCost;const net=totIn-totEx;
+  p.cash+=net;G.round++;sPay();floatCash(net);
+  // 重置利率修正
+  p.rateModifier=1;
+
+  // 连续现金流追踪
+  if(net>0){p.negCashFlowStreak=0;p.posCashFlowStreak=(p.posCashFlowStreak||0)+1;}
+  else{p.posCashFlowStreak=0;p.negCashFlowStreak=(p.negCashFlowStreak||0)+1;}
+
+  // 困难模式：连续3回合负现金流→资金链断裂，强制变卖最贵资产
+  let forcedSaleMsg='';
+  if(G.diff==='hard'&&p.negCashFlowStreak>=3&&p.assets.length>0){
+    const sold=p.assets.reduce((a,b)=>a.cost>b.cost?a:b);
+    p.assets=p.assets.filter(a=>a!==sold);
+    const salePrice=Math.round(sold.cost*0.7); // 折价70%变卖
+    p.cash+=salePrice;recPI(p);
+    forcedSaleMsg=`<div style="background:rgba(248,113,113,.15);border:1px solid rgba(248,113,113,.35);border-radius:9px;padding:10px;margin-bottom:12px;font-size:13px;color:#f08080;"><strong>⚠️ 资金链断裂！</strong><br>连续${p.negCashFlowStreak}回合负现金流，被迫变卖「${sold.name}」(折价7折 +¥${fmt(salePrice)})</div>`;
+    p.negCashFlowStreak=0;
+    toast(`⚠️ 资金链断裂！强制变卖「${sold.name}」`,'err');
+    log(`⚠️ 资金链断裂！强制变卖「${sold.name}」+¥${fmt(salePrice)}`,'ln');
+  }
+
+  // 成就检查
+  if(net>0)checkAch(p,'first_profit');
+  if(G.round>10)checkAch(p,'ten_rounds');
+  if(p.posCashFlowStreak>=3)checkAch(p,'cashflow_pos');
+  const types=new Set(p.assets.map(a=>a.type));
+  if(types.size>=3)checkAch(p,'diversified');
+
+  const free=chkFree(p);
+  const fpct=d.winConditionAssets>0
+    ?Math.min(100,Math.round((p.cash+p.assets.reduce((s,a)=>s+a.cost,0))/d.winConditionAssets*100))
+    :Math.min(100,Math.round(p.pi/p.career.expense*100));
+
+  // 季节标签
+  const season=getSeason();const seasTag=G.diff!=='easy'?`<div class="srow"><span class="srl">${season==='peak'?'☀️旺季':'🌙淡季'}（每3回合切换）</span><span class="srv" style="color:${season==='peak'?'var(--green)':'#7fb3f5'}">${season==='peak'?'资产收益+10%':'资产收益-10%'}</span></div>`:'';
+
+  const holdRow=holdCost?`<div class="srow"><span class="srl">持有成本（资产×1%/回）</span><span class="srv" style="color:var(--red)">-¥${fmt(holdCost)}</span></div>`:'';
+
+  // 困难通关条件提示
+  const winNote=G.diff==='hard'?`<div style="font-size:12px;color:rgba(236,240,241,0.6);text-align:center;margin-bottom:10px;">🔥 困难通关：总资产≥1亿 + 连续3回合正现金流 (当前连续正流 ${p.posCashFlowStreak||0} 回)</div>`:'';
+
+  document.getElementById('msetc').innerHTML=`
+    <h3 class="mtit">💰 月度现金流结算</h3>
+    ${free?`<div class="fdann"><div class="fdtit">🎉 创业自由达成！</div></div>`:''}
+    ${forcedSaleMsg}
+    ${winNote}
+    <div class="srows">
+      <div class="srow"><span class="srl">月薪收入</span><span class="srv" style="color:var(--green)">+¥${fmt(p.career.income)}</span></div>
+      <div class="srow"><span class="srl">被动收入合计</span><span class="srv" style="color:var(--green)">+¥${fmt(p.pi)}</span></div>
+      <div class="srow"><span class="srl">生活支出</span><span class="srv" style="color:var(--red)">-¥${fmt(p.career.expense)}</span></div>
+      ${li?`<div class="srow"><span class="srl">贷款利息${p.rateModifier>1?' (利率调整×'+p.rateModifier+')':''}</span><span class="srv" style="color:var(--red)">-¥${fmt(li)}</span></div>`:''}
+      ${holdRow}
+      ${seasTag}
+      <div class="srow stot"><span class="srl">💵 本月净现金流</span><span class="srv" style="color:${net>=0?'var(--green)':'var(--red)'}">${net>=0?'+':''}¥${fmt(net)}</span></div>
+      <div class="srow"><span class="srl">持有现金</span><span class="srv" style="color:var(--gold)">¥${fmt(p.cash)}</span></div>
+      <div class="srow"><span class="srl">创业自由进度</span><span class="srv" style="color:var(--ocean-l)">${fpct}%</span></div>
+    </div>
+    <button class="binvest" onclick="${free?`cm('mset');trigWin(${p.id});`:`cm('mset');allowEnd();`}">
+      ${free?'🏆 查看胜利画面！':'继续游戏 →'}
+    </button>`;
+  document.getElementById('mset').classList.add('open');
+  log(`💰 月度结算：净现金流 ${net>=0?'+':''}¥${fmt(net)}${holdCost?' (含持有成本-¥'+fmt(holdCost)+')':''}`,net>=0?'lp':'ln');
+  renderG();
+}
+
+// =====================================================
+// OPPORTUNITY (INVEST)
+// =====================================================
+function doOpp(cell){
+  const p=G.ps[G.cur];const grp=ASSETS[cell.ag];const at=grp[cell.ai];
+  if(cell.hr){
+    const uc=Math.random()<0.3?true:false;
+    if(!uc){log('🔒 隐藏标的未解锁','le');toast('🔒 隐藏标的未解锁，继续努力！','info');allowEnd();return;}
+    log(`🔓 ${p.career.name} 解锁了隐藏标的！`,'lp');checkAch(p,'unlock_hidden');
+  }
+  sOpp();window.__tmpAsset__={...at};renderOppModal();
+  document.getElementById('mopp').classList.add('open');
+}
+
+function renderOppModal(){
+  const p=G.ps[G.cur];const asset=window.__tmpAsset__;const d=getDiff();
+  const mrDisp=Array.isArray(asset.mr)?`¥${fmt(asset.mr[0])} ~ ¥${fmt(asset.mr[1])}` :`¥${fmt(asset.mr)}`;
+  const roi=Array.isArray(asset.mr)?`${(asset.mr[0]/asset.cost*100).toFixed(1)}%~${(asset.mr[1]/asset.cost*100).toFixed(1)}%`:`${(asset.mr/asset.cost*100).toFixed(1)}%`;
+  const rb={low:'blow',medium:'bmed',high:'bhig'}[asset.risk];
+  const rn={low:'低风险稳健',medium:'中等风险',high:'高风险高回报'}[asset.risk];
+
+  // 交易成本（进阶/困难）
+  const tradeCost=getTradeCost(asset);
+  const totalCost=asset.cost+tradeCost;
+
+  // 普通：单次投资≤现金50%
+  const maxAllowedInvest=Math.round(p.cash*d.maxInvestRatio);
+  const exceedsLimit=d.maxInvestRatio<1&&asset.cost>maxAllowedInvest;
+  let limitWarning='';
+  if(exceedsLimit){
+    limitWarning=`<div style="background:rgba(243,156,18,.12);border:1px solid rgba(243,156,18,.3);border-radius:9px;padding:9px;margin-bottom:12px;font-size:12px;color:#f39c12;">⚠️ 普通模式：单次投资≤现金50%（¥${fmt(maxAllowedInvest)}），可通过贷款补足差额</div>`;
+  }
+
+  // 困难模式大额投资提示（≥500万需分3回合建仓）
+  let bigInvestWarning='';
+  if(G.diff==='hard'&&asset.cost>=d.bigInvestThreshold){
+    bigInvestWarning=`<div style="background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.3);border-radius:9px;padding:9px;margin-bottom:12px;font-size:12px;color:#f87171;">🔥 大额投资（≥500万）需分3回合完成建仓，避免一次性抄底风险</div>`;
+  }
+
+  const canAff=p.cash>=totalCost;
+  const shortfall=totalCost-p.cash;
+  // 计算需要贷款的金额（超过50%限制时）
+  const loanNeeded=exceedsLimit?Math.max(0,totalCost-maxAllowedInvest):shortfall;
+
+  // 季节影响显示
+  const seasMod=getSeasonalMod(asset);
+  const seasonNote=asset.seasonal&&d.seasonalEffect?`<div style="font-size:12px;color:${getSeason()==='peak'?'#2ecc71':'#7fb3f5'};margin-bottom:10px;">${getSeason()==='peak'?'☀️ 当前旺季，收益+10%':'🌙 当前淡季，收益-10%'}</div>`:'';
+
+  // 按钮逻辑：资金足够且不超过限制才能直接投资
+  let actionBtn='';
+  if(canAff&&!exceedsLimit){
+    actionBtn=`<button class="binvest" onclick="buyAsset()">立即投资 💰</button>`;
+  }else if(exceedsLimit&&canAff){
+    // 资金足够但超过限制，需要贷款补足
+    actionBtn=`<button class="binvest-loan" onclick="openInvestLoan()">💳 申请贷款补足（需¥${fmt(loanNeeded)}）</button>`;
+  }else{
+    // 资金不足
+    actionBtn=`<button class="binvest-loan" onclick="openInvestLoan()">💳 申请贷款（需¥${fmt(shortfall)}）</button>`;
+  }
+
+  document.getElementById('moppc').innerHTML=`
+    <span class="mbadge ${rb}">${rn}</span>
+    <h3 class="mtit">${asset.icon} ${asset.name}</h3>
+    <p class="mdesc">${asset.desc}${asset.propType?` · ${asset.propType}`:''}</p>
+    ${seasonNote}
+    <div class="istats">
+      <div class="istat"><div class="istl">投资成本</div><div class="istv" style="color:#F87171">¥${fmt(asset.cost)}</div></div>
+      <div class="istat"><div class="istl">月度收益</div><div class="istv" style="color:#2ecc71">${mrDisp}</div></div>
+      <div class="istat"><div class="istl">月回报率</div><div class="istv" style="color:#f39c12">${roi}</div></div>
+      <div class="istat"><div class="istl">当前现金</div><div class="istv" style="color:${canAff?'#ecf0f1':'#F87171'}">¥${fmt(p.cash)}</div></div>
+    </div>
+    ${tradeCost?`<div style="background:rgba(243,156,18,.1);border:1px solid rgba(243,156,18,.25);border-radius:9px;padding:9px 13px;margin-bottom:12px;font-size:13px;color:#f39c12;">💼 交易成本（${asset.type==='property'?'房产2%':asset.type==='shop'?'开店1.5%':'金融0.5%'}）：¥${fmt(tradeCost)} &nbsp;|&nbsp; 合计：¥${fmt(totalCost)}</div>`:''}
+    ${bigInvestWarning}${limitWarning}
+    ${!canAff?`<div style="background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.3);border-radius:9px;padding:9px 13px;margin-bottom:14px;font-size:13px;color:#f08080;">💸 尚缺 <strong>¥${fmt(shortfall)}</strong>，可申请贷款后完成投资</div>`:''}
+    ${asset.bonus?`<p style="font-size:14px;color:#f39c12;margin-bottom:14px">🎁 购买即获一次性分红 ¥${fmt(asset.bonus)}</p>`:''}
+    <div class="mact">
+      ${actionBtn}
+      <button class="bskip" onclick="closeOppModal()">放弃机会</button>
+    </div>`;
+}
+
+function closeOppModal(){
+  document.getElementById('mopp').classList.remove('open');renderG();allowEnd();
+}
+
+function buyAsset(){
+  saveState(); // 保存状态以便撤销
+  const asset=window.__tmpAsset__;const p=G.ps[G.cur];const d=getDiff();
+  const tradeCost=getTradeCost(asset);
+  const totalCost=asset.cost+tradeCost;
+
+  // 普通难度：单次投资≤现金50%（防止全仓梭哈）
+  if(d.maxInvestRatio<1&&asset.cost>p.cash*d.maxInvestRatio){
+    toast(`❌ 普通模式：单次投资不超过现金50%（¥${fmt(Math.round(p.cash*d.maxInvestRatio))}）`,'err');return;
+  }
+
+  if(p.cash<totalCost){toast('❌ 现金不足，请先申请贷款','err');return;}
+
+  // 困难模式大额建仓（≥500万分3回合）
+  if(G.diff==='hard'&&asset.cost>=(d.bigInvestThreshold||5000000)){
+    startBigInvest(asset,totalCost);return;
+  }
+
+  p.cash-=totalCost;
+  if(asset.bonus)p.cash+=asset.bonus;
+  p.assets.push({...asset});recPI(p);sBuy();
+  floatCash(asset.bonus?asset.bonus-totalCost:-totalCost);
+  const diceEl=document.getElementById('dface');if(diceEl)particleBurst(diceEl,'#f39c12');
+  let msg=`✅ 购入「${asset.name}」-¥${fmt(totalCost)}`;
+  if(tradeCost)msg+=` (含交易成本¥${fmt(tradeCost)})`;
+  if(asset.bonus)msg+=` 分红+¥${fmt(asset.bonus)}`;
+  log(msg,'lp');
+  toast(`✅ 成功购入「${asset.name}」月收益+¥${fmt(getMR({...asset},p))}`,'suc');
+  document.getElementById('mopp').classList.remove('open');
+  checkAch(p,'first_asset');
+  if(p.assets.filter(a=>a.risk==='low').length>=3)checkAch(p,'three_stable');
+  const types=new Set(p.assets.map(a=>a.type));if(types.size>=3)checkAch(p,'diversified');
+  renderG();if(chkWin(p))return;allowEnd();
+}
+
+// 困难模式：大额建仓分3回合
+function startBigInvest(asset, totalCost){
+  const p=G.ps[G.cur];const stageAmt=Math.round(totalCost/3);
+  if(p.cash<stageAmt){toast(`❌ 大额建仓第1期需¥${fmt(stageAmt)}`,'err');return;}
+  p.cash-=stageAmt;p.pendingInvest={asset:{...asset},totalCost,stagesLeft:2,paidSoFar:stageAmt};
+  document.getElementById('mopp').classList.remove('open');
+  toast(`📋 大额建仓第1/3期已支付¥${fmt(stageAmt)}，还需2回合完成`,'info');
+  log(`📋 大额建仓「${asset.name}」第1期 -¥${fmt(stageAmt)}`,'lp');renderG();allowEnd();
+}
+
+// 回合开始时处理建仓进度
+function processPendingInvest(p){
+  if(!p.pendingInvest)return;
+  const pi=p.pendingInvest;const d=getDiff();
+  const stageAmt=Math.round(pi.totalCost/3);
+  if(p.cash<stageAmt){
+    toast(`⚠️ 建仓中，但现金不足支付第${4-pi.stagesLeft}期（¥${fmt(stageAmt)}），跳过`,'err');return;
+  }
+  p.cash-=stageAmt;pi.paidSoFar+=stageAmt;pi.stagesLeft--;
+  const stage=3-pi.stagesLeft;
+  toast(`📋 大额建仓第${stage}/3期 已支付¥${fmt(stageAmt)}`,'info');
+  log(`📋 建仓「${pi.asset.name}」第${stage}期 -¥${fmt(stageAmt)}`,'lp');
+  if(pi.stagesLeft===0){
+    p.assets.push({...pi.asset});recPI(p);sBuy();
+    p.pendingInvest=null;
+    toast(`✅ 「${pi.asset.name}」建仓完成！开始产生收益`,'suc');
+    log(`✅ 建仓完成「${pi.asset.name}」`,'lp');
+  }
+  renderG();
+}
+
+// =====================================================
+// LOAN — 现实约束：额度/拒绝/LPR利率
+// =====================================================
+function openLoan(){
+  const p=G.ps[G.cur];const d=getDiff();
+  const limit=getLoanLimit(p);
+  const monthRate=getLoanMonthRate(d, p.career);
+  const careerRatioMod=p.career.loanRatioMod||0;
+  const careerMod=p.career.loanMod||0;
+  
+  // 利率对标说明（贴合乡村创业真实融资成本）
+  const rateBenchmark=G.diff==='easy'
+    ?'乡村创业扶持贷（月息0.25%-0.5%）'
+    :G.diff==='normal'
+    ?'乡村创业信用贷（月息0.7%-1.0%）'
+    :'乡村创业民间融资（月息1.0%-1.5%）';
+  
+  const rateText=G.diff==='hard'
+    ?`月利率 ${(monthRate*100).toFixed(2)}%（LPR浮动）`
+    :`月利率 ${(monthRate*100).toFixed(2)}%`;
+  
+  // 计算等额本息首月还款
+  function calcFirstPayment(principal, monthlyRate, periods=12){
+    if(monthlyRate===0)return Math.round(principal/periods);
+    const emi=principal*monthlyRate*Math.pow(1+monthlyRate,periods)/(Math.pow(1+monthlyRate,periods)-1);
+    return Math.round(emi);
+  }
+
+  document.getElementById('lopts').innerHTML=`
+    <span class="mbadge" style="background:rgba(39,174,96,.16);color:#34D399;border:1px solid rgba(39,174,96,.35);margin-bottom:10px;">利率对标：乡村创业真实融资成本</span>
+    <h3 class="mtit">申请乡村创业贷款</h3>
+    <div style="background:rgba(37,99,235,.1);border:1px solid rgba(59,130,246,.25);border-radius:10px;padding:11px 14px;margin-bottom:14px;font-size:13px;line-height:2.0;">
+      <div>📊 可贷额度：<strong style="color:#f39c12">¥${fmt(limit)}</strong>（总资产${Math.round((d.loanRatio+careerRatioMod)*100)}%${careerRatioMod>0?'，实体资产抵押增信':''}）</div>
+      <div>💳 ${rateText}（<span style="color:var(--gold)">${p.career.name}</span>+<span style="color:var(--ocean-l)">${d.name}难度</span>）</div>
+      <div style="font-size:11px;color:rgba(236,240,241,0.55);">└ 对标：${rateBenchmark}</div>
+      <div>📋 还款方式：等额本息（12期），首月还款约¥<span id="loanFirstPay">${fmt(calcFirstPayment(Math.min(100000,limit),monthRate))}</span>（利息逐月递减，贴合银行真实还款规则）</div>
+      <div>🎲 审核通过率：<strong style="color:${d.loanRejectChance>=0.5?'#f08080':'#f39c12'}">${Math.round((1-d.loanRejectChance)*100)}%</strong></div>
+      <div style="font-size:11px;color:#f08080;margin-top:6px;">⚠️ 逾期罚息：未还部分利率上浮50%，冻结经营操作（对标乡村创业风控规则）</div>
+      ${p.career.loanDesc?`<div style="font-size:11px;color:rgba(243,156,18,0.8);margin-top:4px;">💼 融资属性：${p.career.loanDesc}</div>`:''}
+    </div>
+    <div style="margin-bottom:10px;font-size:14px;color:rgba(236,240,241,0.7);">贷款金额（最低1万，步长1万）：</div>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+      <input id="customLoanInput" type="number" min="10000" step="10000" value="${Math.min(100000,limit)}"
+        style="flex:1;padding:10px 14px;border-radius:10px;border:1px solid rgba(59,130,246,.4);
+               background:rgba(255,255,255,.10);color:#ecf0f1;font-size:15px;
+               font-family:'Space Mono',monospace;outline:none;"/>
+      <button class="binvest" style="padding:10px 18px;font-size:14px;flex:none;" onclick="takeLoanCustom()">申请</button>
+    </div>
+    <div id="loanPreviewMain" style="font-size:13px;color:rgba(236,240,241,0.65);margin-bottom:12px;min-height:20px;"></div>
+    <button class="bskip" onclick="cm('mloan')" style="width:100%;margin-top:4px">取消</button>`;
+
+  const input=document.getElementById('customLoanInput');
+  const preview=document.getElementById('loanPreviewMain');
+  const firstPayEl=document.getElementById('loanFirstPay');
+  function updatePreviewMain(){
+    const v=Math.max(10000,Math.round((parseInt(input.value)||0)/10000)*10000);
+    const mi=Math.round(v*monthRate);
+    const firstPay=calcFirstPayment(v,monthRate);
+    const afterCash=p.cash+v;
+    if(firstPayEl)firstPayEl.textContent=fmt(firstPay);
+    preview.innerHTML=`月息：<strong style="color:${mi>0?'#f08080':'#2ecc71'}">¥${fmt(mi)}</strong> &nbsp;|&nbsp; 首月还款：<strong style="color:#f39c12">¥${fmt(firstPay)}</strong> &nbsp;|&nbsp; 贷后现金：<strong style="color:#2ecc71">¥${fmt(afterCash)}</strong>`;
+  }
+  input.addEventListener('input',updatePreviewMain);updatePreviewMain();
+  document.getElementById('mloan').classList.add('open');
+}
+
+function takeLoanCustom(){
+  const raw=parseInt(document.getElementById('customLoanInput').value||'0');
+  const amount=Math.round(raw/10000)*10000;
+  if(amount<10000){toast('❌ 贷款金额至少1万元','err');return;}
+  takeLoan(amount);
+}
+
+function takeLoan(a){
+  saveState(); // 保存状态以便撤销
+  const p=G.ps[G.cur];const d=getDiff();
+  const limit=getLoanLimit(p);
+
+  // 贷款上限检查
+  if(a>limit){toast(`❌ 超出贷款额度上限（¥${fmt(limit)}）`,'err');return;}
+
+  // 贷款审核（随机拒绝）
+  if(Math.random()<d.loanRejectChance){
+    log(`❌ 贷款审核未通过（${Math.round(d.loanRejectChance*100)}%拒绝率）`,'ln');
+    sExp();toast(`❌ 贷款审核未通过！银行拒绝了您的申请（拒绝率${Math.round(d.loanRejectChance*100)}%）`,'err');
+    cm('mloan');return;
+  }
+
+  // 计算月息（考虑职业融资属性）
+  const monthRate=getLoanMonthRate(d, p.career);
+  const mi=Math.round(a*monthRate);
+
+  p.cash+=a;
+  p.loans.push({amount:a, mi, rate:monthRate, takenRound:G.round});
+  log(`💳 贷款审核通过！¥${fmt(a)}${mi?`，月息¥${fmt(mi)}/月`:'，0利息'}`,'lp');sLoan();
+  toast(`💳 成功贷款 ¥${fmt(a)}${mi?`，月息¥${fmt(mi)}/月`:'，0利率'}`,'info');
+  cm('mloan');renderG();
+}
+
+// 投资弹窗内贷款
+function openInvestLoan(){
+  const p=G.ps[G.cur];const asset=window.__tmpAsset__;const d=getDiff();
+  const tradeCost=getTradeCost(asset);
+  const totalCost=asset.cost+tradeCost;
+  const limit=getLoanLimit(p);
+  const monthRate=getLoanMonthRate(d, p.career);
+  const careerRatioMod=p.career.loanRatioMod||0;
+  
+  // 计算需要贷款的金额
+  const maxAllowedInvest=Math.round(p.cash*d.maxInvestRatio);
+  const exceedsLimit=d.maxInvestRatio<1&&asset.cost>maxAllowedInvest;
+  let needed,loanReason;
+  if(exceedsLimit){
+    // 资金足够但超过50%限制，需要贷款补足差额
+    needed=Math.max(10000,totalCost-maxAllowedInvest);
+    loanReason=`<div style="color:#f39c12;">⚠️ 普通模式限制：需贷款补足差额，投资后剩余现金¥${fmt(maxAllowedInvest)}</div>`;
+  }else{
+    // 资金不足
+    needed=Math.max(10000,totalCost-p.cash);
+    loanReason=`<div style="color:#f08080;">💸 尚缺：<strong>¥${fmt(needed)}</strong></div>`;
+  }
+  const defaultAmt=Math.ceil(needed/10000)*10000;
+  
+  // 利率对标说明
+  const rateBenchmark=G.diff==='easy'
+    ?'乡村创业扶持贷'
+    :G.diff==='normal'
+    ?'乡村创业信用贷'
+    :'乡村创业民间融资';
+  
+  const rateText=`月利率 ${(monthRate*100).toFixed(2)}%`;
+
+  document.getElementById('lopts').innerHTML=`
+    <span class="mbadge" style="background:rgba(39,174,96,.16);color:#34D399;border:1px solid rgba(39,174,96,.35);margin-bottom:10px;">利率对标：乡村创业真实融资成本</span>
+    <h3 class="mtit">申请乡村创业贷款</h3>
+    <div style="background:rgba(37,99,235,.12);border:1px solid rgba(59,130,246,.3);border-radius:10px;padding:11px 14px;margin-bottom:16px;font-size:14px;line-height:2.0;">
+      <div>📊 投资成本：<strong style="color:#f39c12">¥${fmt(totalCost)}</strong>${tradeCost?` (含交易成本¥${fmt(tradeCost)})`:''}</div>
+      <div>💰 当前现金：<strong style="color:#2ecc71">¥${fmt(p.cash)}</strong></div>
+      ${loanReason}
+      <div>🏦 可贷额度：<strong style="color:#f39c12">¥${fmt(limit)}</strong>（总资产${Math.round((d.loanRatio+careerRatioMod)*100)}%）</div>
+      <div>💳 ${rateText}（<span style="color:var(--gold)">${p.career.name}</span>+<span style="color:var(--ocean-l)">${d.name}难度</span>）</div>
+      <div style="font-size:11px;color:rgba(236,240,241,0.55);">└ 对标：${rateBenchmark}</div>
+      <div>🎲 审核通过率：<strong style="color:${d.loanRejectChance>=0.5?'#f08080':'#f39c12'}">${Math.round((1-d.loanRejectChance)*100)}%</strong></div>
+      ${p.career.loanDesc?`<div style="font-size:11px;color:rgba(243,156,18,0.8);margin-top:4px;">💼 融资属性：${p.career.loanDesc}</div>`:''}
+    </div>
+    <div style="margin-bottom:10px;font-size:14px;color:rgba(236,240,241,0.7);">贷款金额（最低1万，步长1万）：</div>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+      <input id="loanInput" type="number" min="10000" step="10000" value="${Math.min(defaultAmt,limit)}"
+        style="flex:1;padding:11px 14px;border-radius:10px;border:1px solid rgba(59,130,246,.4);
+               background:rgba(255,255,255,.10);color:#ecf0f1;font-size:15px;
+               font-family:'Space Mono',monospace;outline:none;"/>
+      <span style="font-size:13px;color:rgba(236,240,241,0.6);">元</span>
+    </div>
+    <div id="loanPreview" style="font-size:13px;color:rgba(236,240,241,0.65);margin-bottom:16px;min-height:20px;"></div>
+    <div style="display:flex;gap:10px;">
+      <button class="bskip" style="flex:1" onclick="cm('mloan');renderOppModal();">取消</button>
+      <button class="binvest" style="flex:1" onclick="confirmInvestLoan()">确认申请 💳</button>
+    </div>`;
+
+  const input=document.getElementById('loanInput');
+  function updatePreview(){
+    const v=Math.max(10000,Math.round((parseInt(input.value)||0)/10000)*10000);
+    const mi=Math.round(v*monthRate);
+    const afterCash=p.cash+v;
+    document.getElementById('loanPreview').innerHTML=
+      `月息：<strong style="color:${mi>0?'#f08080':'#2ecc71'}">¥${fmt(mi)}</strong>／月 &nbsp;|&nbsp; 贷款后现金：<strong style="color:#2ecc71">¥${fmt(afterCash)}</strong>`;
+  }
+  input.addEventListener('input',updatePreview);updatePreview();
+  document.getElementById('mloan').classList.add('open');
+}
+
+function confirmInvestLoan(){
+  saveState(); // 保存状态以便撤销
+  const p=G.ps[G.cur];const d=getDiff();
+  const raw=parseInt(document.getElementById('loanInput').value||'0');
+  const amount=Math.round(raw/10000)*10000;
+  if(amount<10000){toast('❌ 贷款金额至少 1 万元','err');return;}
+
+  const limit=getLoanLimit(p);
+  if(amount>limit){toast(`❌ 超出可贷额度（¥${fmt(limit)}）`,'err');return;}
+
+  // 贷款审核
+  if(Math.random()<d.loanRejectChance){
+    log(`❌ 投资贷款审核未通过`,'ln');sExp();
+    toast(`❌ 贷款审核未通过！请尝试减少金额或稍后再试`,'err');cm('mloan');return;
+  }
+
+  // 计算月息（考虑职业融资属性）
+  const monthRate=getLoanMonthRate(d, p.career);
+  const mi=Math.round(amount*monthRate);
+  p.cash+=amount;p.loans.push({amount,mi,rate:monthRate,takenRound:G.round});
+  log(`💳 申请贷款 ¥${fmt(amount)}${mi?`，月息¥${fmt(mi)}/月`:'，0利息'}`,'ln');sLoan();
+  toast(`💳 成功贷款 ¥${fmt(amount)}${mi?`，月息¥${fmt(mi)}/月`:'，0利率'}`,'info');
+  cm('mloan');renderG();
+  renderOppModal();document.getElementById('mopp').classList.add('open');
+}
+
+// =====================================================
+// PASSIVE INCOME — 含季节/停摆/职业加成
+// =====================================================
+function recPI(p){p.pi=p.assets.reduce((s,a)=>s+getMR(a,p),0);}
+function getMR(a,p){
+  let b=Array.isArray(a.mr)?Math.round(a.mr[0]+Math.random()*(a.mr[1]-a.mr[0])):a.mr;
+
+  // 停摆惩罚（黑天鹅/项目审查）：高风险资产收益腰斩
+  if(p&&p.suspendedRounds>0&&a.risk==='high')b=Math.round(b*0.5);
+
+  // 动态难度（原版）
+  if(G&&G.round<=5&&a.risk==='low')b=Math.round(b*1.2);
+  if(G&&G.round>=16&&a.risk==='high')b=Math.round(b*1.3);
+
+  // 职业加成
+  const {bt,bv}=p.career;
+  if(a.risk==='low'   &&(bt==='low_s'))b=Math.round(b*(1+bv));
+  if(a.risk==='medium'&&(bt==='med_b'||bt==='craf'))b=Math.round(b*(1+bv));
+  if(a.risk==='high'  && bt==='hi_b')               b=Math.round(b*(1+bv));
+
+  // 季节影响（进阶/困难）
+  b=Math.round(b*getSeasonalMod(a));
+
+  return b;
+}
+
+// =====================================================
+// WIN CHECK — 按难度
+// =====================================================
+function chkFree(p){
+  const d=getDiff();
+  if(G.diff==='hard'){
+    // 困难：总资产≥1亿 + 连续3回合正现金流
+    const totalAssets=p.cash+p.assets.reduce((s,a)=>s+a.cost,0);
+    return totalAssets>=d.winConditionAssets&&(p.posCashFlowStreak||0)>=d.winConditionCashflow;
+  }
+  return p.pi>=p.career.expense;
+}
+function chkWin(p){if(chkFree(p)){G.won=true;trigWin(p.id);return true;}return false;}
+function trigWin(pid){
+  const p=G.ps[pid];sWin();cm('mset');cm('mopp');
+  const rating=G.round<=10?'⭐⭐⭐ 传奇创客':G.round<=15?'⭐⭐ 优秀创客':'⭐ 稳健创客';
+  const diff=DIFFICULTIES[G.diff];
+  document.getElementById('wn').textContent=p.name;
+  document.getElementById('wc').textContent=`${p.career.icon} ${p.career.name}`;
+  document.getElementById('wrating').textContent=rating;
+  document.getElementById('wst').innerHTML=`
+    <div class="certst"><div class="certstl">持有现金</div><div class="certstv">¥${fmt(p.cash)}</div></div>
+    <div class="certst"><div class="certstl">被动收入/月</div><div class="certstv">¥${fmt(p.pi)}</div></div>
+    <div class="certst"><div class="certstl">持有资产</div><div class="certstv">${p.assets.length} 项</div></div>
+    <div class="certst"><div class="certstl">用时回合</div><div class="certstv">${G.round} 回合</div></div>
+    <div class="certst"><div class="certstl">成就数</div><div class="certstv">${p.achs.filter(a=>a.done).length}/${p.achs.length}</div></div>
+    <div class="certst"><div class="certstl">难度</div><div class="certstv">${diff.icon} ${diff.name}</div></div>`;
+  showS('sw');startConfetti();
+}
+
+// =====================================================
+// TURN
+// =====================================================
+function allowEnd(){G.phase='end';updCtrl();}
+function endTurn(){
+  saveState(); // 保存状态以便撤销回到上一回合
+  const p=G.ps[G.cur];
+  // 处理大额建仓进度
+  processPendingInvest(p);
+  // 递减停摆回合
+  if(p.suspendedRounds>0){p.suspendedRounds--;recPI(p);}
+  G.cur=(G.cur+1)%np;G.phase='roll';
+  document.getElementById('dface').textContent='🎲';
+  renderG();const np2=G.ps[G.cur];
+  log(`─── ${np2.career.icon} ${np2.name} 的回合 ───`,'le');
+  banner(`${np2.career.icon} ${np2.name} 的回合`);
+}
+
+// =====================================================
+// ACHIEVEMENTS
+// =====================================================
+function checkAch(p,id){
+  const a=p.achs.find(x=>x.id===id);if(!a||a.done)return;
+  a.done=true;p.cash+=a.reward;sAch();
+  toast(`🏅 成就解锁：${a.name}！奖励 ¥${fs(a.reward)}`,'suc');
+  log(`🏅 解锁成就「${a.name}」奖励+¥${fs(a.reward)}`,'lp');
+}
+
+// =====================================================
+// UTILITIES
+// =====================================================
+function fmt(n){return Math.abs(n).toLocaleString('zh-CN');}
+function fs(n){return n>=10000?(n/10000).toFixed(0)+'万':n.toLocaleString('zh-CN');}
+
+// 页面导航历史
+let pageHistory=[];
+let currentPage='';
+
+function showS(id){
+  // 记录页面历史
+  if(currentPage&&currentPage!==id){
+    pageHistory.push(currentPage);
+  }
+  currentPage=id;
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  updateBackBtn();
+}
+
+function goBackPage(){
+  if(pageHistory.length>0){
+    const prevPage=pageHistory.pop();
+    currentPage=prevPage;
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById(prevPage).classList.add('active');
+    updateBackBtn();
+    beep(440,.05);
+  }else{
+    toast('没有可返回的页面','err');
+  }
+}
+
+function updateBackBtn(){
+  const btn=document.querySelector('.back-action');
+  if(btn){
+    if(pageHistory.length>0){
+      btn.style.opacity='1';
+      btn.style.cursor='pointer';
+    }else{
+      btn.style.opacity='0.5';
+      btn.style.cursor='not-allowed';
+    }
+  }
+}
+
+// 操作历史（用于撤销）
+let actionHistory=[];
+const MAX_HISTORY=20;
+
+function saveState(){
+  const state=JSON.stringify({
+    G:{
+      ps:G.ps.map(p=>({
+        id:p.id,
+        name:p.name,
+        career:p.career.id,
+        cash:p.cash,
+        assets:p.assets.map(a=>({...a})),
+        loans:p.loans.map(l=>({...l})),
+        pos:p.pos,
+        pi:p.pi,
+        achs:p.achs.map(a=>({...a})),
+        negCashFlowStreak:p.negCashFlowStreak||0,
+        posCashFlowStreak:p.posCashFlowStreak||0,
+        pendingInvest:p.pendingInvest?{...p.pendingInvest}:null,
+        shUsed:p.shUsed||false,
+        rateModifier:p.rateModifier||1,
+        creditMod:p.creditMod||1,
+        suspendedRounds:p.suspendedRounds||0
+      })),
+      round:G.round,
+      cur:G.cur,
+      phase:G.phase
+    }
+  });
+  actionHistory.push(state);
+  if(actionHistory.length>MAX_HISTORY)actionHistory.shift();
+}
+
+function undoAction(){
+  if(actionHistory.length===0){
+    toast('没有可撤销的操作','err');
+    return;
+  }
+  const state=JSON.parse(actionHistory.pop());
+  // 恢复职业引用
+  const careerMap={};
+  CAREERS.forEach(c=>careerMap[c.id]=c);
+  G={
+    ps:state.G.ps.map(p=>({
+      id:p.id,
+      name:p.name,
+      career:careerMap[p.career],
+      cash:p.cash,
+      assets:p.assets,
+      loans:p.loans,
+      pos:p.pos,
+      pi:p.pi,
+      achs:p.achs,
+      negCashFlowStreak:p.negCashFlowStreak||0,
+      posCashFlowStreak:p.posCashFlowStreak||0,
+      pendingInvest:p.pendingInvest,
+      shUsed:p.shUsed||false,
+      rateModifier:p.rateModifier||1,
+      creditMod:p.creditMod||1,
+      suspendedRounds:p.suspendedRounds||0
+    })),
+    round:state.G.round,
+    cur:state.G.cur,
+    phase:state.G.phase,
+    diff:G.diff
+  };
+  // 更新按钮状态
+  const broll=document.getElementById('broll');
+  const bend=document.getElementById('bend');
+  if(broll)broll.disabled=G.phase!=='roll';
+  if(bend)bend.disabled=G.phase!=='end';
+  // 更新阶段显示
+  const phasePill=document.getElementById('phasePill');
+  if(phasePill){
+    phasePill.textContent=G.phase==='roll'?'掷骰子阶段':G.phase==='end'?'结束回合阶段':'行动阶段';
+  }
+  renderG();
+  toast('已撤销上一步操作','info');
+  log('↩️ 撤销了上一步操作','ln');
+  beep(330,.08);
+}
+
+function cm(id){document.getElementById(id).classList.remove('open');renderG();}
+
+function closeLoanModal(){
+  document.getElementById('mloan').classList.remove('open');
+  renderG();
+  // 如果当前在投资弹窗中，重新打开投资弹窗
+  if(document.getElementById('mopp').classList.contains('open')){
+    renderOppModal();
+  }else{
+    // 如果不是从投资弹窗打开的，允许结束回合
+    allowEnd();
+  }
+}
+
+function log(msg,cls=''){
+  const el=document.getElementById('glog');if(!el)return;
+  const now=new Date();const ts=`${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+  const d=document.createElement('div');d.className='loge '+cls;d.textContent=`[${ts}] ${msg}`;
+  el.prepend(d);while(el.children.length>40)el.removeChild(el.lastChild);
+}
+
+function toast(msg,type='info'){
+  const colors={suc:'linear-gradient(135deg,#059669,#2ecc71)',err:'linear-gradient(135deg,#dc2626,#f87171)',info:'linear-gradient(135deg,#1d4ed8,#3b82f6)'};
+  document.querySelectorAll('.toast').forEach(el=>el.remove());
+  const t=document.createElement('div');t.className='toast';
+  t.style.background=colors[type]||colors.info;t.textContent=msg;
+  document.body.appendChild(t);setTimeout(()=>t.remove(),3000);
+}
+
+function floatCash(amount){
+  const bar=document.getElementById('sbar');if(!bar)return;
+  const rect=bar.getBoundingClientRect();
+  const el=document.createElement('div');
+  el.textContent=(amount>=0?'+':'')+'\u00a5'+fmt(Math.abs(amount));
+  el.style.cssText=`position:fixed;left:${rect.left+20}px;top:${rect.bottom+4}px;font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:${amount>=0?'#34D399':'#F87171'};pointer-events:none;z-index:500;white-space:nowrap;text-shadow:0 2px 8px rgba(0,0,0,.6);animation:floatUp .9s var(--ease-out) forwards;`;
+  document.body.appendChild(el);setTimeout(()=>el.remove(),900);
+}
+
+function particleBurst(el,color='#f39c12'){
+  const rect=el.getBoundingClientRect();const cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
+  for(let i=0;i<8;i++){
+    const p=document.createElement('div');const angle=(i/8)*Math.PI*2;const dist=30+Math.random()*20;
+    p.style.cssText=`position:fixed;left:${cx}px;top:${cy}px;width:6px;height:6px;border-radius:50%;background:${color};pointer-events:none;z-index:500;animation:pburst .6s ease-out forwards;--dx:${Math.cos(angle)*dist}px;--dy:${Math.sin(angle)*dist}px;`;
+    document.body.appendChild(p);setTimeout(()=>p.remove(),600);
+  }
+}
+
+function banner(msg){
+  document.querySelector('.tbanner')?.remove();
+  const b=document.createElement('div');b.className='tbanner';b.textContent=msg;
+  document.body.appendChild(b);setTimeout(()=>b.remove(),2500);
+}
+
+function resetGame(){
+  G=null;selC={};np=1;selDiff='easy';stopConf();showS('si');
+  document.querySelectorAll('.psbtn').forEach(b=>b.classList.toggle('sel',+b.dataset.n===1));
+  document.querySelectorAll('.diffbtn').forEach(b=>b.classList.toggle('sel',b.dataset.d==='easy'));
+  updateDiffDesc();
+}
+
+// =====================================================
+// CONFETTI
+// =====================================================
+let craf=null;const cps=[];
+function startConfetti(){
+  const cv=document.getElementById('cc');const ctx=cv.getContext('2d');
+  cv.width=window.innerWidth;cv.height=window.innerHeight;cps.length=0;
+  const cols=['#f39c12','#34D399','#0066CC','#F87171','#9B59B6','#fff','#FF9800'];
+  for(let i=0;i<200;i++)cps.push({x:Math.random()*cv.width,y:-20,vy:Math.random()*4+2,vx:(Math.random()-.5)*3,sz:Math.random()*8+4,col:cols[i%cols.length],rot:Math.random()*360,rv:(Math.random()-.5)*10});
+  function fr(){ctx.clearRect(0,0,cv.width,cv.height);cps.forEach(p=>{p.y+=p.vy;p.x+=p.vx;p.rot+=p.rv;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);ctx.fillStyle=p.col;ctx.fillRect(-p.sz/2,-p.sz/2,p.sz,p.sz);ctx.restore();});cps.forEach(p=>{if(p.y>cv.height+20){p.y=-20;p.x=Math.random()*cv.width;}});craf=requestAnimationFrame(fr);}
+  if(craf)cancelAnimationFrame(craf);fr();
+}
+function stopConf(){if(craf){cancelAnimationFrame(craf);craf=null;}const cv=document.getElementById('cc');if(cv)cv.getContext('2d').clearRect(0,0,cv.width,cv.height);}
+window.addEventListener('resize',()=>{const cv=document.getElementById('cc');if(cv){cv.width=window.innerWidth;cv.height=window.innerHeight;}});
+
+// =====================================================
+// STARS
+// =====================================================
+(function(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<45;i++){
+    const s=document.createElement('div');s.className='star';const sz=Math.random()*3+1;
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*65}%;animation-delay:${Math.random()*4}s;animation-duration:${2+Math.random()*4}s;`;
+    c.appendChild(s);
+  }
+})();
+
+// 初始化难度描述
+updateDiffDesc();
+
+// =====================================================
+// LOCALSTORAGE DATA SYNC — 与服务平台数据互通
+// =====================================================
+const LS_GAME_KEY='zhiyan_rural_maker_data';
+const LS_SERVICE_KEY='hnInvestor_serviceData';
+
+function saveGameToStorage(){
+  if(!G)return;
+  try{
+    const data={
+      ps:G.ps.map(p=>({
+        id:p.id,name:p.name,career:p.career,cash:p.cash,
+        assets:p.assets,loans:p.loans,pos:p.pos,pi:p.pi,
+        achs:p.achs,negCashFlowStreak:p.negCashFlowStreak||0,
+        posCashFlowStreak:p.posCashFlowStreak||0,
+        pendingInvest:p.pendingInvest,shUsed:p.shUsed||false,
+        rateModifier:p.rateModifier||1,creditMod:p.creditMod||1,
+        suspendedRounds:p.suspendedRounds||0,
+      })),
+      round:G.round,cur:G.cur,phase:G.phase,diff:G.diff,
+      serviceBonuses:G.serviceBonuses||[],
+    };
+    localStorage.setItem(LS_GAME_KEY,JSON.stringify(data));
+  }catch(e){}
+}
+
+function loadServiceBonuses(){
+  try{
+    const raw=localStorage.getItem(LS_SERVICE_KEY);
+    if(!raw)return;
+    const sd=JSON.parse(raw);
+    if(!G||!sd||!sd.consult||!sd.consult.bonusClaimed)return;
+    G.serviceBonuses=G.serviceBonuses||[];
+  }catch(e){}
+}
+
+function applyServiceBonuses(){
+  if(!G)return;
+  try{
+    const raw=localStorage.getItem(LS_GAME_KEY);
+    if(!raw)return;
+    const gd=JSON.parse(raw);
+    if(!gd||!gd.serviceBonuses)return;
+    G.serviceBonuses=gd.serviceBonuses;
+  }catch(e){}
+}
+
+function getServiceBonusRateDiscount(){
+  if(!G||!G.serviceBonuses)return 0;
+  let discount=0;
+  G.serviceBonuses.forEach(b=>{
+    if(b.type==='rate_discount')discount+=b.value;
+  });
+  return discount;
+}
+
+function getServiceBonusSeasonalExtra(){
+  if(!G||!G.serviceBonuses)return 0;
+  let extra=0;
+  G.serviceBonuses.forEach(b=>{
+    if(b.type==='seasonal_bonus')extra+=b.value;
+  });
+  return extra;
+}
+
+const _origRenderG=renderG;
+renderG=function(){
+  _origRenderG();
+  saveGameToStorage();
+};
+
+const _origGetLoanMonthRate=getLoanMonthRate;
+getLoanMonthRate=function(d,career){
+  const base=_origGetLoanMonthRate(d,career);
+  const discount=getServiceBonusRateDiscount();
+  return Math.max(0,base-discount);
+};
+
+const _origGetSeasonalMod=getSeasonalMod;
+getSeasonalMod=function(asset){
+  const base=_origGetSeasonalMod(asset);
+  const extra=getServiceBonusSeasonalExtra();
+  if(extra>0&&(G.diff==='normal'||G.diff==='hard')&&asset.seasonal){
+    return base+extra;
+  }
+  return base;
+};
+
+applyServiceBonuses();
+
+const LS_MAKER_KEY = 'zhiyan_rural_maker_data';
+function exportMakerDataToZhiyan() {
+  if(!G) return;
+  try {
+    const p = G.ps[0];
+    const totalAssets = p.cash + p.assets.reduce((s,a)=>s+a.cost, 0);
+    const makerReport = {
+      role: p.career.name,
+      finalAssets: totalAssets,
+      passiveIncome: p.pi,
+      achievements: p.achs.filter(a=>a.done).map(a=>a.name),
+      makerIndex: Math.min(100, Math.round(totalAssets/100000 + (p.pi/5000)))
+    };
+    localStorage.setItem(LS_MAKER_KEY, JSON.stringify(makerReport));
+  } catch(e) {}
+}
+
+const _origTrigWin = trigWin;
+trigWin = function(pid) {
+  _origTrigWin(pid);
+  exportMakerDataToZhiyan();
+};
+</script>
+</body>
+</html>
