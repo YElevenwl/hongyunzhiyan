@@ -266,6 +266,287 @@ body{
 @media(max-width:860px){.gmain{grid-template-columns:1fr;}.spanel{display:none;}}
 
 /* =====================================================
+   RESPONSIVE / MOBILE OPTIMIZATION
+===================================================== */
+/* 超小屏手机（≤360px） */
+@media(max-width:360px){
+  body{padding-top:50px;}
+  .glayout{padding:8px;gap:8px;}
+  
+  /* 棋盘容器优化 */
+  .bwrap{
+    padding:8px;
+    border-radius:14px;
+    perspective:800px;
+    /* 确保棋盘完全适应屏幕 */
+    width:100%;
+    box-sizing:border-box;
+  }
+  .bgrid{
+    gap:1px;
+    transform:rotateX(2deg); /* 最小倾斜角度 */
+    max-width:100%;
+    width:100%;
+  }
+  
+  /* 格子尺寸优化 */
+  .bcell{
+    min-height:38px;
+    padding:1px;
+    border-radius:4px;
+  }
+  .cico{font-size:11px;}
+  .cnam{font-size:7px;line-height:1;}
+  .cnum{font-size:6px;top:0;left:1px;}
+  
+  /* 棋子尺寸 */
+  .pawn{font-size:11px;}
+  
+  /* 中心区域 */
+  .bcenter{padding:6px;gap:4px;border-radius:10px;}
+  .bctit{font-size:12px;}
+  .bcrd{font-size:9px;}
+  .fbar-wrap{max-width:100px;}
+  .fbar-lbl{font-size:8px;}
+  .fbar{height:4px;}
+  
+  /* 图例 */
+  .blegend{gap:4px;margin-top:3px;}
+  .bleg{font-size:8px;}
+  .bleg-dot{width:6px;height:6px;border-radius:1px;}
+  
+  /* 操作按钮 */
+  .action-btn{padding:8px 12px;border-radius:8px;font-size:11px;}
+  .action-icon{font-size:13px;}
+  
+  /* 控制按钮 */
+  .cb{padding:10px 18px;font-size:13px;}
+  .dicewr{width:48px;height:48px;}
+  .diceface{width:48px;height:48px;font-size:24px;border-radius:9px;}
+}
+
+/* 小屏手机（≤420px） */
+@media(max-width:420px) and (min-width:361px){
+  body{padding-top:52px;}
+  .glayout{padding:9px;gap:9px;}
+  
+  /* 棋盘容器优化 */
+  .bwrap{
+    padding:10px;
+    border-radius:16px;
+    perspective:900px;
+    width:100%;
+    box-sizing:border-box;
+  }
+  .bgrid{
+    gap:2px;
+    transform:rotateX(2deg);
+    max-width:100%;
+    width:100%;
+  }
+  
+  /* 格子尺寸优化 */
+  .bcell{
+    min-height:42px;
+    padding:2px;
+    border-radius:5px;
+  }
+  .cico{font-size:12px;}
+  .cnam{font-size:8px;}
+  .cnum{font-size:6px;top:0;left:1px;}
+  
+  /* 棋子尺寸 */
+  .pawn{font-size:12px;}
+  
+  /* 中心区域 */
+  .bcenter{padding:7px;gap:5px;border-radius:11px;}
+  .bctit{font-size:13px;}
+  .bcrd{font-size:10px;}
+  .fbar-wrap{max-width:110px;}
+  .fbar-lbl{font-size:9px;}
+  .fbar{height:4px;}
+  
+  /* 图例 */
+  .blegend{gap:5px;margin-top:4px;}
+  .bleg{font-size:9px;}
+  .bleg-dot{width:6px;height:6px;border-radius:1px;}
+  
+  /* 操作按钮 */
+  .action-btn{padding:9px 14px;border-radius:9px;font-size:12px;}
+  .action-icon{font-size:14px;}
+  
+  /* 控制按钮 */
+  .cb{padding:11px 20px;font-size:14px;}
+  .dicewr{width:52px;height:52px;}
+  .diceface{width:52px;height:52px;font-size:26px;border-radius:10px;}
+}
+
+/* 中等屏手机（≤500px） */
+@media(max-width:500px) and (min-width:421px){
+  body{padding-top:54px;}
+  .glayout{padding:10px;gap:10px;}
+  
+  /* 棋盘容器优化 */
+  .bwrap{
+    padding:11px;
+    border-radius:17px;
+    perspective:950px;
+    width:100%;
+    box-sizing:border-box;
+  }
+  .bgrid{
+    gap:2px;
+    transform:rotateX(3deg);
+    max-width:100%;
+    width:100%;
+  }
+  
+  /* 格子尺寸优化 */
+  .bcell{
+    min-height:46px;
+    padding:3px;
+    border-radius:6px;
+  }
+  .cico{font-size:13px;}
+  .cnam{font-size:8px;}
+  .cnum{font-size:7px;top:1px;left:2px;}
+  
+  /* 棋子尺寸 */
+  .pawn{font-size:13px;}
+  
+  /* 中心区域 */
+  .bcenter{padding:9px;gap:6px;border-radius:12px;}
+  .bctit{font-size:14px;}
+  .bcrd{font-size:10px;}
+  .fbar-wrap{max-width:130px;}
+  .fbar-lbl{font-size:9px;}
+  .fbar{height:5px;}
+  
+  /* 图例 */
+  .blegend{gap:5px;margin-top:4px;}
+  .bleg{font-size:9px;}
+  .bleg-dot{width:7px;height:7px;border-radius:2px;}
+}
+
+/* 普通手机（≤600px） */
+@media(max-width:600px) and (min-width:501px){
+  /* 页面布局 */
+  body{padding-top:55px;}
+  .glayout{padding:10px;gap:10px;}
+  
+  /* 棋盘容器优化 */
+  .bwrap{
+    padding:12px;
+    border-radius:18px;
+    perspective:1000px;
+    width:100%;
+    box-sizing:border-box;
+  }
+  .bgrid{
+    gap:2px;
+    transform:rotateX(3deg);
+    max-width:100%;
+    width:100%;
+  }
+  
+  /* 格子尺寸优化 */
+  .bcell{
+    min-height:48px;
+    padding:3px;
+    border-radius:6px;
+  }
+  .cico{font-size:14px;}
+  .cnam{font-size:9px;}
+  .cnum{font-size:7px;top:1px;left:2px;}
+  
+  /* 棋子尺寸 */
+  .pawn{font-size:14px;}
+  
+  /* 中心区域 */
+  .bcenter{padding:10px;border-radius:12px;}
+  .bctit{font-size:15px;}
+  .bcrd{font-size:11px;}
+  .fbar-wrap{max-width:140px;}
+  .fbar-lbl{font-size:10px;}
+  .fbar{height:5px;}
+  
+  /* 图例 */
+  .blegend{gap:6px;margin-top:4px;}
+  .bleg{font-size:10px;}
+  .bleg-dot{width:7px;height:7px;border-radius:2px;}
+}
+
+/* 所有手机（≤600px）的通用优化 */
+@media(max-width:600px){
+  /* 防止页面内容溢出 */
+  html,body{
+    overflow-x:hidden;
+  }
+  
+  /* 状态栏 */
+  .sbar{gap:8px;}
+  .back-btn,.undo-btn{padding:5px 10px;font-size:11px;border-radius:6px;}
+  
+  /* 操作按钮 */
+  .action-btns{gap:8px;margin-bottom:10px;}
+  
+  /* 引入页优化 */
+  #si{padding:30px 16px;text-align:center;}
+  .logo{font-size:28px;}
+  .sub{font-size:12px;letter-spacing:3px;margin-bottom:24px;}
+  .desc{font-size:14px;max-width:100%;margin-bottom:28px;}
+  .btn-main{padding:12px 40px;font-size:16px;}
+  .psrow{flex-wrap:wrap;gap:8px;margin-bottom:24px;justify-content:center;}
+  .psbtn{width:40px;height:40px;font-size:15px;}
+  
+  /* 职业选择页 */
+  #sc{padding:24px 12px 80px;}
+  .ct{font-size:18px;}
+  .cs{font-size:14px;}
+  
+  /* 控制按钮 */
+  .ccbtn{padding:10px 20px;font-size:14px;border-radius:12px;}
+  
+  /* 确保棋盘容器完全适配 */
+  .bwrap{
+    width:100% !important;
+    max-width:100vw !important;
+  }
+  
+  /* 棋盘网格自适应屏幕 */
+  .bgrid{
+    width:100% !important;
+  }
+}
+
+/* 横屏手机优化 */
+@media(max-height:500px) and (orientation:landscape){
+  body{padding-top:45px;}
+  .glayout{grid-template-rows:auto 1fr;}
+  .bwrap{padding:8px;}
+  .bcell{min-height:40px;}
+  .cnam{font-size:8px;}
+  .bcenter{display:none;} /* 横屏时隐藏中心，节省空间 */
+}
+
+/* 大屏手机/小平板（≤768px） */
+@media(max-width:768px) and (min-width:601px){
+  .bwrap{padding:14px;}
+  .bgrid{gap:3px;transform:rotateX(4deg);}
+  .bcell{min-height:54px;}
+  .cico{font-size:15px;}
+  .cnam{font-size:9px;}
+  .pawn{font-size:15px;}
+}
+
+/* 平板设备优化 */
+@media(min-width:769px) and (max-width:1024px){
+  .bcell{min-height:56px;}
+  .cnam{font-size:9px;}
+  .pawn{font-size:15px;}
+}
+
+/* =====================================================
    BOARD
 ===================================================== */
 /* 【修改点10】棋盘容器改回深色半透明玻璃，适配深海蓝背景 */
@@ -284,11 +565,22 @@ body{
   background:radial-gradient(ellipse at 50% 0%,rgba(192,57,43,.12) 0%,transparent 60%);
   pointer-events:none;
 }
-.bgrid{display:grid;gap:3px;width:100%;max-width:680px;transform:rotateX(5deg);transform-style:preserve-3d;}
+.bgrid{
+  display:grid;
+  gap:3px;
+  width:100%;
+  max-width:100%;
+  transform:rotateX(5deg);
+  transform-style:preserve-3d;
+  aspect-ratio:1/1; /* 保持正方形比例 */
+}
 .bcell{
   border-radius:8px;padding:4px;display:flex;flex-direction:column;
   align-items:center;justify-content:center;position:relative;
-  transition:all .22s var(--ease);min-height:64px;font-size:12px;text-align:center;
+  transition:all .22s var(--ease);
+  min-height:64px;
+  height:100%; /* 填充网格高度 */
+  font-size:12px;text-align:center;
   /* 【修改点11】min-height 58→64px（约+10%），整体格子稍大 */
   border:1px solid rgba(255,255,255,.1);
   cursor:default;
@@ -318,7 +610,18 @@ body{
 .cnum{font-size:8px;color:rgba(255,255,255,.32);position:absolute;top:2px;left:3px;font-family:'Space Mono',monospace;}
 /* 【修改点13】棋子尺寸放大20%：13px→16px，宽高由布局决定用font-size控制 */
 .pawn{position:absolute;font-size:16px;z-index:10;pointer-events:none;transition:all .38s var(--ease);filter:drop-shadow(0 2px 6px rgba(0,0,0,.7));}
-.bcenter{display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:14px;border:1px dashed rgba(255,255,255,.12);padding:14px;gap:8px;}
+.bcenter{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border-radius:14px;
+  border:1px dashed rgba(255,255,255,.12);
+  padding:14px;
+  gap:8px;
+  /* 优化中心区域自适应 */
+  min-height:0;
+}
 .bctit{font-size:clamp(17px,2.5vw,23px);font-weight:900;background:linear-gradient(135deg,var(--gold),var(--ocean-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;}
 .bcrd{font-size:13px;color:var(--dim);}
 .fbar-wrap{width:100%;max-width:180px;}
