@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乡村地图 - 红韵智研</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .hero-section {
+            text-align: center;
+            padding: 40px 20px 20px;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 50%, #fff5f5 100%);
+        }
+        .hero-section h1 {
+            color: #C41E3A;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .village-name-display {
+            font-size: 28px;
+            color: #C41E3A;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .hero-section p {
+            color: #666;
+            font-size: 14px;
+        }
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        .map-section {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .section-title {
+            color: #C41E3A;
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #C41E3A;
+        }
+        .map-container {
+            background: linear-gradient(135deg, #f8f8f8, #e8e8e8);
+            border-radius: 8px;
+            height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #e0e0e0;
+            position: relative;
+            overflow: hidden;
+        }
+        .map-location-marker {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #ff4444 0%, #C41E3A 100%);
+            border-radius: 50%;
+            border: 3px solid #DAA520;
+            box-shadow: 0 0 20px rgba(196, 30, 58, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 20px rgba(196, 30, 58, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(196, 30, 58, 0.8); }
+            100% { box-shadow: 0 0 20px rgba(196, 30, 58, 0.5); }
+        }
+        .map-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f8f8;
+            border-radius: 8px;
+        }
+        .map-info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .map-info-row:last-child { border-bottom: none; }
+        .map-info-key { color: #C41E3A; font-weight: bold; }
+        .map-info-val { color: #333; }
+        .info-section {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .info-card {
+            background: linear-gradient(135deg, #fff5f5, #fff);
+            border: 1px solid rgba(196, 30, 58, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .info-card-title {
+            color: #C41E3A;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .info-card-content {
+            color: #333;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .info-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .info-tag {
+            background: rgba(196, 30, 58, 0.1);
+            color: #C41E3A;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            border: 1px solid rgba(196, 30, 58, 0.3);
+        }
+        .history-card {
+            background: linear-gradient(135deg, #fff8f8, #fff);
+            border: 1px solid rgba(196, 30, 58, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .history-title {
+            color: #C41E3A;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .history-content {
+            color: #333;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .history-timeline {
+            margin-top: 10px;
+            padding-left: 15px;
+        }
+        .history-item {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+        }
+        .history-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 6px;
+            width: 8px;
+            height: 8px;
+            background: #DAA520;
+            border-radius: 50%;
+        }
+        .history-date {
+            color: #C41E3A;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .history-text {
+            color: #333;
+            font-size: 12px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .stat-box {
+            background: #f8f8f8;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+        .stat-box-num {
+            font-size: 24px;
+            font-weight: bold;
+            color: #C41E3A;
+        }
+        .stat-box-label {
+            font-size: 11px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #C41E3A, #8B0000);
+            border: 2px solid #DAA520;
+            color: white;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 20px auto;
+            display: block;
+            width: fit-content;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .back-btn:hover {
+            background: linear-gradient(135deg, #8B0000, #C41E3A);
+            box-shadow: 0 0 20px rgba(196, 30, 58, 0.3);
+            transform: scale(1.05);
+        }
+        .related-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .related-villages {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .related-village-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .related-village-card:hover {
+            border-color: #C41E3A;
+            box-shadow: 0 4px 12px rgba(196, 30, 58, 0.2);
+            transform: translateY(-3px);
+        }
+        .related-village-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .related-village-name {
+            color: #C41E3A;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .related-village-location {
+            color: #666;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">红韵智研</div>
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="route.html">AI 研学路线</a></li>
+                <li><a href="knowledgemap.html">知识图谱</a></li>
+                <li><a href="rural.html">乡村振兴</a></li>
+                <li><a href="profile.html">个人中心</a></li>
+            </ul>
+            <button class="nav-toggle">☰</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <h1>🗺️ 红色乡村地图</h1>
+        <p>琼崖革命遗址与乡村振兴示范点</p>
+        <div class="village-name-display" id="village-name">加载中...</div>
+        <button class="back-btn" onclick="goBack()">⬅️ 返回知识图谱</button>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Map Section -->
+        <div class="map-section">
+            <h3 class="section-title">📍 地理位置</h3>
+            <div class="map-container">
+                <div class="map-location-marker" id="map-marker">🏴‍☠️</div>
+            </div>
+            <div class="map-info">
+                <div class="map-info-row">
+                    <span class="map-info-key">地理位置</span>
+                    <span class="map-info-val" id="location-info">--</span>
+                </div>
+                <div class="map-info-row">
+                    <span class="map-info-key">行政归属</span>
+                    <span class="map-info-val" id="admin-info">--</span>
+                </div>
+                <div class="map-info-row">
+                    <span class="map-info-key">红色等级</span>
+                    <span class="map-info-val" id="red-level">--</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div class="info-section">
+            <!-- Basic Info -->
+            <div class="info-card">
+                <div class="info-card-title">🏛️ 基本信息</div>
+                <div class="info-card-content" id="basic-info">加载中...</div>
+            </div>
+
+            <!-- Revolutionary History -->
+            <div class="history-card">
+                <div class="history-title">⚔️ 革命历史</div>
+                <div class="history-timeline" id="history-timeline">
+                    <!-- Timeline items will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Revitalization Stats -->
+            <div class="info-card">
+                <div class="info-card-title">🏦 振兴成效</div>
+                <div class="stats-grid" id="revitalization-stats">
+                    <!-- Stats will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Villages -->
+    <div class="related-section">
+        <h3 class="section-title">🔍 相关乡村推荐</h3>
+        <div class="related-villages" id="related-villages">
+            <!-- Related villages will be inserted here -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 红韵智研—AI 赋能海南红色文化与乡村振兴综合服务平台. 版权所有.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Village Data
+        const villageData = {
+            '母瑞山': {
+                location: '琼中县和平镇',
+                admin: '琼中黎族苗族自治县',
+                redLevel: 'AAAA级红色景区',
+                icon: '🏴‍☠️',
+                basicInfo: '母瑞山位于琼中县和平镇，是琼崖革命根据地的中心，素有"海南的井冈山"之称。1928年3月，琼崖苏维埃政府在此建立革命根据地，在极端艰苦的环境中坚持了长达23年的革命斗争。母瑞山革命根据地是琼崖革命的一面旗帜，见证了琼崖革命二十三年红旗不倒的光辉历程。',
+                history: [
+                    { date: '1928年3月', text: '琼崖苏维埃政府在母瑞山建立革命根据地' },
+                    { date: '1929年', text: '在敌人重兵围剿下坚持斗争' },
+                    { date: '1930年', text: '王文明率领部分红军在母瑞山坚持斗争' },
+                    { date: '1932年', text: '琼崖红军在母瑞山重建' }
+                ],
+                stats: [
+                    { num: '23年', label: '革命斗争' },
+                    { num: '1928', label: '建根据地' },
+                    { num: 'AAAA', label: '景区等级' },
+                    { num: '100+', label: '革命故事' }
+                ],
+                tags: ['革命圣地', '红色旅游', '革命教育']
+            },
+            '美合': {
+                location: '澄迈县仁兴镇',
+                admin: '澄迈县',
+                redLevel: '省级文物保护单位',
+                icon: '🏴‍☠️',
+                basicInfo: '美合抗日根据地位于澄迈县仁兴镇，是琼崖抗日根据地的重要组成部分。1940年初，冯白驹率领琼崖抗日独立总队在美合建立根据地，开展抗日游击战争。美合根据地是琼崖抗战的重要指挥中心，为琼崖抗日战争的胜利做出了重要贡献。',
+                history: [
+                    { date: '1940年1月', text: '琼崖抗日独立总队在美合建立根据地' },
+                    { date: '1941年', text: '召开琼崖党政军干部会议' },
+                    { date: '1942年', text: '粉碎日伪军多次"扫荡"' },
+                    { date: '1945年', text: '配合主力部队反攻' }
+                ],
+                stats: [
+                    { num: '5年', label: '抗战岁月' },
+                    { num: '1940', label: '建根据地' },
+                    { num: '省级', label: '文保单位' },
+                    { num: '50+', label: '抗日故事' }
+                ],
+                tags: ['抗日根据地', '革命遗址', '抗战教育']
+            },
+            '五指山': {
+                location: '五指山市',
+                admin: '五指山市',
+                redLevel: '国家级红色景区',
+                icon: '🏴‍☠️',
+                basicInfo: '五指山是琼崖革命的指挥中枢。1947年4月，琼崖党政军机关进驻五指山，五指山成为琼崖革命的大本营和指挥中心。1947年10月，琼崖纵队正式成立，统一了琼崖革命武装力量。五指山革命根据地是琼崖革命走向胜利的转折点。',
+                history: [
+                    { date: '1947年4月', text: '琼崖党政军机关进驻五指山' },
+                    { date: '1947年10月', text: '琼崖纵队正式成立' },
+                    { date: '1948年', text: '发起春季攻势' },
+                    { date: '1950年', text: '配合野战军解放海南岛' }
+                ],
+                stats: [
+                    { num: '3年', label: '指挥中枢' },
+                    { num: '1947', label: '进驻五指山' },
+                    { num: '国家级', label: '红色景区' },
+                    { num: '200+', label: '革命文献' }
+                ],
+                tags: ['革命圣地', '指挥中心', '胜利起点']
+            },
+            '南阁': {
+                location: '临高县南阁镇',
+                admin: '临高县',
+                redLevel: '县级红色教育基地',
+                icon: '🏴‍☠️',
+                basicInfo: '南阁是琼崖革命的重要发源地之一。1927年4月22日，南阁起义打响了琼崖武装斗争的第一枪，成为琼崖革命武装起义的先声。南阁起义是琼崖人民反抗国民党反动统治的第一声春雷，标志着琼崖革命进入武装斗争的新阶段。',
+                history: [
+                    { date: '1927年4月22日', text: '南阁起义爆发，打响琼崖武装斗争第一枪' },
+                    { date: '1927年', text: '建立南阁农民协会' },
+                    { date: '1928年', text: '组建琼崖红军' },
+                    { date: '1930年', text: '参加母瑞山斗争' }
+                ],
+                stats: [
+                    { num: '1927', label: '起义年份' },
+                    { num: '第一枪', label: '武装斗争' },
+                    { num: '县级', label: '教育基地' },
+                    { num: '10+', label: '革命人物' }
+                ],
+                tags: ['起义发源地', '武装斗争', '革命教育']
+            },
+            '椰子寨': {
+                location: '琼海市',
+                admin: '琼海市',
+                redLevel: '省级红色教育基地',
+                icon: '🏴‍☠️',
+                basicInfo: '椰子寨是琼崖革命的重要事件发生地。1927年9月23日，椰子寨战斗打响，全琼武装总暴动由此揭开序幕。这是一次具有重大历史意义的武装起义，标志着琼崖革命进入全面武装斗争的新阶段。',
+                history: [
+                    { date: '1927年9月23日', text: '椰子寨战斗，全琼武装总暴动揭幕' },
+                    { date: '1927年', text: '组建琼崖讨逆革命军' },
+                    { date: '1928年', text: '建立琼崖苏维埃政权' }
+                ],
+                stats: [
+                    { num: '1927', label: '总暴动' },
+                    { num: '省级', label: '教育基地' },
+                    { num: '重要', label: '历史事件' }
+                ],
+                tags: ['武装暴动', '历史事件', '革命教育']
+            },
+            '加脑': {
+                location: '保亭县加脑村',
+                admin: '保亭黎族苗族自治县',
+                redLevel: '美丽乡村示范点',
+                icon: '🏴‍☠️',
+                basicInfo: '加脑村是保亭县特色黎苗乡村，也是红色文化与民族风情交融的典范。在革命战争年代，加脑村群众积极支持革命，是琼崖革命的可靠后方。如今，加脑村在乡村振兴中走在前列，打造了红色文化与黎苗风情相结合的特色乡村旅游。',
+                history: [
+                    { date: '抗日战争', text: '支援琼崖抗日独立总队' },
+                    { date: '解放战争', text: '提供后勤保障' },
+                    { date: '新时代', text: '美丽乡村建设示范' }
+                ],
+                stats: [
+                    { num: '美丽', label: '乡村示范' },
+                    { num: '黎苗', label: '民族风情' },
+                    { num: '红色+', label: '文化融合' }
+                ],
+                tags: ['美丽乡村', '民族团结', '乡村振兴']
+            },
+            '便文': {
+                location: '澄迈县',
+                admin: '澄迈县',
+                redLevel: '省级党史教育基地',
+                icon: '🏴‍☠️',
+                basicInfo: '便文村是琼崖抗日根据地的重要村庄。在抗日战争和解放战争时期，便文村群众为琼崖革命做出了重要贡献。村中保存有革命遗址和纪念设施，是开展革命传统教育的重要基地。',
+                history: [
+                    { date: '1940年代', text: '琼崖党政军机关驻地' },
+                    { date: '1942年', text: '反"扫荡"斗争' },
+                    { date: '1945年', text: '支援大反攻' }
+                ],
+                stats: [
+                    { num: '省级', label: '教育基地' },
+                    { num: '1940s', label: '革命岁月' },
+                    { num: '重要', label: '历史见证' }
+                ],
+                tags: ['抗日根据地', '党史教育', '革命遗址']
+            },
+            '王文明故居': {
+                location: '琼山区',
+                admin: '海口市琼山区',
+                redLevel: '省级文物保护单位',
+                icon: '🏴‍☠️',
+                basicInfo: '王文明是琼崖革命的重要领导人，琼崖苏维埃政府首任主席。故居现保存有王文明生平事迹展览，是开展革命传统教育的重要场所。王文明1894年出生于琼山，1930年在母瑞山病逝，为琼崖革命事业献出了宝贵生命。',
+                history: [
+                    { date: '1894年', text: '王文明出生于琼山' },
+                    { date: '1926年', text: '任中共琼崖地委委员' },
+                    { date: '1927年', text: '参加南阁起义' },
+                    { date: '1928年', text: '任琼崖苏维埃政府主席' },
+                    { date: '1930年1月', text: '在母瑞山病逝' }
+                ],
+                stats: [
+                    { num: '1894', label: '出生年份' },
+                    { num: '1930', label: '逝世年份' },
+                    { num: '省级', label: '文保单位' }
+                ],
+                tags: ['革命领袖', '名人故居', '革命教育']
+            }
+        };
+
+        // Related villages (excluding current)
+        const allVillages = Object.keys(villageData);
+
+        // Get query parameter
+        function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Go back to knowledge graph
+        function goBack() {
+            window.location.href = 'knowledgemap.html';
+        }
+
+        // Load village data
+        function loadVillageData() {
+            const villageName = getQueryParam('q') || '母瑞山';
+            const data = villageData[villageName] || villageData['母瑞山'];
+
+            // Update page title
+            document.title = villageName + ' - 红色乡村地图 - 红韵智研';
+
+            // Update village name display
+            document.getElementById('village-name').textContent = data.icon + ' ' + villageName;
+
+            // Update map marker
+            document.getElementById('map-marker').innerHTML = data.icon;
+
+            // Update location info
+            document.getElementById('location-info').textContent = data.location;
+            document.getElementById('admin-info').textContent = data.admin;
+            document.getElementById('red-level').textContent = data.redLevel;
+
+            // Update basic info
+            document.getElementById('basic-info').textContent = data.basicInfo;
+
+            // Update history timeline
+            const historyContainer = document.getElementById('history-timeline');
+            let historyHTML = '';
+            data.history.forEach(item => {
+                historyHTML += '<div class="history-item">' +
+                    '<div class="history-date">' + item.date + '</div>' +
+                    '<div class="history-text">' + item.text + '</div>' +
+                    '</div>';
+            });
+            historyContainer.innerHTML = historyHTML;
+
+            // Update revitalization stats
+            const statsContainer = document.getElementById('revitalization-stats');
+            let statsHTML = '';
+            data.stats.forEach(stat => {
+                statsHTML += '<div class="stat-box">' +
+                    '<div class="stat-box-num">' + stat.num + '</div>' +
+                    '<div class="stat-box-label">' + stat.label + '</div>' +
+                    '</div>';
+            });
+            statsContainer.innerHTML = statsHTML;
+
+            // Update related villages
+            const relatedContainer = document.getElementById('related-villages');
+            let relatedHTML = '';
+            const related = allVillages.filter(v => v !== villageName).slice(0, 4);
+            related.forEach(name => {
+                const vData = villageData[name];
+                relatedHTML += '<div class="related-village-card" onclick="window.location.href=\'rural-map.html?q=' + encodeURIComponent(name) + '\'">' +
+                    '<div class="related-village-icon">' + vData.icon + '</div>' +
+                    '<div class="related-village-name">' + name + '</div>' +
+                    '<div class="related-village-location">' + vData.location + '</div>' +
+                    '</div>';
+            });
+            relatedContainer.innerHTML = relatedHTML;
+        }
+
+        // Load data on page load
+        window.addEventListener('load', loadVillageData);
+    </script>
+</body>
+</html>

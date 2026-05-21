@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乡村人才与帮扶 - 红韵智研—AI 赋能海南红色文化与乡村振兴综合服务平台</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 左侧固定导航栏 */
+        .sidebar-nav {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .sidebar-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            background: white;
+            border: 3px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 18px 15px;
+            color: var(--primary-color);
+            transition: all 0.3s;
+            min-width: 110px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .sidebar-icon {
+            font-size: 32px;
+        }
+
+        .sidebar-text {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 1200px) {
+            .sidebar-nav {
+                left: 10px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar-nav {
+                position: relative;
+                left: 0;
+                top: 0;
+                transform: none;
+                flex-direction: row;
+                justify-content: center;
+                margin: 20px 0;
+            }
+        }
+
+        .talent-hero { background: linear-gradient(135deg, #6a1b9a 0%, #9c27b0 100%); color: white; padding: 50px 20px; text-align: center; }
+        .talent-hero h1 { font-size: 36px; margin-bottom: 10px; }
+        .talent-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 25px; margin: 30px 0; }
+        .talent-card { background: white; border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; transition: all 0.3s; }
+        .talent-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+        .talent-card-header { padding: 18px 20px; color: white; font-weight: bold; font-size: 16px; }
+        .talent-card-body { padding: 20px; }
+        .volunteer-item { padding: 12px; background: var(--bg-color); border-radius: 8px; margin-bottom: 10px; display: flex; gap: 12px; align-items: center; }
+        .volunteer-avatar { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+        .training-item { padding: 12px; border-left: 3px solid var(--primary-color); margin-bottom: 10px; background: var(--bg-color); border-radius: 0 8px 8px 0; }
+        .project-timeline { position: relative; padding-left: 20px; }
+        .timeline-item { padding: 10px 0 10px 20px; border-left: 2px solid var(--secondary-color); position: relative; margin-bottom: 5px; }
+        .timeline-item::before { content: ''; position: absolute; left: -6px; top: 14px; width: 10px; height: 10px; border-radius: 50%; background: var(--secondary-color); }
+        .tag-purple { background: #f3e5f5; color: #6a1b9a; padding: 2px 8px; border-radius: 8px; font-size: 11px; }
+        @media(max-width:768px){ .talent-grid{grid-template-columns:1fr;} .volunteer-item{flex-direction:column; text-align:center;} }
+    </style>
+</head>
+<body>
+    <!-- 左侧固定导航栏 -->
+    <div class="sidebar-nav">
+        <a href="rural-industry.html" class="sidebar-link">
+            <span class="sidebar-icon">🏭</span>
+            <span class="sidebar-text">产业服务</span>
+        </a>
+        <a href="digital-governance.html" class="sidebar-link">
+            <span class="sidebar-icon">🏛️</span>
+            <span class="sidebar-text">数字治理</span>
+        </a>
+        <a href="rural-talent.html" class="sidebar-link active">
+            <span class="sidebar-icon">🎓</span>
+            <span class="sidebar-text">人才帮扶</span>
+        </a>
+    </div>
+
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">红韵智研</div>
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="route.html">AI 研学路线</a></li>
+                <li><a href="knowledgemap.html">知识图谱</a></li>
+                <li><a href="rural.html">乡村振兴</a></li>
+                <li><a href="profile.html">个人中心</a></li>
+            </ul>
+            <button class="nav-toggle">☰</button>
+        </div>
+    </nav>
+
+    <header class="talent-hero">
+        <div class="container">
+            <h1>🎓 乡村人才与帮扶</h1>
+            <p>大学生实践 · 志愿者帮扶 · 农技培训 · 电商培训 · 帮扶项目跟踪</p>
+            <p style="font-size:14px; opacity:0.8; margin-top:8px;">完美贴合"青年红色筑梦之旅"导向 — 青年服务乡村，助力人才振兴</p>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="talent-grid">
+                <div class="talent-card">
+                    <div class="talent-card-header" style="background:linear-gradient(135deg,#C41E3A,#8B0000);">🎒 大学生实践报名</div>
+                    <div class="talent-card-body">
+                        <p style="font-size:14px; margin-bottom:15px;">响应"青年红色筑梦之旅"，深入海南乡村开展社会实践</p>
+                        <div class="volunteer-item">
+                            <div class="volunteer-avatar" style="background:linear-gradient(135deg,#fff5f5,#ffe8e8);">📚</div>
+                            <div><strong>乡村振兴调研实践团</strong><br><span style="font-size:12px; color:var(--text-light);">海南大学 | 招募10人 | 2026年7月-8月</span><br><span class="tag-purple">已报名: 6人</span></div>
+                        </div>
+                        <div class="volunteer-item">
+                            <div class="volunteer-avatar" style="background:linear-gradient(135deg,#e3f2fd,#bbdefb);">🌾</div>
+                            <div><strong>农技推广志愿服务队</strong><br><span style="font-size:12px; color:var(--text-light);">海南师范大学 | 招募15人 | 2026年6月-9月</span><br><span class="tag-purple">已报名: 9人</span></div>
+                        </div>
+                        <div class="volunteer-item">
+                            <div class="volunteer-avatar" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);">💻</div>
+                            <div><strong>乡村电商助农团队</strong><br><span style="font-size:12px; color:var(--text-light);">海口经济学院 | 招募8人 | 长期招募</span><br><span class="tag-purple">已报名: 5人</span></div>
+                        </div>
+                        <button class="btn btn-primary btn-small" style="margin-top:10px;" onclick="alert('感谢您关注乡村实践！请填写报名信息：姓名+学校+专业+意向项目。联系邮箱：XXXXXXXX@XX.com')">📝 我要报名实践</button>
+                    </div>
+                </div>
+
+                <div class="talent-card">
+                    <div class="talent-card-header" style="background:linear-gradient(135deg,#1976D2,#0d47a1);">🤝 志愿者帮扶报名</div>
+                    <div class="talent-card-body">
+                        <div class="volunteer-item">
+                            <div class="volunteer-avatar" style="background:linear-gradient(135deg,#fff3e0,#ffe0b2);">👩‍🏫</div>
+                            <div><strong>支教志愿帮扶计划</strong><br><span style="font-size:12px; color:var(--text-light);">云龙镇小学 | 招募志愿者: 5人</span></div>
+                        </div>
+                        <div class="volunteer-item">
+                            <div class="volunteer-avatar" style="background:linear-gradient(135deg,#f5f0ff,#ede0ff);">🏥</div>
+                            <div><strong>乡村健康义诊服务</strong><br><span style="font-size:12px; color:var(--text-light);">海南医学院志愿队 | 定安县 | 每月1次</span></div>
+                        </div>
+                        <div class="volunteer-item">
+                            <div class="volunteer-avatar" style="background:linear-gradient(135deg,#fce4ec,#f8bbd0);">🎨</div>
+                            <div><strong>乡村美育支教</strong><br><span style="font-size:12px; color:var(--text-light);">美术学院志愿者 | 全省多村 | 暑期</span></div>
+                        </div>
+                        <button class="btn btn-primary btn-small" style="margin-top:10px;" onclick="alert('志愿服务报名已开通！请填写志愿服务意向和可用时间。联系邮箱：XXXXXXXX@XX.com')">🤲 我要报名志愿者</button>
+                    </div>
+                </div>
+
+                <div class="talent-card">
+                    <div class="talent-card-header" style="background:linear-gradient(135deg,#2e7d32,#1b5e20);">📖 农技培训 / 电商培训</div>
+                    <div class="talent-card-body">
+                        <div class="training-item">
+                            <strong>🌱 热带特色农产品种植技术</strong>
+                            <p style="font-size:12px; color:var(--text-light);">定安县 | 2026年5月15日 | 主讲：省农科院专家</p>
+                            <span style="font-size:11px; background:#e8f5e9; padding:2px 6px; border-radius:8px;">已报名: 32人</span>
+                        </div>
+                        <div class="training-item">
+                            <strong>📱 农产品电商直播带货实操</strong>
+                            <p style="font-size:12px; color:var(--text-light);">海口市 | 2026年5月20日 | 主讲：电商培训导师</p>
+                            <span style="font-size:11px; background:#e8f5e9; padding:2px 6px; border-radius:8px;">已报名: 45人</span>
+                        </div>
+                        <div class="training-item">
+                            <strong>🏘️ 乡村旅游民宿经营培训</strong>
+                            <p style="font-size:12px; color:var(--text-light);">万宁市 | 2026年6月5日 | 主讲：民宿协会</p>
+                            <span style="font-size:11px; background:#e8f5e9; padding:2px 6px; border-radius:8px;">已报名: 21人</span>
+                        </div>
+                        <div class="training-item">
+                            <strong>🌐 数字乡村建设与应用</strong>
+                            <p style="font-size:12px; color:var(--text-light);">线上 | 随时学习 | 主讲：乡村数字化专家</p>
+                            <span style="font-size:11px; background:#e8f5e9; padding:2px 6px; border-radius:8px;">可随时参与</span>
+                        </div>
+                        <button class="btn btn-primary btn-small" style="margin-top:10px;" onclick="alert('培训报名已开通！请选择您想参加的培训课程。联系电话：XXXX-XXXXXXXX')">📋 我要报名培训</button>
+                    </div>
+                </div>
+
+                <div class="talent-card">
+                    <div class="talent-card-header" style="background:linear-gradient(135deg,#D4AF37,#8B6914);">📊 帮扶项目跟踪与成果展示</div>
+                    <div class="talent-card-body">
+                        <div class="project-timeline">
+                            <div class="timeline-item">
+                                <strong>🏆 云龙镇红色文旅推广项目</strong>
+                                <p style="font-size:12px;">执行团队：海南大学红韵实践团</p>
+                                <p style="font-size:12px; color:#2e7d32;">✅ 已完成 | 产出：研学路线3条，宣传视频5部</p>
+                            </div>
+                            <div class="timeline-item">
+                                <strong>📦 兴隆咖啡电商助农项目</strong>
+                                <p style="font-size:12px;">执行团队：海口经济学院电商团队</p>
+                                <p style="font-size:12px; color:#1565c0;">🔄 进行中 | 已完成：产品上架、首场直播</p>
+                            </div>
+                            <div class="timeline-item">
+                                <strong>🎨 保亭黎锦非遗传承项目</strong>
+                                <p style="font-size:12px;">执行团队：海南师范大学文化传承队</p>
+                                <p style="font-size:12px; color:#1565c0;">🔄 进行中 | 已完成：传承工作坊2期</p>
+                            </div>
+                            <div class="timeline-item">
+                                <strong>💡 定安智慧农业试点项目</strong>
+                                <p style="font-size:12px;">执行团队：华南农业大学科技助农团</p>
+                                <p style="font-size:12px; color:#e65100;">📅 筹备中 | 计划启动：2026年6月</p>
+                            </div>
+                        </div>
+                        <div style="text-align:center; margin-top:15px;">
+                            <p style="font-size:14px; font-weight:bold;">📈 累计成果</p>
+                            <div style="display:flex; justify-content:space-around; flex-wrap:wrap;">
+                                <div><div style="font-size:24px; color:var(--primary-color);font-weight:bold;">12</div><div style="font-size:11px;">帮扶项目</div></div>
+                                <div><div style="font-size:24px; color:var(--secondary-color);font-weight:bold;">86</div><div style="font-size:11px;">大学生参与</div></div>
+                                <div><div style="font-size:24px; color:#2e7d32;font-weight:bold;">5</div><div style="font-size:11px;">乡村受益</div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer id="about">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section"><h3>红韵智研</h3><p>AI赋能海南红色文化与乡村振兴综合服务平台</p><p>青年服务乡村，响应"青年红色筑梦之旅"号召</p></div>
+                <div class="footer-section"><h3>联系我们</h3><p>📞 XXXXXXXXXXX</p><p>📧 XXXXXXXXXX@XX.com</p><p>📍 海南省海口市</p></div>
+                <div class="footer-section"><h3>合作伙伴</h3><p>XXXX 国际贸易有限公司</p></div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2026 红韵智研——AI 赋能海南红色文化与乡村振兴综合服务平台. 版权所有.</p></div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

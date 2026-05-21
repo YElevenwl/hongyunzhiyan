@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>红色研学护照 - 红韵智研 - 2026大创赛红旅公益组</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        :root {
+            --primary-color: #C41E3A;
+            --primary-dark: #8B0000;
+            --accent-gold: #D4AF37;
+            --text-dark: #333;
+            --text-light: #666;
+            --bg-light: #f5f5f5;
+            --white: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background-color: var(--bg-light);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        /* Navigation */
+        .navbar {
+            background: var(--white);
+            border-bottom: 2px solid rgba(196, 30, 58, 0.2);
+            padding: 15px 0;
+        }
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-size: 22px; font-weight: bold; color: var(--primary-color); }
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary-color); }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 35px 20px 20px;
+            background: linear-gradient(135deg, rgba(196, 30, 58, 0.05), rgba(212, 175, 55, 0.1));
+        }
+        .hero-section h1 { color: var(--primary-color); font-size: 28px; margin-bottom: 8px; }
+        .hero-section p { color: var(--text-light); font-size: 13px; }
+        .hero-icon { font-size: 50px; margin-bottom: 12px; }
+
+        /* Passport Container */
+        .passport-container {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Passport Card */
+        .passport-card {
+            background: var(--white);
+            border: 1px solid rgba(196, 30, 58, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .passport-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(196, 30, 58, 0.1);
+        }
+        .passport-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .passport-icon { font-size: 42px; }
+        .passport-title-text h2 {
+            color: var(--primary-color);
+            font-size: 22px;
+            margin: 0 0 4px 0;
+        }
+        .passport-title-text p { color: var(--text-light); font-size: 12px; margin: 0; }
+        .passport-stamp {
+            width: 70px;
+            height: 70px;
+            border: 3px solid var(--accent-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            transform: rotate(-15deg);
+            opacity: 0.8;
+        }
+
+        /* User Info */
+        .user-info {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        .info-field {
+            background: #f8f8f8;
+            border-radius: 8px;
+            padding: 12px 15px;
+        }
+        .info-field-label { color: var(--primary-color); font-size: 12px; margin-bottom: 5px; }
+        .info-field-value { color: var(--text-dark); font-size: 14px; font-weight: bold; }
+        .info-field input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-dark);
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+        }
+        .info-field input::placeholder { color: #aaa; }
+
+        /* Stamps Grid */
+        .stamps-section { margin-top: 18px; }
+        .stamps-title {
+            color: var(--primary-color);
+            font-size: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .stamps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        .stamp-slot {
+            aspect-ratio: 1;
+            background: #f8f8f8;
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .stamp-slot:hover {
+            border-color: var(--primary-color);
+            background: rgba(196, 30, 58, 0.03);
+        }
+        .stamp-slot.collected {
+            border-style: solid;
+            border-color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.08);
+        }
+        .stamp-slot.locked { opacity: 0.5; cursor: not-allowed; }
+        .stamp-icon { font-size: 28px; margin-bottom: 4px; }
+        .stamp-name { font-size: 11px; color: var(--text-light); text-align: center; padding: 0 4px; }
+        .stamp-date {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            font-size: 9px;
+            color: var(--accent-gold);
+        }
+        .stamp-count {
+            margin-top: 12px;
+            color: var(--text-light);
+            font-size: 13px;
+            text-align: center;
+        }
+        .stamp-count span { color: var(--primary-color); font-weight: bold; }
+
+        /* Record Section */
+        .record-section {
+            background: var(--white);
+            border: 1px solid rgba(196, 30, 58, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .record-title {
+            color: var(--primary-color);
+            font-size: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .record-list { max-height: 280px; overflow-y: auto; }
+        .record-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: #f8f8f8;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--accent-gold);
+        }
+        .record-icon { font-size: 24px; flex-shrink: 0; }
+        .record-content { flex: 1; }
+        .record-name { color: var(--primary-color); font-size: 14px; font-weight: bold; margin-bottom: 4px; }
+        .record-desc { color: var(--text-light); font-size: 12px; line-height: 1.4; }
+        .record-time { color: #aaa; font-size: 11px; margin-top: 4px; }
+        .empty-record {
+            text-align: center;
+            padding: 35px;
+            color: var(--text-light);
+        }
+        .empty-record-icon { font-size: 40px; margin-bottom: 8px; }
+
+        /* Badge Section */
+        .badge-section {
+            background: var(--white);
+            border: 1px solid rgba(196, 30, 58, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .badge-title {
+            color: var(--primary-color);
+            font-size: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+        }
+        .badge-item {
+            background: #f8f8f8;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .badge-item.unlocked { border-color: var(--accent-gold); }
+        .badge-item.locked { opacity: 0.4; }
+        .badge-icon { font-size: 32px; margin-bottom: 6px; }
+        .badge-name { color: var(--primary-color); font-size: 12px; font-weight: bold; margin-bottom: 3px; }
+        .badge-desc { color: #aaa; font-size: 10px; }
+
+        /* Buttons */
+        .btn-area {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            padding: 12px 28px;
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);
+        }
+        .btn-secondary {
+            padding: 12px 28px;
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: var(--white);
+            border: 2px solid var(--accent-gold);
+            border-radius: 16px;
+            padding: 28px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+        }
+        .modal-icon { font-size: 70px; margin-bottom: 15px; }
+        .modal-title { color: var(--primary-color); font-size: 22px; margin-bottom: 10px; }
+        .modal-desc { color: var(--text-light); font-size: 14px; margin-bottom: 18px; line-height: 1.6; }
+        .modal-btn {
+            padding: 12px 35px;
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .modal-btn:hover { box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3); }
+
+        /* Footer */
+        footer {
+            background: var(--white);
+            border-top: 2px solid rgba(196, 30, 58, 0.2);
+            padding: 25px 20px;
+            margin-top: 35px;
+            text-align: center;
+        }
+        footer p { color: var(--text-light); font-size: 12px; margin: 5px 0; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .user-info { grid-template-columns: 1fr 1fr; }
+            .stamps-grid { grid-template-columns: repeat(3, 1fr); }
+            .passport-stamp { display: none; }
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">🎖️ 红韵智研</div>
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="route.html">AI 研学路线</a></li>
+                <li><a href="knowledgemap.html">知识图谱</a></li>
+                <li><a href="rural.html">乡村振兴</a></li>
+                <li><a href="profile.html">个人中心</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-icon">📘</div>
+        <h1>红色研学护照</h1>
+        <p>集印章、获徽章，记录你的红色研学之旅</p>
+    </section>
+
+    <!-- Passport Container -->
+    <div class="passport-container">
+        <!-- Passport Card -->
+        <div class="passport-card">
+            <div class="passport-header">
+                <div class="passport-title">
+                    <span class="passport-icon">📘</span>
+                    <div class="passport-title-text">
+                        <h2>红色研学护照</h2>
+                        <p>红韵智研 · 2026大创赛红旅公益组</p>
+                    </div>
+                </div>
+                <div class="passport-stamp">🏆</div>
+            </div>
+            <div class="user-info">
+                <div class="info-field">
+                    <div class="info-field-label">姓名</div>
+                    <div class="info-field-value">
+                        <input type="text" id="user-name" placeholder="请输入姓名" value="小小红色传承人" />
+                    </div>
+                </div>
+                <div class="info-field">
+                    <div class="info-field-label">学校/班级</div>
+                    <div class="info-field-value">
+                        <input type="text" id="user-school" placeholder="请输入学校和班级" value="海南中学初二(3)班" />
+                    </div>
+                </div>
+                <div class="info-field">
+                    <div class="info-field-label">研学次数</div>
+                    <div class="info-field-value" id="visit-count">已参与 0 次研学活动</div>
+                </div>
+                <div class="info-field">
+                    <div class="info-field-label">获得印章</div>
+                    <div class="info-field-value" id="stamp-count">收集 0 / 8 枚印章</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stamps Section -->
+        <div class="passport-card">
+            <div class="stamps-section">
+                <div class="stamps-title">⭐ 研学印章收集</div>
+                <div class="stamps-grid" id="stamps-grid"></div>
+            </div>
+        </div>
+
+        <!-- Badges Section -->
+        <div class="badge-section">
+            <div class="badge-title">🏅 荣誉徽章</div>
+            <div class="badge-grid" id="badge-grid"></div>
+        </div>
+
+        <!-- Records Section -->
+        <div class="record-section">
+            <div class="record-title">📋 研学足迹</div>
+            <div class="record-list" id="record-list"></div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="btn-area">
+            <button class="btn-primary" onclick="addSampleRecord()">➕ 模拟收集印章</button>
+            <a href="knowledgemap.html" class="btn-secondary">🔍 探索图谱学习</a>
+            <a href="route.html" class="btn-secondary">🏠 生成研学路线</a>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <div class="modal-icon" id="modal-icon">🎉</div>
+            <h3 class="modal-title" id="modal-title">恭喜获得新印章!</h3>
+            <p class="modal-desc" id="modal-desc">你已经完成了母瑞山革命根据地的研学任务，获得一枚珍贵的印章!</p>
+            <button class="modal-btn" onclick="closeModal()">太棒了!</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>2026大创赛 · 红旅公益组 · 琼崖革命知识图谱与乡村联动平台</p>
+        <p>红韵智研 - AI赋能海南红色文化与乡村振兴</p>
+    </footer>
+
+    <script>
+        const stampData = [
+            { id: 1, name: '冯白驹', icon: '👴', location: '海口', unlocked: false, date: null, desc: '琼崖革命领袖' },
+            { id: 2, name: '母瑞山', icon: '⛰️', location: '琼中', unlocked: false, date: null, desc: '海南的井冈山' },
+            { id: 3, name: '红色娘子军', icon: '👩', location: '琼海', unlocked: false, date: null, desc: '巾帼不让须眉' },
+            { id: 4, name: '五指山', icon: '🏔️', location: '五指山', unlocked: false, date: null, desc: '琼崖革命指挥中枢' },
+            { id: 5, name: '美合根据地', icon: '🌳', location: '澄迈', unlocked: false, date: null, desc: '抗日根据地' },
+            { id: 6, name: '椰子寨', icon: '⚔️', location: '琼海', unlocked: false, date: null, desc: '全琼暴动揭幕' },
+            { id: 7, name: '南阁起义', icon: '🚩', location: '临高', unlocked: false, date: null, desc: '武装斗争第一枪' },
+            { id: 8, name: '王文明', icon: '✊', location: '琼山', unlocked: false, date: null, desc: '琼崖苏维埃主席' }
+        ];
+
+        const badgeData = [
+            { id: 1, name: '初识红韵', icon: '🌟', desc: '完成第一次研学', unlocked: false },
+            { id: 2, name: '革命小兵', icon: '👮', desc: '收集3枚印章', unlocked: false },
+            { id: 3, name: '红色传人', icon: '🏆', desc: '收集5枚印章', unlocked: false },
+            { id: 4, name: '革命专家', icon: '👑', desc: '收集8枚印章', unlocked: false },
+            { id: 5, name: '知识达人', icon: '📚', desc: '完成知识竞赛', unlocked: false }
+        ];
+
+        let records = [];
+
+        function init() {
+            renderStamps();
+            renderBadges();
+            renderRecords();
+            updateStats();
+        }
+
+        function renderStamps() {
+            const grid = document.getElementById('stamps-grid');
+            grid.innerHTML = '';
+            stampData.forEach(stamp => {
+                const slot = document.createElement('div');
+                slot.className = 'stamp-slot' + (stamp.unlocked ? ' collected' : '');
+                slot.onclick = () => { if (stamp.unlocked) showStampDetail(stamp); };
+                slot.innerHTML = `<div class="stamp-icon">${stamp.icon}</div><div class="stamp-name">${stamp.name}</div>${stamp.unlocked && stamp.date ? '<div class="stamp-date">' + stamp.date + '</div>' : ''}`;
+                grid.appendChild(slot);
+            });
+        }
+
+        function renderBadges() {
+            const grid = document.getElementById('badge-grid');
+            grid.innerHTML = '';
+            badgeData.forEach(badge => {
+                const item = document.createElement('div');
+                item.className = 'badge-item' + (badge.unlocked ? ' unlocked' : ' locked');
+                item.innerHTML = `<div class="badge-icon">${badge.icon}</div><div class="badge-name">${badge.name}</div><div class="badge-desc">${badge.desc}</div>`;
+                grid.appendChild(item);
+            });
+        }
+
+        function renderRecords() {
+            const list = document.getElementById('record-list');
+            if (records.length === 0) {
+                list.innerHTML = `<div class="empty-record"><div class="empty-record-icon">📋</div><p>暂无研学记录</p><p style="font-size:12px; margin-top:5px;">去知识图谱探索红色乡村，完成研学任务即可获得印章!</p></div>`;
+                return;
+            }
+            list.innerHTML = '';
+            records.forEach(rec => {
+                const item = document.createElement('div');
+                item.className = 'record-item';
+                item.innerHTML = `<div class="record-icon">${rec.icon}</div><div class="record-content"><div class="record-name">${rec.name}</div><div class="record-desc">${rec.desc}</div><div class="record-time">${rec.time}</div></div>`;
+                list.appendChild(item);
+            });
+        }
+
+        function updateStats() {
+            const collectedCount = stampData.filter(s => s.unlocked).length;
+            document.getElementById('stamp-count').textContent = '收集 ' + collectedCount + ' / 8 枚印章';
+            document.getElementById('visit-count').textContent = '已参与 ' + records.length + ' 次研学活动';
+        }
+
+        function addSampleRecord() {
+            const lockedStamp = stampData.find(s => !s.unlocked);
+            if (!lockedStamp) { alert('你已经收集了所有印章!'); return; }
+            lockedStamp.unlocked = true;
+            lockedStamp.date = new Date().toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+            const record = { icon: lockedStamp.icon, name: '研学盖章: ' + lockedStamp.name, desc: lockedStamp.desc + ' - 研学任务完成，获得印章!', time: new Date().toLocaleString('zh-CN') };
+            records.unshift(record);
+            const collectedCount = stampData.filter(s => s.unlocked).length;
+            if (collectedCount >= 1) badgeData[0].unlocked = true;
+            if (collectedCount >= 3) badgeData[1].unlocked = true;
+            if (collectedCount >= 5) badgeData[2].unlocked = true;
+            if (collectedCount >= 8) badgeData[3].unlocked = true;
+            renderStamps();
+            renderBadges();
+            renderRecords();
+            updateStats();
+            showModal(lockedStamp.icon, '恭喜获得新印章!', '你已经完成了' + lockedStamp.name + '的研学任务，获得一枚珍贵的印章!');
+        }
+
+        function showStampDetail(stamp) { showModal(stamp.icon, stamp.name, stamp.desc + (stamp.date ? '<br><br>获得日期: ' + stamp.date : '')); }
+
+        function showModal(icon, title, desc) {
+            document.getElementById('modal-icon').innerHTML = icon;
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-desc').innerHTML = desc;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() { document.getElementById('modal').classList.remove('active'); }
+
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

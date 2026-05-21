@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乡村产业服务 - 红韵智研—AI 赋能海南红色文化与乡村振兴综合服务平台</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 左侧固定导航栏 */
+        .sidebar-nav {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .sidebar-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            background: white;
+            border: 3px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 18px 15px;
+            color: var(--primary-color);
+            transition: all 0.3s;
+            min-width: 110px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .sidebar-icon {
+            font-size: 32px;
+        }
+
+        .sidebar-text {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 1200px) {
+            .sidebar-nav {
+                left: 10px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar-nav {
+                position: relative;
+                left: 0;
+                top: 0;
+                transform: none;
+                flex-direction: row;
+                justify-content: center;
+                margin: 20px 0;
+            }
+        }
+
+        .industry-hero { background: linear-gradient(135deg, #2d5016 0%, #5a8f40 100%); color: white; padding: 50px 20px; text-align: center; }
+        .industry-hero h1 { font-size: 36px; margin-bottom: 10px; }
+        .tabs { display: flex; gap: 10px; justify-content: center; margin: 30px 0; flex-wrap: wrap; }
+        .tab-btn { padding: 10px 24px; border: 2px solid var(--primary-color); background: white; border-radius: 25px; cursor: pointer; font-size: 14px; transition: all 0.3s; }
+        .tab-btn.active, .tab-btn:hover { background: var(--primary-color); color: white; }
+        .tab-content { display: none; animation: fadeIn 0.4s; }
+        .tab-content.active { display: block; }
+        .product-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .product-item { background: white; border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; transition: all 0.3s; }
+        .product-item:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+        .product-img { height: 180px; display: flex; align-items: center; justify-content: center; font-size: 80px; }
+        .product-body { padding: 20px; }
+        .product-body h3 { color: var(--primary-color); margin-bottom: 8px; }
+        .product-trace { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+        .trace-tag { background: #e8f5e9; color: #2e7d32; padding: 3px 10px; border-radius: 12px; font-size: 11px; }
+        .coop-card { background: white; border-radius: 12px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 20px; display: flex; gap: 20px; transition: all 0.3s; }
+        .coop-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+        .coop-avatar { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; flex-shrink: 0; }
+        .order-list { background: white; border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; }
+        .order-item { padding: 18px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .order-item:last-child { border-bottom: none; }
+        .order-status { padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+        .status-pending { background: #fff3e0; color: #e65100; }
+        .status-matched { background: #e3f2fd; color: #1565c0; }
+        .status-done { background: #e8f5e9; color: #2e7d32; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+        @media(max-width:768px){ .coop-card{flex-direction:column; text-align:center;} .coop-avatar{margin:0 auto;} }
+    </style>
+</head>
+<body>
+    <!-- 左侧固定导航栏 -->
+    <div class="sidebar-nav">
+        <a href="rural-industry.html" class="sidebar-link active">
+            <span class="sidebar-icon">🏭</span>
+            <span class="sidebar-text">产业服务</span>
+        </a>
+        <a href="digital-governance.html" class="sidebar-link">
+            <span class="sidebar-icon">🏛️</span>
+            <span class="sidebar-text">数字治理</span>
+        </a>
+        <a href="rural-talent.html" class="sidebar-link">
+            <span class="sidebar-icon">🎓</span>
+            <span class="sidebar-text">人才帮扶</span>
+        </a>
+    </div>
+
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">红韵智研</div>
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="route.html">AI 研学路线</a></li>
+                <li><a href="knowledgemap.html">知识图谱</a></li>
+                <li><a href="rural.html">乡村振兴</a></li>
+                <li><a href="profile.html">个人中心</a></li>
+            </ul>
+            <button class="nav-toggle">☰</button>
+        </div>
+    </nav>
+
+    <header class="industry-hero">
+        <div class="container">
+            <h1>🌾 乡村产业服务</h1>
+            <p>一村一品 · 特色农产品展示 · 溯源预售 · 产销对接</p>
+            <p style="font-size:14px; opacity:0.8; margin-top:8px;">本平台为公益性质，不收取任何中介费用，致力于服务乡村振兴</p>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('products')">🏷️ 一村一品</button>
+                <button class="tab-btn" onclick="switchTab('cooperatives')">👨‍🌾 农户/合作社</button>
+                <button class="tab-btn" onclick="switchTab('orders')">📦 产销对接</button>
+            </div>
+
+            <div class="tab-content active" id="tab-products">
+                <h2>海南特色农产品展示</h2>
+                <p class="subtitle">每一件产品都可溯源，支持预售订购（公益助农，零差价）</p>
+                <div class="product-list">
+                    <div class="product-item">
+                        <div class="product-img" style="background:linear-gradient(135deg,#fef9f0,#fef3e0);">🥥</div>
+                        <div class="product-body">
+                            <h3>文昌椰子</h3>
+                            <p>文昌市东郊镇特产，国家地理标志产品，椰肉厚实、椰汁清甜</p>
+                            <div class="product-trace"><span class="trace-tag">📍 文昌东郊镇</span><span class="trace-tag">👨‍🌾 农户: 符永吉</span><span class="trace-tag">📅 预售中</span></div>
+                            <button class="btn btn-outline btn-small" onclick="alert('感谢关注！本平台为公益助农展示，请联系合作社直接购买。联系电话：XXXX-XXXXXXXX')">了解详情（公益展示）</button>
+                        </div>
+                    </div>
+                    <div class="product-item">
+                        <div class="product-img" style="background:linear-gradient(135deg,#f0f9f0,#e0f0e0);">☕</div>
+                        <div class="product-body">
+                            <h3>兴隆咖啡</h3>
+                            <p>万宁兴隆华侨农场出品，中粒种咖啡，浓香醇厚</p>
+                            <div class="product-trace"><span class="trace-tag">📍 万宁兴隆</span><span class="trace-tag">👨‍🌾 兴隆咖啡合作社</span><span class="trace-tag">📅 可预售</span></div>
+                            <button class="btn btn-outline btn-small" onclick="alert('感谢关注！本平台为公益助农展示，请联系合作社直接购买。联系电话：XXXX-XXXXXXXX')">了解详情（公益展示）</button>
+                        </div>
+                    </div>
+                    <div class="product-item">
+                        <div class="product-img" style="background:linear-gradient(135deg,#fff5f5,#ffe8e8);">🍵</div>
+                        <div class="product-body">
+                            <h3>五指山红茶</h3>
+                            <p>五指山市毛纳村特产，高山云雾茶，国家地理标志产品</p>
+                            <div class="product-trace"><span class="trace-tag">📍 五指山毛纳村</span><span class="trace-tag">👨‍🌾 毛纳茶叶合作社</span><span class="trace-tag">📅 新茶预售</span></div>
+                            <button class="btn btn-outline btn-small" onclick="alert('感谢关注！本平台为公益助农展示，请联系合作社直接购买。联系电话：XXXX-XXXXXXXX')">了解详情（公益展示）</button>
+                        </div>
+                    </div>
+                    <div class="product-item">
+                        <div class="product-img" style="background:linear-gradient(135deg,#f5f0ff,#ede0ff);">🍍</div>
+                        <div class="product-body">
+                            <h3>琼中绿橙</h3>
+                            <p>琼中黎族苗族自治县特产，皮绿肉甜，全国名特优新农产品</p>
+                            <div class="product-trace"><span class="trace-tag">📍 琼中湾岭镇</span><span class="trace-tag">👨‍🌾 绿橙合作社</span><span class="trace-tag">📅 季节性</span></div>
+                            <button class="btn btn-outline btn-small" onclick="alert('感谢关注！本平台为公益助农展示，请联系合作社直接购买。联系电话：XXXX-XXXXXXXX')">了解详情（公益展示）</button>
+                        </div>
+                    </div>
+                    <div class="product-item">
+                        <div class="product-img" style="background:linear-gradient(135deg,#e3f2fd,#bbdefb);">🐟</div>
+                        <div class="product-body">
+                            <h3>潭门海产</h3>
+                            <p>琼海潭门镇千年渔港出品，马鲛鱼、海虾、贝类干货</p>
+                            <div class="product-trace"><span class="trace-tag">📍 琼海潭门镇</span><span class="trace-tag">👨‍🌾 潭门渔业合作社</span><span class="trace-tag">📅 常年供应</span></div>
+                            <button class="btn btn-outline btn-small" onclick="alert('感谢关注！本平台为公益助农展示，请联系合作社直接购买。联系电话：XXXX-XXXXXXXX')">了解详情（公益展示）</button>
+                        </div>
+                    </div>
+                    <div class="product-item">
+                        <div class="product-img" style="background:linear-gradient(135deg,#fce4ec,#f8bbd0);">🌸</div>
+                        <div class="product-body">
+                            <h3>屯昌梦幻香草</h3>
+                            <p>屯昌县芳香文化园出品，薰衣草精油、香草茶、芳香制品</p>
+                            <div class="product-trace"><span class="trace-tag">📍 屯昌梦幻香山</span><span class="trace-tag">👨‍🌾 芳香合作社</span><span class="trace-tag">📅 可预售</span></div>
+                            <button class="btn btn-outline btn-small" onclick="alert('感谢关注！本平台为公益助农展示，请联系合作社直接购买。联系电话：XXXX-XXXXXXXX')">了解详情（公益展示）</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-cooperatives">
+                <h2>农户/合作社信息管理</h2>
+                <p class="subtitle">连接农户、合作社与市场，搭建公益产销桥梁</p>
+                <div class="coop-card">
+                    <div class="coop-avatar" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);">🧑‍🌾</div>
+                    <div>
+                        <h3 style="color:var(--primary-color);">文昌东郊镇椰子合作社</h3>
+                        <p>负责人：符永吉 | 📞 XXXX-XXXXXXX | 👥 社员：48户</p>
+                        <p>主营：椰子种植、椰雕工艺品 | 📍 文昌市东郊镇</p>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;"><span class="trace-tag">认证合作社</span><span class="trace-tag">6年经营</span></div>
+                    </div>
+                </div>
+                <div class="coop-card">
+                    <div class="coop-avatar" style="background:linear-gradient(135deg,#fff3e0,#ffe0b2);">☕</div>
+                    <div>
+                        <h3 style="color:var(--primary-color);">万宁兴隆咖啡种植合作社</h3>
+                        <p>负责人：陈亚福 | 📞 XXXX-XXXXXXX | 👥 社员：32户</p>
+                        <p>主营：咖啡种植加工、咖啡研学体验 | 📍 万宁市兴隆镇</p>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;"><span class="trace-tag">认证合作社</span><span class="trace-tag">省级示范社</span></div>
+                    </div>
+                </div>
+                <div class="coop-card">
+                    <div class="coop-avatar" style="background:linear-gradient(135deg,#e3f2fd,#bbdefb);">🐟</div>
+                    <div>
+                        <h3 style="color:var(--primary-color);">琼海潭门渔业合作社</h3>
+                        <p>负责人：卢传安 | 📞 XXXX-XXXXXXX | 👥 社员：56户</p>
+                        <p>主营：海洋捕捞、海产加工、休闲渔业 | 📍 琼海市潭门镇</p>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;"><span class="trace-tag">认证合作社</span><span class="trace-tag">非遗传承</span></div>
+                    </div>
+                </div>
+                <div class="coop-card">
+                    <div class="coop-avatar" style="background:linear-gradient(135deg,#f5f0ff,#ede0ff);">🍃</div>
+                    <div>
+                        <h3 style="color:var(--primary-color);">五指山毛纳茶叶合作社</h3>
+                        <p>负责人：王琼花 | 📞 XXXX-XXXXXXX | 👥 社员：25户</p>
+                        <p>主营：高山茶叶种植加工、黎族茶文化体验 | 📍 五指山市毛纳村</p>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;"><span class="trace-tag">认证合作社</span><span class="trace-tag">国家地理标志</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-orders">
+                <h2>产销对接 · 需求与订单匹配</h2>
+                <p class="subtitle">公益平台，免费发布需求，智能匹配（本服务完全免费）</p>
+                <div class="order-list">
+                    <div class="order-item">
+                        <div><strong>🏫 海口市XX小学</strong><br><span style="font-size:13px;color:var(--text-light);">研学伴手礼需求：椰子糖200份、兴隆咖啡100盒</span></div>
+                        <div><span class="order-status status-pending">待匹配</span></div>
+                    </div>
+                    <div class="order-item">
+                        <div><strong>🏢 三亚XX酒店</strong><br><span style="font-size:13px;color:var(--text-light);">长期采购：五指山红茶50斤/月、特色水果</span></div>
+                        <div><span class="order-status status-matched">已匹配</span></div>
+                    </div>
+                    <div class="order-item">
+                        <div><strong>🎓 海南大学XX社团</strong><br><span style="font-size:13px;color:var(--text-light);">社会实践采购：绿橙礼盒100箱</span></div>
+                        <div><span class="order-status status-done">已完成</span></div>
+                    </div>
+                    <div class="order-item">
+                        <div><strong>🏪 海口XX电商公司</strong><br><span style="font-size:13px;color:var(--text-light);">直播带货合作：寻找海南特色农产品供应商</span></div>
+                        <div><span class="order-status status-pending">待匹配</span></div>
+                    </div>
+                    <div class="order-item">
+                        <div><strong>🗺️ XX研学机构</strong><br><span style="font-size:13px;color:var(--text-light);">研学基地合作：寻乡村振兴主题研学点</span></div>
+                        <div><span class="order-status status-matched">已匹配</span></div>
+                    </div>
+                </div>
+                <div style="text-align:center; margin-top:30px;">
+                    <button class="btn btn-primary" onclick="alert('感谢您的关注！本平台为公益性质，不收取任何费用。如需发布需求，请联系平台客服：XXXX-XXXXXXXX')">📝 发布需求（公益免费）</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer id="about">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section"><h3>红韵智研</h3><p>AI赋能海南红色文化与乡村振兴综合服务平台</p><p>本平台产业服务为纯公益性质，不收取任何费用</p></div>
+                <div class="footer-section"><h3>联系我们</h3><p>📞 XXXXXXXXXXX</p><p>📧 XXXXXXXXXX@XX.com</p><p>📍 海南省海口市</p></div>
+                <div class="footer-section"><h3>合作伙伴</h3><p>XXXX 国际贸易有限公司</p></div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2026 红韵智研. 版权所有.</p></div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        function switchTab(id) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + id).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

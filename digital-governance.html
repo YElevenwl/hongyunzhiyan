@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数字乡村治理 - 红韵智研—AI 赋能海南红色文化与乡村振兴综合服务平台</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 左侧固定导航栏 */
+        .sidebar-nav {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .sidebar-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            background: white;
+            border: 3px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 18px 15px;
+            color: var(--primary-color);
+            transition: all 0.3s;
+            min-width: 110px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .sidebar-icon {
+            font-size: 32px;
+        }
+
+        .sidebar-text {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 1200px) {
+            .sidebar-nav {
+                left: 10px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar-nav {
+                position: relative;
+                left: 0;
+                top: 0;
+                transform: none;
+                flex-direction: row;
+                justify-content: center;
+                margin: 20px 0;
+            }
+        }
+
+        .gov-hero { background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%); color: white; padding: 50px 20px; text-align: center; }
+        .gov-hero h1 { font-size: 36px; margin-bottom: 10px; }
+        .gov-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin: 30px 0; }
+        .gov-card { background: white; border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; transition: all 0.3s; }
+        .gov-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+        .gov-card-header { padding: 18px 20px; color: white; font-weight: bold; font-size: 16px; }
+        .gov-card-body { padding: 20px; }
+        .notice-item { padding: 10px 0; border-bottom: 1px dashed var(--border-color); }
+        .notice-item:last-child { border-bottom: none; }
+        .notice-date { font-size: 12px; color: var(--text-light); }
+        .appeal-list { display: flex; flex-direction: column; gap: 12px; }
+        .appeal-item { padding: 12px; background: var(--bg-color); border-radius: 8px; border-left: 3px solid var(--secondary-color); }
+        .appeal-status { font-size: 12px; padding: 2px 8px; border-radius: 10px; font-weight: bold; }
+        .env-score { display: flex; justify-content: space-around; text-align: center; margin: 15px 0; }
+        .score-item { padding: 10px; }
+        .score-value { font-size: 32px; font-weight: bold; color: var(--primary-color); }
+        .score-label { font-size: 12px; color: var(--text-light); }
+        .credit-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .credit-table th { background: var(--bg-color); padding: 10px; text-align: left; }
+        .credit-table td { padding: 10px; border-bottom: 1px solid var(--border-color); }
+        .star-gold { color: #D4AF37; }
+        @media(max-width:768px){ .gov-grid{grid-template-columns:1fr;} }
+    </style>
+</head>
+<body>
+    <!-- 左侧固定导航栏 -->
+    <div class="sidebar-nav">
+        <a href="rural-industry.html" class="sidebar-link">
+            <span class="sidebar-icon">🏭</span>
+            <span class="sidebar-text">产业服务</span>
+        </a>
+        <a href="digital-governance.html" class="sidebar-link active">
+            <span class="sidebar-icon">🏛️</span>
+            <span class="sidebar-text">数字治理</span>
+        </a>
+        <a href="rural-talent.html" class="sidebar-link">
+            <span class="sidebar-icon">🎓</span>
+            <span class="sidebar-text">人才帮扶</span>
+        </a>
+    </div>
+
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">红韵智研</div>
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="route.html">AI 研学路线</a></li>
+                <li><a href="knowledgemap.html">知识图谱</a></li>
+                <li><a href="rural.html">乡村振兴</a></li>
+                <li><a href="profile.html">个人中心</a></li>
+            </ul>
+            <button class="nav-toggle">☰</button>
+        </div>
+    </nav>
+
+    <header class="gov-hero">
+        <div class="container">
+            <h1>🏛️ 数字乡村治理</h1>
+            <p>村务公开 · 政策通知 · 诉求上报闭环 · 人居环境积分 · 文明户评选</p>
+            <p style="font-size:14px; opacity:0.8; margin-top:8px;">体现服务基层、可落地、可推广</p>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="gov-grid">
+                <div class="gov-card">
+                    <div class="gov-card-header" style="background:linear-gradient(135deg,#C41E3A,#8B0000);">📋 村务公开</div>
+                    <div class="gov-card-body">
+                        <div class="notice-item">
+                            <strong>2026年第二季度村集体经济收入公示</strong>
+                            <p class="notice-date">发布：2026-05-01 | 浏览量：328</p>
+                        </div>
+                        <div class="notice-item">
+                            <strong>云龙镇2026年度乡村振兴项目资金使用明细</strong>
+                            <p class="notice-date">发布：2026-04-15 | 浏览量：256</p>
+                        </div>
+                        <div class="notice-item">
+                            <strong>关于开展农村人居环境整治专项行动的通知</strong>
+                            <p class="notice-date">发布：2026-04-01 | 浏览量：189</p>
+                        </div>
+                        <button class="btn btn-outline btn-small" style="margin-top:10px;" onclick="alert('更多公开信息请联系村委会查询。联系电话：XXXX-XXXXXXXX')">查看更多</button>
+                    </div>
+                </div>
+
+                <div class="gov-card">
+                    <div class="gov-card-header" style="background:linear-gradient(135deg,#1976D2,#0d47a1);">📢 政策通知</div>
+                    <div class="gov-card-body">
+                        <div class="notice-item">
+                            <span style="background:#e3f2fd;color:#1565c0;padding:2px 8px;border-radius:10px;font-size:11px;">省级</span>
+                            <strong>海南省2026年乡村振兴重点工作的通知</strong>
+                            <p class="notice-date">2026-04-20 | 省农业农村厅</p>
+                        </div>
+                        <div class="notice-item">
+                            <span style="background:#fff3e0;color:#e65100;padding:2px 8px;border-radius:10px;font-size:11px;">市级</span>
+                            <strong>海口市特色农产品品牌培育扶持政策</strong>
+                            <p class="notice-date">2026-04-10 | 海口市农业农村局</p>
+                        </div>
+                        <div class="notice-item">
+                            <span style="background:#e8f5e9;color:#2e7d32;padding:2px 8px;border-radius:10px;font-size:11px;">镇级</span>
+                            <strong>云龙镇2026年第二季度重点工作安排</strong>
+                            <p class="notice-date">2026-04-01 | 云龙镇政府</p>
+                        </div>
+                        <button class="btn btn-outline btn-small" style="margin-top:10px;" onclick="alert('政策详情请咨询当地镇政府或村委会。联系电话：XXXX-XXXXXXXX')">查看全部通知</button>
+                    </div>
+                </div>
+
+                <div class="gov-card">
+                    <div class="gov-card-header" style="background:linear-gradient(135deg,#e65100,#bf360c);">📝 村民诉求上报</div>
+                    <div class="gov-card-body">
+                        <div class="appeal-list">
+                            <div class="appeal-item">
+                                <strong>诉求：</strong>云龙镇长泰村灌溉水渠破损，影响农田灌溉
+                                <br><span style="font-size:12px; color:var(--text-light);">上报人：冯大哥 | 2026-05-02</span>
+                                <br><span class="appeal-status" style="background:#e3f2fd;color:#1565c0;">处理中</span>
+                            </div>
+                            <div class="appeal-item">
+                                <strong>诉求：</strong>希望开设电商直播培训课程
+                                <br><span style="font-size:12px; color:var(--text-light);">上报人：李大姐 | 2026-04-28</span>
+                                <br><span class="appeal-status" style="background:#e8f5e9;color:#2e7d32;">已办结 → 已安排5月培训</span>
+                            </div>
+                            <div class="appeal-item">
+                                <strong>诉求：</strong>村口道路路灯损坏，夜间出行不便
+                                <br><span style="font-size:12px; color:var(--text-light);">上报人：王大叔 | 2026-05-05</span>
+                                <br><span class="appeal-status" style="background:#fff3e0;color:#e65100;">待受理</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-small" style="margin-top:10px;" onclick="alert('诉求上报功能已开通！请联系村委会或通过本平台在线提交。联系电话：XXXX-XXXXXXXX')">我要上报诉求</button>
+                    </div>
+                </div>
+
+                <div class="gov-card">
+                    <div class="gov-card-header" style="background:linear-gradient(135deg,#2e7d32,#1b5e20);">🌿 人居环境积分</div>
+                    <div class="gov-card-body">
+                        <h4 style="text-align:center; margin-bottom:10px;">云龙镇各村环境评分</h4>
+                        <div class="env-score">
+                            <div class="score-item"><div class="score-value">92</div><div class="score-label">长泰村</div><div>⭐⭐⭐⭐⭐</div></div>
+                            <div class="score-item"><div class="score-value">88</div><div class="score-label">岭脚村</div><div>⭐⭐⭐⭐</div></div>
+                            <div class="score-item"><div class="score-value">95</div><div class="score-label">云龙村</div><div>⭐⭐⭐⭐⭐</div></div>
+                        </div>
+                        <p style="font-size:13px; color:var(--text-light);">评价维度：垃圾分类执行率、庭院整洁度、公共区域维护、绿化覆盖率</p>
+                        <p style="font-size:12px; margin-top:10px;">📊 全镇平均分：91.7 | 🏆 本月标杆村：云龙村</p>
+                    </div>
+                    <div class="gov-card-body" style="border-top:1px solid var(--border-color);">
+                        <h4>🏅 文明户评选</h4>
+                        <table class="credit-table">
+                            <tr><th>户主</th><th>村</th><th>积分</th><th>⭐</th></tr>
+                            <tr><td>冯永福</td><td>长泰村</td><td>98</td><td class="star-gold">★★★★★</td></tr>
+                            <tr><td>陈玉兰</td><td>云龙村</td><td>95</td><td class="star-gold">★★★★★</td></tr>
+                            <tr><td>李国栋</td><td>岭脚村</td><td>90</td><td class="star-gold">★★★★☆</td></tr>
+                            <tr><td>王琼花</td><td>长泰村</td><td>89</td><td class="star-gold">★★★★☆</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer id="about">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section"><h3>红韵智研</h3><p>AI赋能海南红色文化与乡村振兴综合服务平台</p><p>数字治理模块服务基层，可落地可推广</p></div>
+                <div class="footer-section"><h3>联系我们</h3><p>📞 XXXXXXXXXXX</p><p>📧 XXXXXXXXXX@XX.com</p><p>📍 海南省海口市</p></div>
+                <div class="footer-section"><h3>合作伙伴</h3><p>XXXX 国际贸易有限公司</p></div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2026 红韵智研. 版权所有.</p></div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

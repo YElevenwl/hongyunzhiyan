@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI研学路线生成 - 红韵智研—AI 赋能海南红色文化与乡村振兴综合服务平台</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 左侧固定导航栏 */
+        .sidebar-nav {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .sidebar-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            background: white;
+            border: 3px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 18px 15px;
+            color: var(--primary-color);
+            transition: all 0.3s;
+            min-width: 110px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .sidebar-icon {
+            font-size: 32px;
+        }
+
+        .sidebar-text {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 1200px) {
+            .sidebar-nav {
+                left: 10px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar-nav {
+                position: relative;
+                left: 0;
+                top: 0;
+                transform: none;
+                flex-direction: row;
+                justify-content: center;
+                margin: 20px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 左侧固定导航栏 -->
+    <div class="sidebar-nav">
+        <a href="quiz.html" class="sidebar-link">
+            <span class="sidebar-icon">🎯</span>
+            <span class="sidebar-text">知识竞赛</span>
+        </a>
+        <a href="passport.html" class="sidebar-link">
+            <span class="sidebar-icon">📕</span>
+            <span class="sidebar-text">研学护照</span>
+        </a>
+    </div>
+
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">红韵智研</div>
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="route.html" class="active">AI 研学路线</a></li>
+                <li><a href="knowledgemap.html">知识图谱</a></li>
+                <li><a href="rural.html">乡村振兴</a></li>
+                <li><a href="profile.html">个人中心</a></li>
+            </ul>
+            <button class="nav-toggle">☰</button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <h1>AI 研学路线智能生成</h1>
+            <p class="subtitle">输入您的需求，AI将为您生成完整的研学旅行方案</p>
+
+            <div class="generator-layout">
+                <div class="form-section">
+                    <h2>填写需求</h2>
+                    <form id="routeForm">
+                        <div class="form-group">
+                            <label>研学主题 — 请选择主题</label>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                                <div>
+                                    <label style="font-size:13px;color:var(--text-light);margin-bottom:8px;display:block;">🔥 红色/非遗/自然/现代主题</label>
+                                    <select id="theme1" name="theme" style="width:100%;">
+                                        <option value="">请选择主题</option>
+                                        <optgroup label="🔥 红色革命主题">
+                                            <option value="hongse_jiaoyu">红色革命教育</option>
+                                            <option value="hongse_juBenYou">红色剧本游</option>
+                                            <option value="hongse_jiyi">红色记忆寻访</option>
+                                            <option value="hongse_junshi">红色军事体验</option>
+                                            <option value="hongse_nuZi">红色娘子军</option>
+                                            <option value="hongse_qiongYa">琼崖纵队精神</option>
+                                            <option value="hongse_yingXiong">红色英雄故事</option>
+                                            <option value="hongse_qiZhi">红色旗帜传承</option>
+                                            <option value="hongse_lieShi">红色烈士缅怀</option>
+                                            <option value="hongse_jiaFeng">红色家风传承</option>
+                                            <option value="hongse_shiCi">红色诗词研学</option>
+                                            <option value="hongse_yingShi">红色影视研学</option>
+                                            <option value="hongse_diTu">红色地图探秘</option>
+                                            <option value="hongse_jianZhu">红色建筑寻踪</option>
+                                            <option value="hongse_changZheng">红色长征体验</option>
+                                            <option value="hongse_shaoNian">红色少年先锋</option>
+                                            <option value="hongse_shengYin">红色声音档案</option>
+                                            <option value="hongse_nongGeng">红色农耕文化</option>
+                                            <option value="hongse_minSu">红色主题民宿</option>
+                                            <option value="hongse_tongZhan">红色统战记忆</option>
+                                        </optgroup>
+                                        <optgroup label="🥥 非遗文化主题">
+                                            <option value="limiao">黎苗文化</option>
+                                            <option value="feiyi_yediao">非遗椰雕</option>
+                                            <option value="feiyi_lijin">非遗黎锦</option>
+                                            <option value="feiyi_jianZhi">非遗剪纸</option>
+                                            <option value="feiyi_taoYi">非遗陶艺</option>
+                                            <option value="feiyi_muDiao">非遗木雕</option>
+                                            <option value="feiyi_zhiYi">非遗织锦</option>
+                                            <option value="feiyi_yaoCao">非遗药香</option>
+                                        </optgroup>
+                                        <optgroup label="🌊 自然科普主题">
+                                            <option value="haiyang">海洋科普</option>
+                                            <option value="shengtai">热带雨林生态</option>
+                                            <option value="nongye">热带农业</option>
+                                            <option value="dizhi">火山地质</option>
+                                            <option value="shengwu">红树林生态</option>
+                                            <option value="shanHu">珊瑚礁保护</option>
+                                            <option value="haiGui">海龟保护</option>
+                                            <option value="reDaiYu">热带鱼类</option>
+                                        </optgroup>
+                                        <optgroup label="🏗️ 现代发展主题">
+                                            <option value="ziyougang">自贸港建设</option>
+                                            <option value="keJi">科技研学</option>
+                                            <option value="hangTian">航天科技</option>
+                                            <option value="shuZi">数字经济</option>
+                                            <option value="lvSe">绿色能源</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="font-size:13px;color:var(--text-light);margin-bottom:8px;display:block;">🌾 乡村振兴主题</label>
+                                    <select id="theme2" name="theme" style="width:100%;">
+                                        <option value="">请选择主题</option>
+                                        <option value="xiangcun">乡村振兴综合研学</option>
+                                        <option value="nongLv">农旅融合体验</option>
+                                        <option value="minSu">乡村民宿体验</option>
+                                        <option value="teChan">特色农产品研学</option>
+                                        <option value="dianShang">乡村电商研学</option>
+                                        <option value="sheQu">社区营造研学</option>
+                                        <option value="shengwu">红树林生态研学</option>
+                                        <option value="shanHu">珊瑚礁保护研学</option>
+                                        <option value="haiGui">海龟保护研学</option>
+                                        <option value="reDaiYu">热带鱼类研学</option>
+                                        <option value="feiyi_jianZhi">非遗剪纸乡村体验</option>
+                                        <option value="feiyi_taoYi">非遗陶艺乡村体验</option>
+                                        <option value="feiyi_muDiao">非遗木雕乡村体验</option>
+                                        <option value="feiyi_zhiYi">非遗织锦乡村体验</option>
+                                        <option value="feiyi_yaoCao">非遗药香乡村体验</option>
+                                        <option value="shuZi">数字乡村研学</option>
+                                        <option value="lvSe">绿色能源乡村研学</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="days">研学天数</label>
+                            <div class="radio-group">
+                                <label class="radio-option"><input type="radio" name="days" value="1" required><span>1日游</span></label>
+                                <label class="radio-option"><input type="radio" name="days" value="2"><span>2日1夜</span></label>
+                                <label class="radio-option"><input type="radio" name="days" value="3"><span>3日2夜</span></label>
+                                <label class="radio-option"><input type="radio" name="days" value="4"><span>4日3夜</span></label>
+                                <label class="radio-option"><input type="radio" name="days" value="5"><span>5日4夜</span></label>
+                                <label class="radio-option"><input type="radio" name="days" value="6"><span>6日5夜</span></label>
+                                <label class="radio-option"><input type="radio" name="days" value="7"><span>7日6夜</span></label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="grade">适用年级</label>
+                            <div class="radio-group">
+                                <label class="radio-option"><input type="radio" name="grade" value="primary_low" required><span>小学1-3年级</span></label>
+                                <label class="radio-option"><input type="radio" name="grade" value="primary_high"><span>小学4-6年级</span></label>
+                                <label class="radio-option"><input type="radio" name="grade" value="junior"><span>初中</span></label>
+                                <label class="radio-option"><input type="radio" name="grade" value="senior"><span>高中</span></label>
+                                <label class="radio-option"><input type="radio" name="grade" value="university"><span>大学</span></label>
+                                <label class="radio-option"><input type="radio" name="grade" value="postgraduate"><span>研究生</span></label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="people">人数规模</label>
+                            <div class="radio-group">
+                                <label class="radio-option"><input type="radio" name="people" value="3" required><span>3人</span></label>
+                                <label class="radio-option"><input type="radio" name="people" value="5"><span>5人</span></label>
+                                <label class="radio-option"><input type="radio" name="people" value="7"><span>7人</span></label>
+                                <label class="radio-option"><input type="radio" name="people" value="10"><span>10人</span></label>
+                                <label class="radio-option"><input type="radio" name="people" value="15"><span>15人</span></label>
+                                <label class="radio-option"><input type="radio" name="people" value="20"><span>20人</span></label>
+                                <label class="radio-option"><input type="radio" name="people" value="25"><span>25人</span></label>
+                                <label class="radio-option"><input type="radio" name="people" value="30"><span>30人</span></label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="location">出发地区</label>
+                            <select id="location" name="location" required>
+                                <option value="">请选择出发地</option>
+                                <optgroup label="地级市">
+                                    <option value="haikou">海口市</option>
+                                    <option value="sanya">三亚市</option>
+                                    <option value="danzhou">儋州市</option>
+                                    <option value="sansha">三沙市</option>
+                                </optgroup>
+                                <optgroup label="省直辖县级市">
+                                    <option value="qionghai">琼海市</option>
+                                    <option value="wanning">万宁市</option>
+                                    <option value="wenchang">文昌市</option>
+                                    <option value="wuzhishan">五指山市</option>
+                                    <option value="dongfang">东方市</option>
+                                </optgroup>
+                                <optgroup label="县">
+                                    <option value="lingao">临高县</option>
+                                    <option value="chengmai">澄迈县</option>
+                                    <option value="dingan">定安县</option>
+                                    <option value="tunchang">屯昌县</option>
+                                    <option value="changjiang">昌江黎族自治县</option>
+                                    <option value="baisha">白沙黎族自治县</option>
+                                    <option value="ledong">乐东黎族自治县</option>
+                                    <option value="lingshui">陵水黎族自治县</option>
+                                    <option value="baoting">保亭黎族苗族自治县</option>
+                                    <option value="qiongzhong">琼中黎族苗族自治县</option>
+                                </optgroup>
+                                <optgroup label="海口市辖区">
+                                    <option value="haikou_meilan">美兰区</option>
+                                    <option value="haikou_qiongshan">琼山区</option>
+                                    <option value="haikou_xiuying">秀英区</option>
+                                    <option value="haikou_longhua">龙华区</option>
+                                    <option value="haikou_jiangdong">江东新区</option>
+                                </optgroup>
+                                <optgroup label="三亚市辖区">
+                                    <option value="sanya_tianya">天涯区</option>
+                                    <option value="sanya_hedong">河东区</option>
+                                    <option value="sanya_yazhou">崖州区</option>
+                                    <option value="sanya_haiTang">海棠区</option>
+                                </optgroup>
+                                <optgroup label="重点开发区">
+                                    <option value="guilinyang">桂林洋开发区</option>
+                                    <option value="boao">博鳌镇</option>
+                                    <option value="xinglong">兴隆华侨农场</option>
+                                    <option value="haikou_jiangdong_new">海口江东新区</option>
+                                </optgroup>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="budget">预算范围</label>
+                            <select id="budget" name="budget" required>
+                                <option value="">请选择预算</option>
+                                <option value="ultra_economy">30元/人以下（极简型）</option>
+                                <option value="economy">30-50元/人（经济型）</option>
+                                <option value="low">50-80元/人（实惠型）</option>
+                                <option value="low_medium">80-120元/人（舒适型）</option>
+                                <option value="medium">120-200元/人（标准型）</option>
+                                <option value="medium_high">200-300元/人（品质型）</option>
+                                <option value="high">300-500元/人（高端型）</option>
+                                <option value="premium">500-800元/人（豪华型）</option>
+                                <option value="luxury">800-1200元/人（尊享型）</option>
+                                <option value="top">1200元/人以上（定制型）</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-large">
+                            <span class="btn-text">一键生成研学方案</span>
+                            <span class="btn-loading">生成中...</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="result-section">
+                    <h2>生成结果</h2>
+                    <div id="resultContainer" class="result-container">
+                        <div class="result-placeholder">
+                            <div class="placeholder-icon">📋</div>
+                            <p>填写上方需求，点击"一键生成"按钮</p>
+                            <p>AI将为您生成完整的研学旅行方案</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 红韵智研—AI 赋能海南红色文化与乡村振兴综合服务平台. 版权所有.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/data.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/docx@7.1.0/build/index.js"></script>
+    <script src="https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <script src="js/route.js"></script>
+</body>
+</html>

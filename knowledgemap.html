@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>红韵智研—AI 赋能海南红色文化与乡村振兴综合服务平台</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script>
+        (function() {
+            if (typeof d3 !== 'undefined' && d3.version) { window.d3Loaded = true; return; }
+            var src = 'https://cdn.bootcdn.net/ajax/libs/d3/7.9.0/d3.min.js';
+            var s = document.createElement('script'); s.src = src;
+            s.onload = function() { window.d3Loaded = true; };
+            s.onerror = function() {
+                src = 'https://unpkg.com/d3@7.9.0/dist/d3.min.js';
+                var s2 = document.createElement('script'); s2.src = src;
+                s2.onload = function() { window.d3Loaded = true; };
+                document.head.appendChild(s2);
+            };
+            document.head.appendChild(s);
+        })();
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft YaHei','PingFang SC',sans-serif; background: var(--white); color: #f0e6d6; margin: 0; padding: 0; }
+        .main-container { display: flex; height: calc(100vh - 60px); position: relative; z-index: 1; padding: 0 240px; box-sizing: border-box; background: var(--white); overflow: visible; }
+        .content-wrapper { flex: 1; display: flex; position: relative; background: linear-gradient(135deg,#1a0c0c 0%,#2d1515 50%,#1a0c0c 100%); border: 3px solid rgba(218,165,32,0.5); border-radius: 12px; box-shadow: 0 0 20px rgba(218,165,32,0.2); overflow: hidden; }
+        #three-container { flex: 1; position: relative; z-index: 1; overflow: hidden; }
+        #three-container canvas { display: block; width: 100%!important; height: 100%!important; }
+        .node-label-3d { position: absolute; color: #f0e6d6; font-size: 11px; text-align: center; pointer-events: none; white-space: nowrap; text-shadow: 0 0 6px rgba(0,0,0,0.9),0 0 12px rgba(0,0,0,0.7); transform: translate(-50%,-100%); padding: 2px 6px; border-radius: 4px; background: rgba(26,12,12,0.6); z-index: 10; }
+        #webcam-overlay { position: relative; width: 100%; height: 195px; border-radius: 12px; border: 2px solid rgba(218,165,32,0.6); overflow: hidden; z-index: 200; display: none; background: #000; box-shadow: 0 0 20px rgba(218,165,32,0.3); }
+        #webcam-overlay video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        #webcam-overlay canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: scaleX(-1); }
+        #gesture-status { position: relative; color: #ffd700; font-size: 14px; margin-top: 10px; text-align: center; display: none; z-index: 200; font-weight: bold; text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
+        .gesture-guide { position: relative; background: rgba(26,12,12,0.88); backdrop-filter: blur(12px); border: 1px solid rgba(218,165,32,0.35); border-radius: 10px; padding: 10px 12px; z-index: 200; display: none; font-size: 11px; color: #c8a870; line-height: 1.7; box-shadow: 0 4px 15px rgba(0,0,0,0.3); margin-top: 10px; }
+        .gesture-guide-title { color: #ffd700; font-size: 12px; font-weight: bold; margin-bottom: 6px; text-align: center; border-bottom: 1px solid rgba(218,165,32,0.3); padding-bottom: 4px; }
+        .gesture-guide-item { display: flex; align-items: center; gap: 6px; padding: 2px 0; }
+        .gesture-guide-item span:first-child { font-size: 14px; min-width: 22px; text-align: center; }
+        .gesture-container { position: absolute; bottom: 15px; left: 15px; width: 260px; z-index: 200; background: rgba(26,12,12,0.85); backdrop-filter: blur(12px); border-radius: 12px; border: 1px solid rgba(218,165,32,0.35); overflow: hidden; transition: all 0.3s ease; display: none; }
+        .gesture-container.minimized { width: 60px; }
+        .gesture-container-header { color: #daa520; font-size: 12px; margin: 0; text-align: center; border-bottom: 1px solid rgba(218,165,32,0.3); padding: 10px 12px; cursor: default; user-select: none; background: rgba(218,165,32,0.08); display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+        .gesture-container.minimized .gesture-container-header { padding: 12px 10px; flex-direction: column; justify-content: center; gap: 0; }
+        .gesture-minimize-btn { width: 24px; height: 24px; border: 1px solid rgba(218,165,32,0.5); border-radius: 6px; background: rgba(218,165,32,0.1); color: #daa520; cursor: pointer; font-size: 16px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: all 0.2s; padding: 0; user-select: none; }
+        .gesture-minimize-btn:hover { background: rgba(218,165,32,0.3); color: #ffd700; }
+        .gesture-container.minimized .gesture-minimize-btn { width: 32px; height: 32px; font-size: 18px; border-radius: 50%; }
+        .gesture-container-title { flex: 1; text-align: center; font-weight: bold; }
+        .gesture-container.minimized .gesture-container-title { display: none; }
+        .gesture-container-body { padding: 10px; overflow-y: auto; transition: all 0.3s ease; }
+        .gesture-container.minimized .gesture-container-body { padding: 0; height: 0; opacity: 0; }
+        .control-panel { position: absolute; top: 10px; right: 10px; background: rgba(26,12,12,0.85); backdrop-filter: blur(15px); border: 1px solid rgba(218,165,32,0.4); border-radius: 12px; padding: 0; z-index: 200; min-width: 180px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); overflow: hidden; transition: all 0.3s ease; }
+        .control-panel.minimized { min-width: 100px; max-width: 120px; }
+        .control-panel-header { color: #daa520; font-size: 13px; margin: 0; text-align: center; border-bottom: 1px solid rgba(218,165,32,0.3); padding: 10px 15px; cursor: move; user-select: none; background: rgba(218,165,32,0.08); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .control-panel-header::before { content: none; }
+        .panel-minimize-btn { width: 24px; height: 24px; border: 1px solid rgba(218,165,32,0.5); border-radius: 4px; background: rgba(218,165,32,0.1); color: #daa520; cursor: pointer; font-size: 16px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: all 0.2s; padding: 0; user-select: none; }
+        .panel-minimize-btn:hover { background: rgba(218,165,32,0.3); color: #ffd700; }
+        .panel-title { flex: 1; text-align: center; font-weight: bold; }
+        .control-panel.minimized .panel-title { font-size: 11px; }
+        .control-panel-body { padding: 12px 15px; transition: all 0.3s ease; overflow: hidden; }
+        .control-panel.minimized .control-panel-body { padding: 0; height: 0; opacity: 0; }
+        .color-picker-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+        .color-picker-row label { color: #c8a870; font-size: 12px; }
+        .color-picker-row input[type="color"] { width: 30px; height: 24px; border: 1px solid rgba(218,165,32,0.5); border-radius: 4px; background: transparent; cursor: pointer; padding: 0; }
+        .control-btn { width: 100%; padding: 8px; background: linear-gradient(135deg,rgba(139,0,0,0.6),rgba(100,0,0,0.8)); border: 1px solid #daa520; color: #ffd700; border-radius: 6px; cursor: pointer; font-size: 12px; font-family: inherit; transition: all 0.3s; margin-top: 6px; }
+        .control-btn:hover { background: linear-gradient(135deg,rgba(218,165,32,0.6),rgba(139,0,0,0.8)); box-shadow: 0 0 10px rgba(218,165,32,0.4); }
+        .detail-panel { width: 400px; background: rgba(26,12,12,0.85); backdrop-filter: blur(25px); border-left: 1px solid rgba(218,165,32,0.3); padding: 0; overflow-y: auto; display: flex; flex-direction: column; transition: all 0.3s ease; border-radius: 12px 0 0 12px; }
+        .detail-panel.minimized { width: 60px; min-width: 60px; border-radius: 12px; }
+        .detail-panel-header { color: #daa520; font-size: 13px; margin: 0; text-align: center; border-bottom: 1px solid rgba(218,165,32,0.3); padding: 12px 15px; cursor: default; user-select: none; background: rgba(218,165,32,0.08); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .detail-panel.minimized .detail-panel-header { padding: 15px 10px; flex-direction: column; justify-content: center; gap: 0; }
+        .detail-panel-minimize-btn { width: 26px; height: 26px; border: 1px solid rgba(218,165,32,0.5); border-radius: 6px; background: rgba(218,165,32,0.1); color: #daa520; cursor: pointer; font-size: 18px; line-height: 1; display: flex; align-items: center; justify-content: center; transition: all 0.2s; padding: 0; user-select: none; }
+        .detail-panel-minimize-btn:hover { background: rgba(218,165,32,0.3); color: #ffd700; }
+        .detail-panel.minimized .detail-panel-minimize-btn { width: 36px; height: 36px; font-size: 22px; border-radius: 50%; }
+        .detail-panel-title { flex: 1; text-align: center; font-weight: bold; }
+        .detail-panel.minimized .detail-panel-title { display: none; }
+        .detail-panel-body { padding: 25px 25px 30px 25px; overflow-y: auto; transition: all 0.3s ease; flex: 1; }
+        .detail-panel.minimized .detail-panel-body { padding: 0; height: 0; opacity: 0; flex: 0; }
+        .detail-title { font-size: 28px; font-weight: bold; color: #daa520; margin-bottom: 20px; text-shadow: 0 0 10px rgba(218,165,32,0.3); }
+        .detail-info { margin-bottom: 15px; line-height: 1.8; }
+        .detail-label { color: #daa520; font-weight: bold; margin-right: 10px; }
+        .detail-description { background: rgba(139,0,0,0.2); padding: 15px; border-radius: 10px; border-left: 3px solid #daa520; margin: 20px 0; }
+        .ai-buttons { display: flex; flex-direction: column; gap: 12px; margin-top: auto; }
+        .ai-btn { padding: 14px; background: linear-gradient(135deg,rgba(139,0,0,0.6),rgba(100,0,0,0.8)); border: 1px solid #daa520; color: #ffd700; border-radius: 8px; cursor: pointer; font-size: 15px; transition: all 0.3s ease; }
+        .ai-btn:hover { background: linear-gradient(135deg,rgba(139,0,0,0.8),rgba(100,0,0,1)); box-shadow: 0 0 15px rgba(218,165,32,0.5); }
+        .graph-buttons { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+        .graph-btn { padding: 14px; background: linear-gradient(135deg,rgba(218,165,32,0.2),rgba(218,165,32,0.4)); border: 1px solid #daa520; color: #daa520; border-radius: 8px; cursor: pointer; font-size: 15px; transition: all 0.3s ease; }
+        .graph-btn:hover { background: linear-gradient(135deg,rgba(218,165,32,0.4),rgba(218,165,32,0.6)); box-shadow: 0 0 15px rgba(218,165,32,0.4); }
+        .volume-control { margin-top: 10px; padding: 10px; background: rgba(218,165,32,0.1); border-radius: 8px; display: none; }
+        .volume-control.active { display: block; }
+        .volume-control label { color: #daa520; font-size: 13px; display: block; margin-bottom: 8px; }
+        .volume-control input[type="range"] { width: 100%; height: 8px; background: rgba(218,165,32,0.3); border-radius: 4px; outline: none; -webkit-appearance: none; }
+        .volume-control input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: #daa520; border-radius: 50%; cursor: pointer; box-shadow: 0 0 10px rgba(218,165,32,0.5); }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: #daa520; border-radius: 50%; cursor: pointer; box-shadow: 0 0 10px rgba(218,165,32,0.5); }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: linear-gradient(135deg,#2d1515,#1a0c0c); border: 2px solid #daa520; border-radius: 15px; padding: 40px; max-width: 600px; max-height: 80vh; overflow-y: auto; position: relative; }
+        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 30px; color: #daa520; cursor: pointer; }
+        .voice-panel { background: rgba(139,0,0,0.25); border: 1px solid rgba(218,165,32,0.4); border-radius: 12px; padding: 15px; margin-top: 20px; }
+        .voice-title { color: #ffd700; font-size: 16px; margin-bottom: 12px; }
+        .voice-controls { display: flex; gap: 10px; margin-bottom: 12px; }
+        .voice-btn { padding: 8px 16px; background: linear-gradient(135deg,rgba(139,0,0,0.6),rgba(80,0,0,0.8)); border: 1px solid #daa520; border-radius: 20px; color: #ffd700; font-size: 13px; cursor: pointer; transition: all 0.3s ease; flex: 1; }
+        .voice-btn:hover { background: linear-gradient(135deg,rgba(218,165,32,0.6),rgba(139,0,0,0.8)); transform: translateY(-2px); }
+        .voice-select { margin-bottom: 12px; }
+        .voice-label { display: block; color: #daa520; font-size: 13px; margin-bottom: 6px; }
+        .voice-dropdown { width: 100%; padding: 8px 12px; background: rgba(26,12,12,0.8); border: 1px solid rgba(218,165,32,0.5); border-radius: 8px; color: #f0e6d6; font-size: 13px; cursor: pointer; outline: none; }
+        .voice-dropdown:focus { border-color: #daa520; box-shadow: 0 0 8px rgba(218,165,32,0.3); }
+        .voice-dropdown option { background: #1a0c0c; color: #f0e6d6; }
+        .voice-text { background: rgba(26,12,12,0.6); border-radius: 8px; padding: 10px; font-size: 12px; color: #ccc; line-height: 1.6; max-height: 80px; overflow-y: auto; margin-bottom: 10px; }
+        .voice-progress { position: relative; height: 8px; background: rgba(218,165,32,0.2); border-radius: 4px; cursor: pointer; }
+        .voice-progress-bar { height: 100%; background: linear-gradient(90deg,#daa520,#ffd700); width: 0%; border-radius: 4px; transition: width 0.1s ease; }
+        .voice-progress-thumb { position: absolute; top: 50%; left: 0%; width: 14px; height: 14px; background: #ffd700; border: 2px solid #daa520; border-radius: 50%; transform: translate(-50%,-50%); cursor: grab; transition: left 0.1s ease; }
+        .voice-rate-menu { position: absolute; bottom: 100%; right: 0; background: rgba(26,12,12,0.95); border: 1px solid rgba(218,165,32,0.5); border-radius: 8px; padding: 8px; display: none; z-index: 10; }
+        .voice-rate-menu.show { display: flex; flex-direction: column; gap: 4px; }
+        .voice-rate-option { padding: 6px 12px; background: transparent; border: 1px solid transparent; border-radius: 6px; color: #f0e6d6; font-size: 13px; cursor: pointer; text-align: center; transition: all 0.2s ease; }
+        .voice-rate-option:hover { background: rgba(218,165,32,0.3); border-color: #daa520; }
+        .voice-rate-option.active { background: rgba(218,165,32,0.5); color: #ffd700; font-weight: bold; }
+        @keyframes pulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.8; } }
+        @media (max-width: 1600px) { .main-container { padding: 0 120px; } }
+        @media (max-width: 1200px) { .main-container { padding: 0 60px; } }
+        @media (max-width: 768px) { .main-container { flex-direction: column; padding: 0; } .detail-panel { width: 100%; height: 40%; border-left: none; border-top: 1px solid rgba(218,165,32,0.3); } .control-panel { top: auto; bottom: 10px; right: 10px; min-width: 150px; padding: 10px; } }
+        .view-toggle { display: flex; gap: 6px; padding: 6px 10px; background: rgba(26,12,12,0.9); border-radius: 20px; position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 100; border: 1px solid rgba(218,165,32,0.4); }
+        .view-toggle-btn { padding: 5px 16px; border-radius: 16px; border: 1px solid rgba(218,165,32,0.5); background: transparent; color: #c8a870; cursor: pointer; font-size: 12px; font-family: inherit; transition: all 0.3s; }
+        .view-toggle-btn.active { background: linear-gradient(135deg,rgba(139,0,0,0.8),rgba(100,0,0,0.9)); color: #ffd700; border-color: #daa520; box-shadow: 0 0 10px rgba(218,165,32,0.4); }
+        .view-toggle-btn:hover:not(.active) { background: rgba(218,165,32,0.15); color: #ffd700; }
+        #timeline-view { display: none; width: 100%; height: 100%; overflow: hidden; position: relative; }
+        #timeline-view.active { display: block; }
+        .timeline-header { text-align: center; padding: 14px 20px 8px; color: #daa520; background: rgba(26,12,12,0.8); border-bottom: 1px solid rgba(218,165,32,0.3); }
+        .timeline-header h2 { font-size: 18px; margin-bottom: 8px; }
+        .timeline-layout-selector { display: flex; gap: 10px; justify-content: center; margin-top: 5px; }
+        .layout-btn { padding: 6px 12px; background: rgba(26,12,12,0.9); border: 1px solid #daa520; border-radius: 6px; color: #daa520; font-size: 11px; cursor: pointer; transition: all 0.3s; }
+        .layout-btn:hover { background: rgba(139,0,0,0.8); }
+        .layout-btn.active { background: linear-gradient(135deg,rgba(139,0,0,0.8),rgba(100,0,0,1)); color: #ffd700; border-color: #ffd700; }
+        .timeline-scroll-area { width: 100%; height: calc(100% - 52px); overflow: hidden; position: relative; padding: 20px 30px 30px; }
+        .timeline-zoom-controls { position: absolute; top: 30px; right: 30px; display: flex; flex-direction: column; gap: 8px; z-index: 1000; }
+        .timeline-zoom-controls .zoom-btn { width: 36px; height: 36px; background: rgba(26,12,12,0.9); border: 2px solid #daa520; border-radius: 8px; color: #ffd700; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+        .timeline-zoom-controls .zoom-btn:hover { background: rgba(139,0,0,0.8); box-shadow: 0 0 10px rgba(218,165,32,0.5); }
+        .timeline-event-card { position: absolute; width: 180px; background: rgba(26,12,12,0.92); border: 1px solid rgba(218,165,32,0.4); border-radius: 8px; padding: 10px; cursor: pointer; transition: all 0.3s; z-index: 3; }
+        .timeline-event-card:hover { border-color: #ffd700; box-shadow: 0 0 15px rgba(218,165,32,0.5); transform: scale(1.05); }
+        .timeline-event-card.type-event { border-left: 3px solid #ffd700; }
+        .timeline-event-card.type-person { border-left: 3px solid #87ceeb; }
+        .timeline-event-card.type-village { border-left: 3px solid #90ee90; }
+        .timeline-event-date { font-size: 10px; color: #daa520; margin-bottom: 3px; }
+        .timeline-event-name { font-size: 12px; font-weight: bold; color: #ffd700; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .timeline-event-category { font-size: 10px; color: #c8a870; }
+        .detail-enhance-section { background: rgba(139,0,0,0.15); border: 1px solid rgba(218,165,32,0.3); border-radius: 8px; padding: 12px; margin-top: 10px; }
+        .detail-enhance-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 5px 0; border-bottom: 1px solid rgba(218,165,32,0.1); gap: 8px; }
+        .detail-enhance-row:last-child { border-bottom: none; }
+        .detail-enhance-key { color: #daa520; font-size: 12px; white-space: nowrap; font-weight: bold; min-width: 60px; }
+        .detail-enhance-val { color: #f0e6d6; font-size: 12px; text-align: right; flex: 1; }
+        .map-card { background: rgba(26,12,12,0.9); border: 1px solid rgba(218,165,32,0.4); border-radius: 8px; padding: 10px; margin-top: 10px; }
+        .map-card-title { font-size: 12px; color: #daa520; margin-bottom: 6px; font-weight: bold; }
+        .map-card-location { width: 100%; height: 60px; background: rgba(50,20,20,1); border-radius: 6px; border: 1px solid rgba(218,165,32,0.3); margin-bottom: 6px; display: flex; align-items: center; justify-content: center; color: #c8a870; font-size: 11px; }
+        .map-card-desc { font-size: 10px; color: #a89070; margin-bottom: 6px; line-height: 1.4; }
+        .map-card-btn { width: 100%; padding: 7px; background: linear-gradient(135deg,rgba(139,0,0,0.6),rgba(100,0,0,0.8)); border: 1px solid #daa520; color: #ffd700; border-radius: 6px; cursor: pointer; font-size: 12px; font-family: inherit; text-align: center; transition: all 0.3s; }
+        .map-card-btn:hover { background: linear-gradient(135deg,rgba(139,0,0,0.8),rgba(100,0,0,1)); box-shadow: 0 0 10px rgba(218,165,32,0.5); }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">红韵智研</div>
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="route.html">AI 研学路线</a></li>
+                <li><a href="knowledgemap.html" class="active">知识图谱</a></li>
+                <li><a href="rural.html">乡村振兴</a></li>
+                <li><a href="profile.html">个人中心</a></li>
+            </ul>
+            <button class="nav-toggle">☰</button>
+        </div>
+    </nav>
+    <div class="main-container">
+        <div class="content-wrapper">
+            <div class="view-toggle" id="view-toggle">
+                <button class="view-toggle-btn active" id="btn-view-graph" onclick="switchView('graph')">图谱视图</button>
+                <button class="view-toggle-btn" id="btn-view-timeline" onclick="switchView('timeline')">时间轴</button>
+                <div class="timeline-layout-selector" id="timeline-layout-selector-top" style="margin-left:20px;display:none;">
+                    <button class="layout-btn active" data-layout="horizontal" onclick="switchTimelineLayout('horizontal')">🎮 自由</button>
+                    <button class="layout-btn" data-layout="zigzag" onclick="switchTimelineLayout('zigzag')">↝ 之字形</button>
+                    <button class="layout-btn" data-layout="spiral" onclick="switchTimelineLayout('spiral')">↻ 回字形</button>
+                </div>
+            </div>
+            <div id="timeline-view">
+                <div class="timeline-header"><h2 style="display:none;">琼崖革命历史时间轴（1926-1950）</h2></div>
+                <div class="timeline-scroll-area" id="timeline-scroll-area" style="position:relative;width:100%;height:100%;overflow:hidden;">
+                    <svg id="timeline-svg" style="width:100%;height:100%;"></svg>
+                    <div class="timeline-zoom-controls">
+                        <button class="zoom-btn" id="timeline-zoom-in">➕</button>
+                        <button class="zoom-btn" id="timeline-zoom-out">➖</button>
+                        <button class="zoom-btn" id="timeline-zoom-reset">🔄</button>
+                    </div>
+                </div>
+            </div>
+            <div id="three-container">
+                <div class="gesture-container" id="gesture-container">
+                    <div class="gesture-container-header" id="gesture-container-header">
+                        <span class="gesture-minimize-btn" id="gesture-minimize-btn">−</span>
+                        <span class="gesture-container-title">🖐️ 手势控制</span>
+                    </div>
+                    <div class="gesture-container-body" id="gesture-container-body">
+                        <div id="webcam-overlay"><video id="webcam-video" playsinline></video><canvas id="webcam-canvas"></canvas></div>
+                        <div id="gesture-status">🖐️ 未检测</div>
+                        <div class="gesture-guide" id="gesture-guide">
+                            <div class="gesture-guide-title">📋 手势指南</div>
+                            <div class="gesture-guide-item"><span>🖐️</span><span>张开+拖动：旋转+扩散</span></div>
+                            <div class="gesture-guide-item"><span>✊</span><span>握拳+拖动：平移+聚拢</span></div>
+                            <div class="gesture-guide-item"><span>☝️</span><span>单指+拖动：精确旋转</span></div>
+                            <div class="gesture-guide-item"><span>🤏</span><span>捏合：选择节点</span></div>
+                            <div class="gesture-guide-item"><span>🤏</span><span>捏合拉缩：缩放场景</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="control-panel" id="control-panel">
+                <div class="control-panel-header" id="control-panel-header">
+                    <span class="panel-minimize-btn" id="panel-minimize-btn">−</span>
+                    <span class="panel-title">🎨 控制面板</span>
+                </div>
+                <div class="control-panel-body" id="control-panel-body">
+                    <div class="color-picker-row"><label>👤 人物</label><input type="color" id="color-person" value="#ff4444"></div>
+                    <div class="color-picker-row"><label>⚔️ 事件</label><input type="color" id="color-event" value="#daa520"></div>
+                    <div class="color-picker-row"><label>🏠 乡村</label><input type="color" id="color-village" value="#44ff88"></div>
+                    <div class="color-picker-row"><label>🎨 背景</label><input type="color" id="color-bg" value="#1a0c0c"></div>
+                    <button class="control-btn" id="fullscreen-btn">⛶ 全屏</button>
+                    <button class="control-btn" id="camera-toggle-btn">📷 开启手势</button>
+                </div>
+            </div>
+            <div class="detail-panel" id="detail-panel">
+                <div class="detail-panel-header" id="detail-panel-header">
+                    <span class="detail-panel-minimize-btn" id="detail-panel-minimize-btn">−</span>
+                    <span class="detail-panel-title">📜 详情面板</span>
+                </div>
+                <div class="detail-panel-body" id="detail-panel-body">
+                    <div id="detail-content">
+                        <h2 class="detail-title">红韵智研</h2>
+                        <div class="detail-info"><p><span class="detail-label">平台全称：</span>红韵智研—AI 赋能海南红色文化与乡村振兴综合服务平台</p></div>
+                        <div class="detail-description">
+                            <p>欢迎来到海南红色文化3D知识图谱！这里汇聚了琼崖革命的光辉历史。</p>
+                            <p style="margin-top:15px;">🖱️ 拖拽旋转 | 🔍 滚轮缩放 | 👆 点击节点查看详情 | 🖐️ 手势控制聚散</p>
+                        </div>
+                    </div>
+                    <div class="voice-panel" id="voice-panel">
+                        <h3 class="voice-title">🎧 语音讲解</h3>
+                        <div class="voice-controls">
+                            <button class="voice-btn" id="voice-play-btn">▶️ 播放</button>
+                            <button class="voice-btn" id="voice-pause-btn" style="display:none;">⏸️ 暂停</button>
+                            <button class="voice-btn" id="voice-stop-btn">⏹️ 停止</button>
+                            <button class="voice-btn" id="voice-rate-btn">🚀 1.0x</button>
+                        </div>
+                        <div class="voice-select"><label class="voice-label">选择讲解内容：</label><select class="voice-dropdown" id="voice-select"><option value="">-- 请选择节点 --</option></select></div>
+                        <div class="voice-text" id="voice-text">悬浮或点击节点可听取语音讲解</div>
+                        <div class="voice-progress" id="voice-progress"><div class="voice-progress-bar" id="voice-progress-bar"></div><div class="voice-progress-thumb" id="voice-progress-thumb"></div></div>
+                    </div>
+                    <div class="graph-buttons" id="graph-buttons">
+                        <button class="graph-btn" id="mute-btn">🎵 背景音乐</button>
+                        <div class="volume-control" id="bgm-volume-control"><label>🎵 背景音乐：<span id="bgm-volume-value">50%</span></label><input type="range" id="bgm-volume-slider" min="0" max="100" value="50"></div>
+                        <div style="margin-top:15px;"><label style="color:#daa520;font-size:14px;display:block;margin-bottom:8px;">🔊 朗读音量：<span id="speech-volume-value">100%</span></label><input type="range" id="speech-volume-slider" min="0" max="100" value="100" style="width:100%;height:8px;background:rgba(218,165,32,0.3);border-radius:4px;outline:none;-webkit-appearance:none;"></div>
+                        <button class="graph-btn" id="info-btn" style="margin-top:15px;">📖 图谱说明</button>
+                    </div>
+                    <div id="detail-enhance-area"></div>
+                    <div class="ai-buttons" id="ai-buttons">
+                        <button class="ai-btn" onclick="handleTopBtn('publicity')">✨ AI 生成宣传文案</button>
+                        <button class="ai-btn" onclick="handleTopBtn('village')">📚 AI 整理村史资料</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="info-modal">
+        <div class="modal-content">
+            <span class="modal-close" id="close-modal">&times;</span>
+            <h2 style="color:#daa520;margin-bottom:20px;">📖 红韵智研3D知识图谱使用说明</h2>
+            <h3 style="color:#ffd700;margin-bottom:10px;font-size:16px;">一、节点类型说明</h3>
+            <p style="margin-bottom:15px;line-height:1.8;padding-left:15px;"><strong style="color:#ff6b6b;">🔴 发光球体</strong>：代表革命人物<br><strong style="color:#ffd700;">🟡 发光球体</strong>：代表历史事件/武装力量<br><strong style="color:#90ee90;">🟢 发光球体</strong>：代表红色乡村/遗址</p>
+            <h3 style="color:#ffd700;margin-bottom:10px;font-size:16px;">二、3D交互功能</h3>
+            <p style="margin-bottom:15px;line-height:1.8;padding-left:15px;"><strong>🖱️ 鼠标拖拽</strong>：旋转3D视角<br><strong>🔍 滚轮缩放</strong>：放大/缩小3D场景<br><strong>👆 点击节点</strong>：查看该节点的详细介绍<br><strong>🔊 鼠标悬浮</strong>：可听取AI语音讲解<br><strong>🖐️ 手势控制</strong>：张开/握拳控制节点聚散，捏合选择节点</p>
+            <h3 style="color:#ffd700;margin-bottom:10px;font-size:16px;">三、手势控制说明</h3>
+            <p style="margin-bottom:15px;line-height:1.8;padding-left:15px;">• 点击右上角"📷 开启手势"按钮启动摄像头<br>• <strong style="color:#ff6b6b;">🖐️ 张开手掌+拖动</strong>：旋转3D视角 + 节点扩散<br>• <strong style="color:#ff6b6b;">✊ 握拳+拖动</strong>：平移视角 + 节点聚拢<br>• <strong style="color:#ff6b6b;">☝️ 单指指向+拖动</strong>：精确旋转视角<br>• <strong style="color:#ff6b6b;">🤏 拇指食指捏合</strong>：选择节点并语音播放<br>• <strong style="color:#ff6b6b;">🤏 捏合后拉开/合拢</strong>：缩放3D场景</p>
+            <h3 style="color:#ffd700;margin-bottom:10px;font-size:16px;">四、数据规模</h3>
+            <p style="line-height:1.8;padding-left:15px;">本图谱涵盖：<strong>27个</strong>节点，<strong>60余条</strong>关联关系，全面展示琼崖革命的光辉历程。</p>
+        </div>
+    </div>
+    <script>
+        const graphData = {
+            nodes: [
+                { id:"li_shixun",name:"李硕勋",type:"person",category:"革命领袖",description:"中共早期领导人，1903年生于四川高县。1927年参加南昌起义，1931年担任红七军指导员，同年9月在海口东校场被敌人杀害，英勇就义。",relatedVillages:["海口市得胜沙","海口市东门市场"],speakText:"李硕勋，一九零三年出生于四川高县。他是中国共产党的早期优秀党员，坚定的共产主义战士。早年积极参加学生运动和革命活动。一九二七年，他参加了著名的南昌起义，在革命的低潮时期依然坚定信念，继续从事革命工作。一九三一年，李硕勋来到海南岛，担任中国工农红军第七军指导员，参与领导琼崖地区的革命斗争。同年九月，他在海口东校场被敌人逮捕。面对敌人的威逼利诱和严刑拷打，李硕勋坚贞不屈，宁死不降。年仅二十八岁，他为革命事业献出了宝贵的生命，用鲜血和生命诠释了对党的无限忠诚。他的英勇事迹激励着无数琼崖儿女继续革命斗争，是琼崖革命史上的一座不朽丰碑。" },
+                { id:"fengbaiju",name:"冯白驹",type:"person",category:"琼崖革命领袖",description:"1903年生于广东琼山。1926年加入中国共产党，1939年任琼崖抗日游击队司令员，1950年率部迎接海南解放。坚持琼崖革命斗争二十三年，被誉为'琼崖人民的一面旗帜'。",relatedVillages:["海口市云龙镇","琼山区"],speakText:"冯白驹一九零三年出生于广东琼山，就是今天的海南省海口市琼山区。他自幼胸怀报国之志，为人正直勇敢。一九二六年，冯白驹加入了中国共产党，从此走上了革命道路。在漫长的二十三年琼崖革命斗争中，他始终担任主要领导职务，是琼崖革命的一面旗帜。一九三九年抗日战争爆发后，冯白驹担任琼崖抗日游击队司令员，组织指挥了多次抗日战斗，给予日本侵略者沉重打击。在极其艰苦的环境中，他带领琼崖军民坚持敌后抗战，创造了中外革命史上的奇迹。一九五零年海南岛解放时，冯白驹率部积极配合人民解放军，迎接海南的彻底解放。党和人民赞誉他为琼崖人民的一面旗帜，二十三年红旗不倒的领导人。" },
+                { id:"zhang_bailing",name:"张百龄",type:"person",category:"琼崖革命将领",description:"1899年生于海南文昌。1927年参加中国共产党，历任琼崖苏维埃政府主席、红军指挥员等职，为琼崖革命事业做出重要贡献。",relatedVillages:["文昌市"],speakText:"张百龄一八九九年出生于海南文昌，是琼崖地区著名的革命将领。他出身贫苦农民家庭，深切了解劳动人民的苦难。一九二七年，张百龄毅然加入了中国共产党，决心为人民的解放事业而奋斗。参加革命后，他历任琼崖苏维埃政府主席，红军指挥员等重要职务。在担任琼崖苏维埃政府主席期间，他领导建立了琼崖革命根据地，开展土地革命，让广大贫苦农民分得了土地。在担任红军指挥员期间，他参与指挥了多次重要战斗，屡建战功。张百龄为琼崖革命事业做出了卓越贡献，是琼崖革命的重要领导人之一。他的革命精神和战斗事迹，将永远激励着海南人民前进。" },
+                { id:"huang Xue Ying",name:"黄学咏",type:"person",category:"红色娘子军战士",description:"红色娘子军连指导员，英勇善战，是娘子军中的杰出代表。在多次战斗中表现英勇，后在战斗中牺牲。",relatedVillages:["琼海市阳江镇"],speakText:"黄学咏是红色娘子军连的指导员，也是娘子军中最杰出的代表人物之一。她出生于琼海市阳江镇一个贫苦农民家庭，自幼勤劳勇敢，具有强烈的反抗精神。一九三一年五月一日，中国工农红军第二独立师女子军特务连在阳江镇成立，黄学咏毅然报名参加，成为娘子军的一员。她在娘子军中表现突出，英勇善战，很快就担任了指导员的职务。在担任指导员期间，黄学咏不仅负责军事指挥，还负责思想政治工作，她经常给战士们讲解革命道理，鼓舞士气。在她的带领下，娘子军连参加了多次对敌作战屡战屡胜。不幸的是，在一次激烈的战斗中，黄学咏被敌人重兵包围。面对数倍于己的敌军，她毫不畏惧，战斗到最后一刻，最终英勇牺牲，年仅二十余岁。她用鲜血和生命谱写了一曲壮丽的英雄赞歌，是巾帼英雄的典范。" },
+                { id:"wang Yingxi",name:"王映湘",type:"person",category:"琼崖革命先驱",description:"1926年参加中国共产党，是琼崖早期农民运动领导人之一，参与组织多次武装暴动。",relatedVillages:["定安县"],speakText:"王映湘是琼崖地区著名的革命先驱，中国共产党早期优秀党员。他出生于定安县，自幼聪慧好学关心国家大事。一九二六年，王映湘加入了中国共产党，成为琼崖地区最早的共产党员之一。入党后，他积极投身农民运动，深入农村发动群众，组织农民协会，开展减租减息斗争。他是琼崖早期农民运动的杰出领导人之一，为唤醒琼崖农民的革命觉悟做出了重要贡献。在蒋介石发动反革命政变后，王映湘没有被敌人的屠杀所吓倒，而是积极参与组织武装暴动。他参与领导了多次武装起义，为琼崖革命武装力量的建立和发展做出了贡献。他坚定的革命信念和出色的组织能力，至今仍为人们所称颂。" },
+                { id:"red_detachment",name:"红色娘子军",type:"event",category:"武装力量",description:"中国工农红军第二独立师女子军特务连，1931年5月1日在琼海市阳江镇成立。共有指战员100余人，是中国共产党领导下的第一支女子武装连队。",relatedVillages:["琼海市阳江镇","琼海市加积镇"],speakText:"红色娘子军，全称中国工农红军第二独立师女子军特务连，是中国革命史上一支光辉的武装力量。一九三一年五月一日，在琼崖特委的领导下，红色娘子军在琼海市阳江镇正式成立。成立时共有指战员一百余人，全部由女性组成。这是中国共产党领导下的第一支女子武装连队，在中国人民革命斗争史上具有里程碑式的意义。娘子军成立后，立即投入了紧张的军事训练和政治学习。她们学习射击、投弹、战术，训练刻苦进步很快。同时，她们还学习革命理论，提高思想政治觉悟。在短短的时间内，娘子军就成长为一支纪律严明、战斗力强的武装力量。她们参加了多次对敌作战，英勇杀敌，屡建战功，展现了巾帼不让须眉的英雄气概。红色娘子军的故事后来被改编成芭蕾舞剧《红色娘子军》，风靡全国，成为中国文艺史上的经典之作。娘子军精神至今仍激励着无数中国妇女为实现自身价值而奋斗。" },
+                { id:"qiongya_zongdui",name:"琼崖纵队",type:"event",category:"武装力量",description:"中国共产党领导的琼崖地区革命武装，前身为1927年成立的琼崖讨逆革命军。",relatedVillages:["海口市","琼山区","澄迈县"],speakText:"琼崖纵队，全称中国人民解放军琼崖纵队，是中国共产党在海南省领导的一支英雄部队。其前身是一九二七年成立的琼崖讨逆革命军，后来经过多次改编。从一九二七年到一九五零年，琼崖纵队走过了二十三年的光辉历程。这支部队在冯白驹等杰出将领的领导下，从小到大，从弱到强，最终发展成为一支拥有数万人的英雄部队。琼崖纵队最突出的特点是坚持斗争二十三年红旗不倒。在极其艰苦的环境中，在与上级党组织失去联系的情况下，他们依然坚定信念，坚持斗争，最终迎来了革命的胜利。这种精神被概括为琼崖纵队精神，激励着一代又一代海南人民。" },
+                { id:"nanke_battle",name:"南阁起义",type:"event",category:"武装起义",description:"1927年4月22日，在中共琼崖地委领导下，临高县南阁乡爆发武装起义，打响了琼崖革命武装斗争的第一枪。",relatedVillages:["临高县南阁镇"],speakText:"南阁起义是琼崖革命史上一个具有重大历史意义的事件，发生于一九二七年四月二十二日。在这危急关头，中共琼崖地委决定发动武装起义，用革命的武装反对反革命的武装。四月二十二日，在琼崖地委的领导下，临高县南阁乡的革命群众手持土枪、大刀、锄头等简陋武器，举行武装起义。南阁起义打响了琼崖革命武装斗争的第一枪，宣告了琼崖人民武装革命的开始。" },
+                { id:"yongmeng_battle",name:"椰子寨战斗",type:"event",category:"重要战斗",description:"1927年9月23日，冯白驹等领导椰子寨战斗，攻克椰子寨墟，毙敌二十余人，缴获武器一批。",relatedVillages:["琼海市椰子寨"],speakText:"椰子寨战斗是琼崖革命武装斗争史上的一次重要胜利，发生于一九二七年九月二十三日。冯白驹等革命将领亲自指挥这次战斗。经过几个小时的激战，我军终于攻克了椰子寨墟，毙敌二十余人，缴获了一批武器弹药。椰子寨战斗的胜利，极大地鼓舞了琼崖革命军民的斗志。" },
+                { id:"luoxi_battle",name:"罗洛河战斗",type:"event",category:"抗日战斗",description:"1943年初，琼崖抗日独立总队在此伏击日军运输队，击毁汽车两辆，歼敌十余人。",relatedVillages:["澄迈县罗洛村"],speakText:"罗洛河战斗是琼崖抗日战争中的一次精彩伏击战，发生于一九四三年初。抗日独立总队决定在罗洛河畔设下埋伏，截击日军运输队。经过激烈战斗，我军成功击毁日军汽车两辆，消灭敌人十余人，缴获了大批军用物资和生活用品。罗洛河战斗的胜利，有力地打击了日军的嚣张气焰，鼓舞了琼崖军民的抗日斗志。" },
+                { id:"gaoshan_village",name:"高山村",type:"village",category:"红色乡村",description:"位于海口市琼山区云龙镇，是琼崖纵队后方医院所在地。1939-1945年间，在此救治伤员数百人。",relatedFigures:["冯白驹"],relatedVillages:[],speakText:"高山村位于海口市琼山区云龙镇，是一个具有光荣革命传统的红色村庄。一九三九年，琼崖纵队后方医院在高山村正式设立。在那艰苦的岁月里，医院的医护人员和村里的群众克服了重重困难，救治了数百名伤员。高山村现保存有红军后方医院旧址和革命烈士纪念碑等纪念设施。" },
+                { id:"maid_village",name:"迈德村",type:"village",category:"红色乡村",description:"位于海口市美兰区，有光荣革命传统。1926年建立中共党支部，是海南最早成立农村党支部的村庄之一。",relatedFigures:[],relatedVillages:[],speakText:"迈德村位于海口市美兰区，是海南最早成立农村中共党支部的村庄之一。一九二六年，迈德村的几位进步青年加入了中国共产党，并成立了党支部。在漫长的革命岁月里，迈德村先后有数十人参加革命，其中多人献出了宝贵生命。" },
+                { id:"tankou_du",name:"潭口渡",type:"village",category:"革命遗址",description:"位于海口市琼山区，是潭口渡口阻击战遗址。1939年2月10日，打响了琼崖抗日第一枪。",relatedFigures:[],relatedVillages:[],speakText:"潭口渡位于海口市琼山区，是琼崖抗日战争的重要历史见证。一九三九年二月十日，就在这里，打响了琼崖抗日的第一枪，揭开了琼崖人民抗日斗争的序幕。" },
+                { id:"yangjiang_village",name:"阳江镇",type:"village",category:"红色乡村",description:"位于琼海市，是红色娘子军诞生地。1931年5月1日，女子军特务连在阳江镇成立。",relatedFigures:["黄学咏"],relatedVillages:[],speakText:"阳江镇位于琼海市，是中国革命史上著名的红色娘子军的诞生地。一九三一年五月一日，中国工农红军第二独立师女子军特务连正式成立。娘子军的故事后来被改编成芭蕾舞剧《红色娘子军》，风靡全国。" },
+                { id:"luoding_village",name:"罗罗村",type:"village",category:"红色乡村",description:"位于澄迈县，是琼崖革命重要据点。1939年设立抗日救亡室。",relatedFigures:[],relatedVillages:[],speakText:"罗罗村位于澄迈县，是一个具有光荣革命传统的红色村庄。一九三九年，抗日救亡室在罗罗村设立。罗罗村成了远近闻名的抗日据点。" },
+                { id:"zhengguang_office",name:"中共琼崖地委旧址",type:"village",category:"革命遗址",description:"位于海口市得胜沙路。中共琼崖地委1926年在此成立。",relatedFigures:["王映湘"],relatedVillages:[],speakText:"中共琼崖地委旧址位于海口市著名的得胜沙路。一九二六年，中国共产党琼崖地方委员会正式成立，从此琼崖革命有了坚强的领导核心。" },
+                { id:"dongshan_battle",name:"定安县城",type:"village",category:"革命遗址",description:"1932年，琼崖红军攻打定安县城，给敌人沉重打击。",relatedFigures:[],relatedVillages:[],speakText:"定安县城是琼崖革命斗争的重要历史见证。一九三二年，琼崖红军攻打定安县城，给予敌人沉重打击。城墙上的弹痕是琼崖红军英勇作战的历史见证。" },
+                { id:"wang_wenming",name:"王文明",type:"person",category:"革命领袖",description:"1894年生于海南乐会。1926年加入中国共产党，历任中共琼崖特委书记、琼崖苏维埃政府主席。1930年1月病逝于母瑞山。",relatedVillages:["定安县母瑞山"],speakText:"王文明，一八九四年出生于海南乐会县，也就是今天的琼海市。他是琼崖革命的早期领导人之一，琼崖革命根据地的主要创建者。一九三零年一月，王文明在母瑞山因病逝世，年仅三十六岁。他用短暂而光辉的一生诠释了对党和人民的无限忠诚，被誉为琼崖革命的先驱。" },
+                { id:"yang_shanji",name:"杨善集",type:"person",category:"革命领袖",description:"1900年生于海南琼东。1924年加入中国共产党，1927年任中共琼崖特委书记。1927年9月在椰子寨战斗中英勇牺牲，年仅27岁。",relatedVillages:["琼海市椰子寨"],speakText:"杨善集，一九零零年出生于海南琼东县。他是琼崖革命早期的杰出领导人，中国共产党的优秀党员。一九二七年九月，杨善集亲自指挥了椰子寨战斗。战斗中，他身先士卒，冲在最前线。然而不幸的是，在激烈的交火中，杨善集身中数弹，壮烈牺牲，年仅二十七岁。" },
+                { id:"liu_qiuju",name:"刘秋菊",type:"person",category:"革命女英雄",description:"1899年生于海南琼山。1927年加入中国共产党，长期从事地下斗争，被誉为'琼崖人民的刘胡兰'。1949年病逝。",relatedVillages:["海口市琼山区","海口市美兰区迈德村"],speakText:"刘秋菊，一八九九年出生于海南琼山县，是琼崖革命史上著名的女英雄。她机智勇敢，多次化装深入敌占区收集情报、传递密件、掩护同志。一九四九年，刘秋菊因病逝世，享年五十岁。她被琼崖人民亲切地称为琼崖人民的刘胡兰。" },
+                { id:"wang_guoxing",name:"王国兴",type:"person",category:"黎族革命领袖",description:"1894年生于海南白沙。黎族领袖，1943年领导白沙起义，后率部加入琼崖纵队。1975年逝世。",relatedVillages:["白沙县","万宁市六连岭"],speakText:"王国兴，一八九四年出生于海南白沙县，是黎族人民的杰出领袖。一九四三年八月，王国兴联合王玉锦等黎族首领，领导白沙黎族苗族人民举行武装起义。一九四四年，王国兴率部与琼崖纵队会合，被任命为琼崖纵队副司令员。王国兴是黎族人民的骄傲，也是民族团结的典范。" },
+                { id:"ma_baishan",name:"马白山",type:"person",category:"琼崖革命将领",description:"1907年生于海南澄迈。1927年加入中国共产党，1955年被授予少将军衔。1992年逝世。",relatedVillages:["澄迈县","临高县临高角"],speakText:"马白山，一九零七年出生于海南澄迈县，是琼崖纵队著名将领，中华人民共和国开国少将。一九五零年，在海南岛战役中，马白山率部在临高角一带接应解放军登陆，为海南的解放作出了重要贡献。一九五五年，他被授予少将军衔。" },
+                { id:"zhuang_tian",name:"庄田",type:"person",category:"琼崖革命将领",description:"1906年生于广东万宁。1926年加入中国共产党，参加过长征。1940年受党中央派遣到琼崖，担任琼崖纵队副司令员。",relatedVillages:["万宁市","临高县临高角"],speakText:"庄田，一九零六年出生于广东万宁县。他是琼崖纵队的重要领导人，走过长征的老红军。一九四零年，党中央派遣庄田到琼崖，被任命为琼崖纵队副司令员，协助冯白驹指挥琼崖革命斗争。" },
+                { id:"baisha_uprising",name:"白沙起义",type:"event",category:"武装起义",description:"1943年8月，王国兴领导白沙黎族苗族人民举行武装起义，反抗国民党暴政。后与琼崖纵队会合。",relatedVillages:["白沙县","万宁市六连岭"],speakText:"白沙起义是海南黎族苗族人民反抗国民党暴政的一次伟大武装起义，发生于一九四三年八月。起义如燎原之火迅速蔓延，参加起义的群众达两万余人。一九四四年，起义队伍与琼崖纵队胜利会合。白沙起义是黎苗民族觉醒的标志，也是民族团结、共同革命的典范。" },
+                { id:"yunlong_reorganize",name:"云龙改编",type:"event",category:"重要战斗",description:"1938年12月5日，琼崖红军游击队改编为'广东民众抗日自卫团第十四区独立队'，冯白驹任队长。",relatedVillages:["海口市琼山区云龙镇"],speakText:"云龙改编是琼崖抗日战争史上的重要事件，发生于一九三八年十二月五日。琼崖红军游击队正式改编为广东民众抗日自卫团第十四区独立队，冯白驹任队长。云龙改编标志着琼崖抗日民族统一战线的正式形成。" },
+                { id:"murui_breakout",name:"母瑞山突围",type:"event",category:"重要战斗",description:"1933年4月，冯白驹率琼崖红军残部从母瑞山成功突围，保存了革命火种。",relatedVillages:["定安县母瑞山"],speakText:"母瑞山突围是琼崖革命史上一次生死攸关的重大事件，发生于一九三三年四月。冯白驹率领二十多名战士在母瑞山坚持了八个月之久，最后成功突围，保存了革命火种。这段艰苦卓绝的斗争历史，被誉为琼崖革命的传奇。" },
+                { id:"hainan_campaign",name:"海南岛战役",type:"event",category:"重要战斗",description:"1950年3月至5月，中国人民解放军第四野战军发起海南岛战役。5月1日解放海南全岛。",relatedVillages:["临高县临高角","海口市"],speakText:"海南岛战役是解放战争中的一次重大战役，发生于一九五零年三月至五月。五月一日，海南全岛解放。海南岛战役的胜利，宣告了琼崖人民二十三年武装斗争的最后胜利。琼崖纵队在这场战役中发挥了不可替代的重要作用。" },
+                { id:"zhulangqiao_ambush",name:"竹崀桥伏击战",type:"event",category:"抗日战斗",description:"1942年冬，琼崖抗日独立总队在文昌竹崀桥设伏，全歼日军运输队。",relatedVillages:["文昌市","海口市美兰区迈德村"],speakText:"竹崀桥伏击战是琼崖抗日战争中的一场经典伏击战，发生于一九四二年冬季。马白山参谋长亲自带队设伏。经过半个小时激战，我军全歼日军运输队，击毁汽车三辆，消灭敌人三十余人。竹崀桥伏击战的胜利，沉重打击了日军的后勤供应线。" },
+                { id:"murui_mountain",name:"母瑞山革命根据地",type:"village",category:"红色乡村",description:"位于定安县南部，被誉为'琼崖的井冈山'。",relatedFigures:["冯白驹","王文明"],relatedVillages:[],speakText:"母瑞山革命根据地，位于定安县南部，是琼崖革命的重要根据地，被誉为琼崖的井冈山。冯白驹率领二十多名战士在母瑞山坚持了八个月之久，最后成功突围，保存了革命火种。如今，母瑞山保存有多处革命遗址，是进行革命传统教育和爱国主义教育的重要基地。" },
+                { id:"liulianling",name:"六连岭革命根据地",type:"village",category:"红色乡村",description:"位于万宁市北部，被誉为'海南的井冈山'。",relatedFigures:["王国兴"],relatedVillages:[],speakText:"六连岭革命根据地位于万宁市北部六连岭山区，是琼崖革命的重要根据地之一。在随后的二十三年中，六连岭一直是琼崖革命的重要据点。如今，六连岭已成为万宁市重要的红色旅游景点和爱国主义教育基地。" },
+                { id:"lingao_cape",name:"临高角解放公园",type:"village",category:"革命遗址",description:"位于临高县，是1950年解放海南岛战役中解放大军渡海作战的主要登陆点之一。",relatedFigures:["马白山","庄田"],relatedVillages:[],speakText:"临高角解放公园位于临高县北部沿海，是海南岛具有重要历史意义的革命纪念地。一九五零年四月十六日深夜，中国人民解放军主力部队在临高角一带发起登陆作战。临高角的登陆成功，标志着海南岛战役的关键性突破。" },
+                { id:"niangzijun_park",name:"红色娘子军纪念园",type:"village",category:"革命遗址",description:"位于琼海市，是为纪念红色娘子军而建的主题公园。",relatedFigures:["黄学咏"],relatedVillages:[],speakText:"红色娘子军纪念园位于琼海市，是专门为纪念红色娘子军而建的，是集纪念、教育、旅游于一体的红色文化主题公园。红色娘子军纪念园已被列为全国爱国主义教育示范基地。" },
+                { id:"fengbaiju_house",name:"冯白驹故居",type:"village",category:"革命遗址",description:"位于海口市琼山区云龙镇长泰村。是冯白驹将军出生和青少年时期生活的地方。",relatedFigures:["冯白驹"],relatedVillages:[],speakText:"冯白驹故居位于海口市琼山区云龙镇长泰村。一九零三年六月七日，冯白驹就出生在这个院子里。如今，冯白驹故居已被列为省级文物保护单位和爱国主义教育基地。" },
+                { id:"li_shixun_pavilion",name:"李硕勋烈士纪念亭",type:"village",category:"革命遗址",description:"位于海口市琼山区，建于1986年。亭内立有李硕勋烈士花岗岩雕像。",relatedFigures:["李硕勋"],relatedVillages:[],speakText:"李硕勋烈士纪念亭位于海口市琼山区，是为纪念琼崖革命烈士李硕勋而建。一九八六年政府在海口修建了李硕勋烈士纪念亭。李硕勋烈士纪念亭已被列为全国重点烈士纪念建筑物保护单位。" }
+            ],
+            links: [
+                {source:"li_shixun",target:"red_detachment",relation:"指导影响"},{source:"fengbaiju",target:"qiongya_zongdui",relation:"司令员"},{source:"fengbaiju",target:"yongmeng_battle",relation:"指挥"},{source:"zhang_bailing",target:"qiongya_zongdui",relation:"重要将领"},{source:"huang Xue Ying",target:"red_detachment",relation:"指导员"},{source:"wang Yingxi",target:"nanke_battle",relation:"组织者"},{source:"fengbaiju",target:"gaoshan_village",relation:"驻扎地"},{source:"fengbaiju",target:"tankou_du",relation:"战斗地"},{source:"huang Xue Ying",target:"yangjiang_village",relation:"故乡"},{source:"zhang_bailing",target:"maid_village",relation:"活动地"},{source:"wang Yingxi",target:"zhengguang_office",relation:"办公地"},{source:"red_detachment",target:"yangjiang_village",relation:"诞生地"},{source:"qiongya_zongdui",target:"gaoshan_village",relation:"后方医院"},{source:"qiongya_zongdui",target:"maid_village",relation:"活动地"},{source:"qiongya_zongdui",target:"tankou_du",relation:"首战地"},{source:"qiongya_zongdui",target:"luoding_village",relation:"据点"},{source:"nanke_battle",target:"zhengguang_office",relation:"策源地"},{source:"yongmeng_battle",target:"yangjiang_village",relation:"发生地"},{source:"luoxi_battle",target:"luoding_village",relation:"伏击地"},{source:"wang_wenming",target:"nanke_battle",relation:"组织者"},{source:"wang_wenming",target:"qiongya_zongdui",relation:"创建者"},{source:"yang_shanji",target:"yongmeng_battle",relation:"指挥"},{source:"yang_shanji",target:"nanke_battle",relation:"领导者"},{source:"liu_qiuju",target:"qiongya_zongdui",relation:"地下工作者"},{source:"wang_guoxing",target:"baisha_uprising",relation:"领导者"},{source:"wang_guoxing",target:"qiongya_zongdui",relation:"副司令员"},{source:"ma_baishan",target:"qiongya_zongdui",relation:"参谋长"},{source:"ma_baishan",target:"zhulangqiao_ambush",relation:"指挥"},{source:"zhuang_tian",target:"qiongya_zongdui",relation:"副司令员"},{source:"zhuang_tian",target:"hainan_campaign",relation:"指挥"},{source:"fengbaiju",target:"yunlong_reorganize",relation:"队长"},{source:"fengbaiju",target:"murui_breakout",relation:"率领"},{source:"fengbaiju",target:"hainan_campaign",relation:"策应"},{source:"wang_wenming",target:"murui_mountain",relation:"创建根据地"},{source:"yang_shanji",target:"yangjiang_village",relation:"战斗地"},{source:"liu_qiuju",target:"maid_village",relation:"活动地"},{source:"wang_guoxing",target:"liulianling",relation:"转战地"},{source:"ma_baishan",target:"lingao_cape",relation:"接应地"},{source:"zhuang_tian",target:"lingao_cape",relation:"指挥部"},{source:"fengbaiju",target:"fengbaiju_house",relation:"故居"},{source:"fengbaiju",target:"murui_mountain",relation:"坚持斗争"},{source:"li_shixun",target:"li_shixun_pavilion",relation:"纪念地"},{source:"huang Xue Ying",target:"niangzijun_park",relation:"纪念园"},{source:"baisha_uprising",target:"liulianling",relation:"转战地"},{source:"yunlong_reorganize",target:"gaoshan_village",relation:"附近"},{source:"murui_breakout",target:"murui_mountain",relation:"发生地"},{source:"hainan_campaign",target:"lingao_cape",relation:"登陆点"},{source:"zhulangqiao_ambush",target:"maid_village",relation:"附近"},{source:"qiongya_zongdui",target:"murui_mountain",relation:"根据地"},{source:"qiongya_zongdui",target:"liulianling",relation:"根据地"},{source:"red_detachment",target:"niangzijun_park",relation:"纪念地"}
+            ]
+        };
+
+        let currentNode = null;
+        function handleTopBtn(type) { if (!currentNode) { alert('请先在左侧图谱中点击选择一个节点！'); return; } if (type === 'publicity') generatePublicity(currentNode.name, currentNode.category); else generateVillageHistory(currentNode.name, currentNode.category); }
+
+        function showDetail(d) {
+            currentNode = d;
+            const detailContent = document.getElementById('detail-content');
+            const aiButtonsContainer = document.getElementById('ai-buttons');
+            const nodeTypeIcon = d.type === 'person' ? '👤' : (d.type === 'event' ? '⚔️' : '🏠');
+            const typeName = d.type === 'person' ? '人物' : (d.type === 'event' ? '事件' : '乡村');
+            let relatedInfo = '';
+            if (d.relatedVillages && d.relatedVillages.length > 0) relatedInfo += `<p style="margin-top:10px;"><span class="detail-label">📍 关联地点：</span>${d.relatedVillages.join('、')}</p>`;
+            if (d.relatedFigures && d.relatedFigures.length > 0) relatedInfo += `<p style="margin-top:10px;"><span class="detail-label">👥 关联人物：</span>${d.relatedFigures.join('、')}</p>`;
+            detailContent.innerHTML = `<h2 class="detail-title">${nodeTypeIcon} ${d.name}</h2><div class="detail-info"><p><span class="detail-label">类型：</span>${typeName} - ${d.category}</p></div><div class="detail-description"><p>${d.description}</p>${relatedInfo}<p style="margin-top:15px;font-size:13px;color:#888;">📖 史料出处：据《琼崖革命史》</p></div>`;
+            const hasTimelineItem = timelineItems.some(t => t.name === d.name) || personItems.some(p => p.name === d.name);
+            let buttonsHtml = `<button class="ai-btn" onclick="generatePublicity('${d.name}','${d.category}')">✨ AI 生成宣传文案</button><button class="ai-btn" onclick="generateVillageHistory('${d.name}','${d.category}')">📚 AI 整理村史资料</button>`;
+            if (hasTimelineItem) buttonsHtml = `<button class="ai-btn" style="background:linear-gradient(135deg,rgba(218,165,32,0.4),rgba(139,0,0,0.6));" onclick="highlightTimelineCard('${d.name}')">⏱️ 查看在时间轴中</button>${buttonsHtml}`;
+            aiButtonsContainer.innerHTML = buttonsHtml;
+            renderDetailEnhance(d);
+        }
+
+        function generatePublicity(name, category) {
+            const detailContent = document.getElementById('detail-content');
+            const aiButtonsContainer = document.getElementById('ai-buttons');
+            detailContent.innerHTML = `<h2 class="detail-title">✨ AI 宣传文案生成中...</h2><div class="detail-description" style="text-align:center;padding:40px;"><div style="font-size:48px;animation:pulse 1s infinite;">⚙️</div><p style="margin-top:20px;">正在基于"${name}"生成宣传文案...</p></div>`;
+            aiButtonsContainer.innerHTML = '';
+            setTimeout(() => {
+                const publicityTexts = {
+                    '革命领袖': `【${name}——琼崖革命的不朽丰碑】\n\n★人物简介★\n${name}，中国共产党早期优秀党员，坚定的共产主义战士。\n\n★革命历程★\n${name}早年投身革命，1927年参加了著名的南昌起义。\n\n★不朽贡献★\n1931年，${name}来到海南，担任红七军指导员。同年9月英勇就义，年仅二十八岁。\n\n★精神传承★\n${name}用鲜血和生命诠释了对党的无限忠诚。\n\n━━━━━━━━━━━━━━━━━━━━\n💡宣传口号：缅怀革命先烈，传承红色基因！`,
+                    '琼崖革命领袖': `【${name}——琼崖人民的一面旗帜】\n\n★人物简介★\n${name}，琼崖革命的杰出领导人。\n\n★光辉历程★\n${name}1903年生于海南，1926年加入中国共产党。在漫长的二十三年琼崖革命斗争中，他始终担任主要领导职务。\n\n★历史评价★\n"二十三年红旗不倒"——这是党和人民对${name}领导琼崖革命斗争的最高评价。\n\n━━━━━━━━━━━━━━━━━━━━\n💡宣传口号：学习先烈精神，担当时代使命！`,
+                    '红色娘子军战士': `【${name}——不让须眉的女中豪杰】\n\n★人物简介★\n${name}，红色娘子军的光辉典范。\n\n★主要事迹★\n${name}在担任红色娘子军连指导员期间，参与了多次对敌作战。\n\n★精神意义★\n${name}和红色娘子军的故事，是中国共产党领导妇女解放运动的生动写照。\n\n━━━━━━━━━━━━━━━━━━━━\n💡宣传口号：致敬红色娘子军，巾帼建功新时代！`,
+                    '武装力量': `【${name}——琼崖革命武装的光辉旗帜】\n\n★建制沿革★\n${name}是中国共产党在琼崖地区领导建立的一支革命武装力量。\n\n★历史贡献★\n${name}为琼崖革命的胜利做出了不可磨灭的贡献。\n\n━━━━━━━━━━━━━━━━━━━━\n💡宣传口号：传承琼崖纵队精神，续写革命新篇章！`,
+                    '红色乡村': `【${name}——红色热土上的革命摇篮】\n\n★村庄概况★\n${name}位于海南省，是一片有着光荣革命传统的红色热土。\n\n★重要贡献★\n• 建立革命据点，开展地下活动\n• 配合红军作战，提供情报支援\n• 救治伤员，运送物资\n\n★振兴发展★\n新时代背景下，${name}正在依托丰富的红色文化资源，积极推进乡村振兴。\n\n━━━━━━━━━━━━━━━━━━━━\n💡宣传口号：走进红色乡村，感悟革命精神！`,
+                    '革命遗址': `【${name}——镌刻红色记忆的历史丰碑】\n\n★遗址概述★\n${name}是琼崖革命的重要历史见证。\n\n★纪念意义★\n• 是进行革命传统教育的重要基地\n• 是开展党史学习教育的生动课堂\n\n━━━━━━━━━━━━━━━━━━━━\n💡宣传口号：保护革命遗址，传承红色基因！`,
+                    '武装起义': `【${name}——琼崖革命的第一声惊雷】\n\n★历史意义★\n• 打响了琼崖革命武装斗争的第一枪\n• 宣告了琼崖人民武装革命的开始\n\n━━━━━━━━━━━━━━━━━━━━\n💡宣传口号：高举起义旗帜，继承革命传统！`,
+                    '重要战斗': `【${name}——琼崖革命的光辉战例】\n\n★历史价值★\n• 体现了琼崖红军的英勇善战\n• 展示了人民战争的巨大威力\n\n━━━━━━━━━━━━━━━━━━━━\n💡宣传口号：缅怀战斗英烈，传承革命精神！`,
+                    '抗日战斗': `【${name}——琼崖抗日的精彩篇章】\n\n★抗日意义★\n• 打破了日军不可战胜的神话\n• 鼓舞了琼崖军民的抗日斗志\n\n━━━━━━━━━━━━━━━━━━━━\n💡宣传口号：铭记抗日历史，弘扬民族精神！`
+                };
+                const text = publicityTexts[category] || `【${name}——琼崖革命的珍贵记忆】\n\n★核心价值★\n${name}是海南红色文化资源的重要组成部分。\n\n━━━━━━━━━━━━━━━━━━━━\n💡宣传口号：传承红色基因，共创美好未来！`;
+                detailContent.innerHTML = `<h2 class="detail-title">✨ 宣传文案已生成</h2><button class="nav-btn" style="margin-bottom:20px;" onclick="showDetail(graphData.nodes.find(n=>n.name==='${name}'))">← 返回详情</button><div class="detail-description" style="white-space:pre-wrap;line-height:1.8;">${text}</div>`;
+                aiButtonsContainer.innerHTML = `<button class="ai-btn" onclick="copyText(this)" data-text="${text}">📋 复制文案</button><button class="ai-btn" onclick="generatePublicity('${name}','${category}')">🔄 重新生成</button>`;
+            }, 1500);
+        }
+
+        function generateVillageHistory(name, category) {
+            const detailContent = document.getElementById('detail-content');
+            const aiButtonsContainer = document.getElementById('ai-buttons');
+            detailContent.innerHTML = `<h2 class="detail-title">📚 AI 村史整理中...</h2><div class="detail-description" style="text-align:center;padding:40px;"><div style="font-size:48px;animation:pulse 1s infinite;">⚙️</div><p style="margin-top:20px;">正在整理"${name}"的历史资料...</p></div>`;
+            aiButtonsContainer.innerHTML = '';
+            setTimeout(() => {
+                const villageHistoryTexts = {
+                    '红色乡村': `【${name}村史资料汇编】\n\n━━━━━━━━━━━━━━━━━━━━\n第一章 村庄概况\n━━━━━━━━━━━━━━━━━━━━\n\n★地理位置★\n${name}位于海南省境内。\n\n★经济发展★\n近年来，${name}依托红色文化资源，积极发展特色产业。\n\n━━━━━━━━━━━━━━━━━━━━\n第二章 革命历史\n━━━━━━━━━━━━━━━━━━━━\n\n★党组织建立★\n1926年，中国共产党在这里建立了早期革命组织。\n\n★革命活动★\n• 建立了农民协会，开展减租减息斗争\n• 配合红军开展游击战争\n• 设立伤员救治点\n\n━━━━━━━━━━━━━━━━━━━━\n第三章 遗址遗迹\n━━━━━━━━━━━━━━━━━━━━\n\n★革命旧址★\n一、红军活动旧址\n二、革命烈士纪念碑\n三、红色标语墙\n\n━━━━━━━━━━━━━━━━━━━━\n第四章 活化建议\n━━━━━━━━━━━━━━━━━━━━\n\n★预期效益★\n• 年接待游客量可达2万人次\n• 提供就业岗位30余个\n\n━━━━━━━━━━━━━━━━━━━━\n编纂单位：${name}村委会\n编纂时间：2024年`,
+                    '革命遗址': `【${name}历史资料汇编】\n\n━━━━━━━━━━━━━━━━━━━━\n第一部分 遗址概况\n━━━━━━━━━━━━━━━━━━━━\n\n★地理方位★\n${name}位于海南省境内，战略位置十分重要。\n\n━━━━━━━━━━━━━━━━━━━━\n第二部分 历史事件\n━━━━━━━━━━━━━━━━━━━━\n\n★大革命时期★\n1926年，中国共产党在此建立秘密联络点。\n\n★抗日战争时期★\n1939年，琼崖抗日独立总队在此开展抗日游击战争。\n\n━━━━━━━━━━━━━━━━━━━━\n第三部分 遗址价值\n━━━━━━━━━━━━━━━━━━━━\n\n★历史价值★\n${name}是琼崖革命历史的实物见证。\n\n★教育价值★\n遗址是进行革命传统教育的生动教材。\n\n━━━━━━━━━━━━━━━━━━━━\n整理单位：文物保护部门\n整理时间：2024年`
+                };
+                const text = villageHistoryTexts[category] || `【${name}资料汇编】\n\n━━━━━━━━━━━━━━━━━━━━\n一、基本概况\n━━━━━━━━━━━━━━━━━━━━\n${name}位于海南省，是琼崖革命的重要历史见证地。\n\n━━━━━━━━━━━━━━━━━━━━\n二、革命贡献\n━━━━━━━━━━━━━━━━━━━━\n• 培养革命干部数十人\n• 输送红军战士上百人\n\n━━━━━━━━━━━━━━━━━━━━\n编纂整理：红韵智研平台\n整理时间：2024年`;
+                detailContent.innerHTML = `<h2 class="detail-title">📚 村史资料已整理</h2><button class="nav-btn" style="margin-bottom:20px;" onclick="showDetail(graphData.nodes.find(n=>n.name==='${name}'))">← 返回详情</button><div class="detail-description" style="white-space:pre-wrap;line-height:1.8;max-height:400px;overflow-y:auto;">${text}</div>`;
+                aiButtonsContainer.innerHTML = `<button class="ai-btn" onclick="copyText(this)" data-text="${text}">📋 复制资料</button><button class="ai-btn" onclick="generateVillageHistory('${name}','${category}')">🔄 重新整理</button>`;
+            }, 2000);
+        }
+
+        function copyText(btn) { const text = btn.getAttribute('data-text'); navigator.clipboard.writeText(text).then(() => { const o = btn.textContent; btn.textContent = '✅ 已复制'; setTimeout(() => { btn.textContent = o; }, 2000); }); }
+
+        let currentUtterance = null, currentText = '', isSpeaking = false, isPaused = false, currentRate = 0.9, currentCharIndex = 0, totalChars = 0, isDragging = false, speechVolume = 1.0;
+        const rateOptions = [{label:'0.5x',value:0.5},{label:'0.75x',value:0.75},{label:'1.0x',value:1},{label:'1.25x',value:1.25},{label:'1.5x',value:1.5},{label:'2.0x',value:2}];
+
+        function updateVoicePanel(nodeName, text) { const vt = document.getElementById('voice-text'); const vs = document.getElementById('voice-select'); if (vt) vt.textContent = text; if (vs) { for (let o of vs.options) { if (o.text === nodeName) { o.selected = true; break; } } } }
+
+        function speak(text, nodeName) {
+            if (!('speechSynthesis' in window)) { alert('抱歉，您的浏览器不支持语音合成功能。'); return; }
+            stopSpeech(); currentText = text; totalChars = text.length; currentCharIndex = 0;
+            currentUtterance = new SpeechSynthesisUtterance(text); currentUtterance.lang = 'zh-CN'; currentUtterance.rate = currentRate; currentUtterance.pitch = 1; currentUtterance.volume = speechVolume;
+            currentUtterance.onboundary = function(e) { if (e.name === 'word' && !isDragging) { currentCharIndex = e.charIndex; const p = (e.charIndex / totalChars) * 100; const pb = document.getElementById('voice-progress-bar'); const pt = document.getElementById('voice-progress-thumb'); if (pb) pb.style.width = p + '%'; if (pt) pt.style.left = p + '%'; } };
+            currentUtterance.onstart = function() { isSpeaking = true; isPaused = false; updatePlayButton(); };
+            currentUtterance.onend = function() { isSpeaking = false; isPaused = false; updatePlayButton(); resetProgress(); };
+            currentUtterance.onerror = function() { isSpeaking = false; isPaused = false; updatePlayButton(); };
+            if (nodeName) updateVoicePanel(nodeName, text);
+            speechSynthesis.speak(currentUtterance);
+        }
+        function pauseSpeech() { if (isSpeaking && !isPaused) { speechSynthesis.pause(); isPaused = true; updatePlayButton(); } }
+        function resumeSpeech() { if (isPaused) { speechSynthesis.resume(); isPaused = false; updatePlayButton(); } }
+        function stopSpeech() { speechSynthesis.cancel(); isSpeaking = false; isPaused = false; currentUtterance = null; currentCharIndex = 0; updatePlayButton(); resetProgress(); }
+        function updatePlayButton() { const pb = document.getElementById('voice-play-btn'); const pa = document.getElementById('voice-pause-btn'); if (isSpeaking && !isPaused) { pb.style.display = 'none'; pa.style.display = 'block'; } else if (isPaused) { pb.style.display = 'block'; pb.textContent = '▶️ 继续'; pa.style.display = 'none'; } else { pb.style.display = 'block'; pb.textContent = '▶️ 播放'; pa.style.display = 'none'; } }
+        function setRate(rate) { currentRate = rate; const rb = document.getElementById('voice-rate-btn'); if (rb) rb.textContent = '🚀 ' + rate + 'x'; if (isSpeaking && currentUtterance) { speechSynthesis.cancel(); setTimeout(() => { speak(currentText); }, 100); } }
+        function seekToPosition(percentage) { if (!currentText || (!isSpeaking && !isPaused)) return; const ci = Math.floor((percentage / 100) * totalChars); currentCharIndex = ci; const pb = document.getElementById('voice-progress-bar'); const pt = document.getElementById('voice-progress-thumb'); if (pb) pb.style.width = percentage + '%'; if (pt) pt.style.left = percentage + '%'; if (isSpeaking || isPaused) { speechSynthesis.cancel(); isSpeaking = false; isPaused = false; updatePlayButton(); const rt = currentText.substring(ci); if (rt.trim()) { currentUtterance = new SpeechSynthesisUtterance(rt); currentUtterance.lang = 'zh-CN'; currentUtterance.rate = currentRate; currentUtterance.pitch = 1; currentUtterance.volume = speechVolume; currentUtterance.onboundary = function(e) { if (e.name === 'word' && !isDragging) { const aci = ci + e.charIndex; currentCharIndex = aci; const p = (aci / totalChars) * 100; const pb2 = document.getElementById('voice-progress-bar'); const pt2 = document.getElementById('voice-progress-thumb'); if (pb2) pb2.style.width = p + '%'; if (pt2) pt2.style.left = p + '%'; } }; currentUtterance.onstart = function() { isSpeaking = true; isPaused = false; updatePlayButton(); }; currentUtterance.onend = function() { isSpeaking = false; isPaused = false; updatePlayButton(); resetProgress(); }; currentUtterance.onerror = function() { isSpeaking = false; isPaused = false; updatePlayButton(); resetProgress(); }; speechSynthesis.speak(currentUtterance); } } }
+        function resetProgress() { const pb = document.getElementById('voice-progress-bar'); const pt = document.getElementById('voice-progress-thumb'); if (pb) pb.style.width = '0%'; if (pt) pt.style.left = '0%'; }
+
+        function initVoiceControls() {
+            const playBtn = document.getElementById('voice-play-btn'); const pauseBtn = document.getElementById('voice-pause-btn'); const stopBtn = document.getElementById('voice-stop-btn'); const voiceSelect = document.getElementById('voice-select'); const rateBtn = document.getElementById('voice-rate-btn'); const progressBar = document.getElementById('voice-progress');
+            if (playBtn) playBtn.addEventListener('click', function() { if (isPaused) resumeSpeech(); else if (currentText) speak(currentText); });
+            if (pauseBtn) pauseBtn.addEventListener('click', function() { pauseSpeech(); });
+            if (stopBtn) stopBtn.addEventListener('click', function() { stopSpeech(); });
+            if (rateBtn) rateBtn.addEventListener('click', function(e) { e.stopPropagation(); let rm = document.getElementById('voice-rate-menu'); if (rm) { rm.remove(); return; } rm = document.createElement('div'); rm.className = 'voice-rate-menu show'; rm.id = 'voice-rate-menu'; rateOptions.forEach(opt => { const d = document.createElement('div'); d.className = 'voice-rate-option' + (opt.value === currentRate ? ' active' : ''); d.textContent = opt.label; d.addEventListener('click', function() { setRate(opt.value); rm.remove(); }); rm.appendChild(d); }); rateBtn.style.position = 'relative'; rateBtn.appendChild(rm); setTimeout(() => { document.addEventListener('click', function cm(e) { if (!rateBtn.contains(e.target)) { rm.remove(); document.removeEventListener('click', cm); } }); }, 10); });
+            if (progressBar) progressBar.addEventListener('mousedown', function(e) { isDragging = true; const r = progressBar.getBoundingClientRect(); const p = Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100)); const onM = function(ev) { if (!isDragging) return; const r2 = progressBar.getBoundingClientRect(); const p2 = Math.max(0, Math.min(100, ((ev.clientX - r2.left) / r2.width) * 100)); const t = document.getElementById('voice-progress-thumb'); if (t) t.style.left = p2 + '%'; }; const onU = function(ev) { isDragging = false; document.removeEventListener('mousemove', onM); document.removeEventListener('mouseup', onU); const r2 = progressBar.getBoundingClientRect(); seekToPosition(Math.max(0, Math.min(100, ((ev.clientX - r2.left) / r2.width) * 100))); }; document.addEventListener('mousemove', onM); document.addEventListener('mouseup', onU); });
+            if (voiceSelect) { graphData.nodes.forEach(node => { const o = document.createElement('option'); o.value = node.id; o.text = node.name + ' - ' + node.category; voiceSelect.appendChild(o); }); voiceSelect.addEventListener('change', function() { const sid = this.value; if (sid) { const n = graphData.nodes.find(n => n.id === sid); if (n) speak(n.speakText, n.name); } }); }
+        }
+
+        function playClickSound() { const a = new (window.AudioContext || window.webkitAudioContext)(); const o = a.createOscillator(); const g = a.createGain(); o.connect(g); g.connect(a.destination); o.frequency.value = 800; o.type = 'sine'; g.gain.setValueAtTime(0.3, a.currentTime); g.gain.exponentialRampToValueAtTime(0.01, a.currentTime + 0.1); o.start(a.currentTime); o.stop(a.currentTime + 0.1); }
+        function playDingSound() { const a = new (window.AudioContext || window.webkitAudioContext)(); const o = a.createOscillator(); const g = a.createGain(); o.connect(g); g.connect(a.destination); o.frequency.value = 1200; o.type = 'sine'; g.gain.setValueAtTime(0.1, a.currentTime); g.gain.exponentialRampToValueAtTime(0.01, a.currentTime + 0.2); o.start(a.currentTime); o.stop(a.currentTime + 0.2); }
+
+        let bgMusicPlaying = false, audioContext, bgMusicNodes = [], bgMusicVolume = 0.5, bgMusicInterval = null;
+        function playMelody() { if (!audioContext) return; if (bgMusicNodes.length > 0) bgMusicNodes.forEach(n => { try { if (n.osc) n.osc.stop(); } catch(e) {} }); const melody = [392,392,523,392,494,440,392,523,494,440,392,330,294,330,392,392,440,494,440,494,523,392,392,330,294,330,392,440,392]; const dur = [0.8,0.8,1.2,0.8,0.8,0.8,1.2,0.8,0.8,0.8,0.8,0.8,0.8,1.2,0.8,0.8,0.8,0.8,0.8,0.8,1.6,0.8,0.8,0.8,0.8,0.8,0.8,2.4]; let t = audioContext.currentTime; bgMusicNodes = []; melody.forEach((f, i) => { const o = audioContext.createOscillator(); const g = audioContext.createGain(); o.connect(g); g.connect(audioContext.destination); o.frequency.value = f; o.type = 'triangle'; const d = dur[i]; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.07 * bgMusicVolume, t + 0.05); g.gain.linearRampToValueAtTime(0.07 * bgMusicVolume, t + d - 0.15); g.gain.linearRampToValueAtTime(0, t + d); o.start(t); o.stop(t + d + 0.05); bgMusicNodes.push({osc:o,gain:g}); t += d; }); }
+        function createBgMusic() {
+            if (bgMusicPlaying) return; audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            playMelody(); bgMusicInterval = setInterval(playMelody, 25000); bgMusicPlaying = true;
+        }
+        function updateBgMusicVolume(v) { bgMusicVolume = v; if (bgMusicPlaying && audioContext) { if (bgMusicInterval) { clearInterval(bgMusicInterval); bgMusicInterval = null; } playMelody(); bgMusicInterval = setInterval(playMelody, 25000); } }
+
+        document.getElementById('mute-btn').addEventListener('click', function() { if (!bgMusicPlaying) { createBgMusic(); this.textContent = '🔇 音乐'; document.getElementById('bgm-volume-control').classList.add('active'); } else { bgMusicPlaying = false; this.textContent = '🎵 背景音乐'; if (bgMusicInterval) { clearInterval(bgMusicInterval); bgMusicInterval = null; } if (audioContext) audioContext.close(); document.getElementById('bgm-volume-control').classList.remove('active'); } });
+        document.getElementById('bgm-volume-slider').addEventListener('input', function() { bgMusicVolume = this.value / 100; document.getElementById('bgm-volume-value').textContent = this.value + '%'; });
+        document.getElementById('bgm-volume-slider').addEventListener('change', function() { updateBgMusicVolume(this.value / 100); document.getElementById('bgm-volume-value').textContent = this.value + '%'; });
+        document.getElementById('speech-volume-slider').addEventListener('input', function() { speechVolume = this.value / 100; document.getElementById('speech-volume-value').textContent = this.value + '%'; if (isSpeaking && currentUtterance) currentUtterance.volume = speechVolume; });
+        document.getElementById('speech-volume-slider').addEventListener('change', function() { speechVolume = this.value / 100; document.getElementById('speech-volume-value').textContent = this.value + '%'; if (isSpeaking && currentText) { speechSynthesis.cancel(); setTimeout(() => { speak(currentText); }, 100); } });
+        document.getElementById('info-btn').addEventListener('click', function() { document.getElementById('info-modal').style.display = 'flex'; });
+        document.getElementById('close-modal').addEventListener('click', function() { document.getElementById('info-modal').style.display = 'none'; });
+
+        // =================== THREE.JS 3D SCENE ===================
+        let scene, camera, renderer, raycaster, mouse;
+        let nodeMeshes = [], linkLines = [], bgParticles;
+        let nodeLabels = [];
+        let targetSpread = 1.0, currentSpread = 1.0;
+        let nodeColors = { person: 0xff4444, event: 0xdaa520, village: 0x44ff88 };
+        let bgColor = 0x1a0c0c;
+        let isMouseDown = false, mouseDownX = 0, mouseDownY = 0;
+        let cameraTheta = 0, cameraPhi = Math.PI / 4, cameraRadius = 12;
+        let cameraTarget = new THREE.Vector3(0, 0, 0);
+        let lastMouseX = 0, lastMouseY = 0;
+        let hoveredNode = null;
+        let clock = new THREE.Clock();
+        let cameraActive = false;
+        let mediapipeHands = null;
+        let mediapipeCamera = null;
+        let lastPinchTime = 0;
+        let lastInteractionTime = 0;
+        let selectedNodeId = null;
+        let prevPalmCenter = null;
+        let prevPalmTime = 0;
+        let gestureRotationActive = false;
+        let gesturePanActive = false;
+        let gestureZoomActive = false;
+        let prevPinchDist = 0;
+        let smoothPalmX = 0, smoothPalmY = 0;
+        let smoothPalmInited = false;
+        let targetCameraTheta = 0, targetCameraPhi = Math.PI / 4, targetCameraRadius = 40;
+        let targetCameraTarget = new THREE.Vector3(0, 0, 0);
+
+        function initThreeScene() {
+            const container = document.getElementById('three-container');
+            const width = container.clientWidth || window.innerWidth - 400; const height = container.clientHeight || window.innerHeight - 60;
+            scene = new THREE.Scene(); scene.background = new THREE.Color(bgColor); scene.fog = new THREE.FogExp2(bgColor, 0.008);
+            camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
+            updateCameraPosition();
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false }); renderer.setSize(width, height); renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.2;
+            container.insertBefore(renderer.domElement, container.firstChild);
+            scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+            const pl1 = new THREE.PointLight(0xffd700, 1.5, 120); pl1.position.set(25, 25, 25); scene.add(pl1);
+            const pl2 = new THREE.PointLight(0xff4444, 0.8, 100); pl2.position.set(-25, -10, 20); scene.add(pl2);
+            const pl3 = new THREE.PointLight(0x44ff88, 0.5, 100); pl3.position.set(15, -20, -25); scene.add(pl3);
+            const pl4 = new THREE.PointLight(0x4488ff, 0.3, 80); pl4.position.set(-10, 20, -15); scene.add(pl4);
+            raycaster = new THREE.Raycaster(); mouse = new THREE.Vector2();
+            createNodes(); createLinks(); createBackgroundParticles();
+            renderer.domElement.addEventListener('mousedown', onMouseDown);
+            renderer.domElement.addEventListener('mousemove', onMouseMove);
+            renderer.domElement.addEventListener('mouseup', onMouseUp);
+            renderer.domElement.addEventListener('wheel', onWheel);
+            renderer.domElement.addEventListener('click', onClick);
+            renderer.domElement.addEventListener('touchstart', onTouchStart, { passive: false });
+            renderer.domElement.addEventListener('touchmove', onTouchMove, { passive: false });
+            renderer.domElement.addEventListener('touchend', onTouchEnd);
+            window.addEventListener('resize', onResize);
+            animate();
+        }
+
+        function createNodes() {
+            const persons = graphData.nodes.filter(n => n.type === 'person');
+            const events = graphData.nodes.filter(n => n.type === 'event');
+            const villages = graphData.nodes.filter(n => n.type === 'village');
+            function arrange(items, cx, r) { items.forEach((node, i) => { const a = (i / items.length) * Math.PI * 2; const rr = r + (Math.random() - 0.5) * 3; node.basePosition = new THREE.Vector3(cx + rr * Math.cos(a), (Math.random() - 0.5) * 8, rr * Math.sin(a)); node.currentTarget = node.basePosition.clone(); }); }
+            arrange(persons, -12, 5); arrange(events, 0, 6); arrange(villages, 12, 5);
+            graphData.nodes.forEach(node => {
+                const color = nodeColors[node.type] || 0xffffff;
+                const isMajor = ['fengbaiju','li_shixun','qiongya_zongdui','red_detachment'].includes(node.id);
+                const br = isMajor ? 1.2 : 0.8;
+                const geo = new THREE.SphereGeometry(br, 32, 32);
+                const mat = new THREE.MeshPhongMaterial({ color: color, emissive: color, emissiveIntensity: 0.4, transparent: true, opacity: 0.92, shininess: 100 });
+                const mesh = new THREE.Mesh(geo, mat); mesh.position.copy(node.basePosition);
+                mesh.userData = { nodeId: node.id, nodeData: node, baseRadius: br };
+                scene.add(mesh); nodeMeshes.push(mesh);
+                const gGeo = new THREE.SphereGeometry(br * 2.0, 16, 16);
+                const gMat = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.08, side: THREE.BackSide });
+                mesh.add(new THREE.Mesh(gGeo, gMat));
+                const g2Geo = new THREE.SphereGeometry(br * 3.0, 16, 16);
+                const g2Mat = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.03, side: THREE.BackSide });
+                mesh.add(new THREE.Mesh(g2Geo, g2Mat));
+                const ringGeo = new THREE.RingGeometry(br * 1.5, br * 1.7, 32);
+                const ringMat = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.15, side: THREE.DoubleSide });
+                const ring = new THREE.Mesh(ringGeo, ringMat); ring.rotation.x = Math.PI / 2;
+                mesh.add(ring);
+                const labelDiv = document.createElement('div'); labelDiv.className = 'node-label-3d'; labelDiv.textContent = node.name;
+                document.getElementById('three-container').appendChild(labelDiv);
+                nodeLabels.push({ div: labelDiv, node: node, mesh: mesh });
+            });
+        }
+
+        function createLinks() {
+            const nodeMap = {}; graphData.nodes.forEach(n => { nodeMap[n.id] = n; });
+            graphData.links.forEach(link => {
+                const s = nodeMap[link.source]; const t = nodeMap[link.target];
+                if (!s || !t || !s.basePosition || !t.basePosition) return;
+                const geo = new THREE.BufferGeometry().setFromPoints([s.basePosition.clone(), t.basePosition.clone()]);
+                const mat = new THREE.LineBasicMaterial({ color: 0xdaa520, transparent: true, opacity: 0.25 });
+                const line = new THREE.Line(geo, mat); line.userData = { sourceId: link.source, targetId: link.target };
+                scene.add(line); linkLines.push(line);
+            });
+        }
+
+        function createBackgroundParticles() {
+            const count = 800; const positions = new Float32Array(count * 3); const colors = new Float32Array(count * 3); const sizes = new Float32Array(count);
+            for (let i = 0; i < count; i++) { positions[i*3] = (Math.random()-0.5)*120; positions[i*3+1] = (Math.random()-0.5)*120; positions[i*3+2] = (Math.random()-0.5)*120; const r = Math.random(); const c = r > 0.6 ? new THREE.Color(0xdaa520) : r > 0.3 ? new THREE.Color(0x8b0000) : new THREE.Color(0x44ff88); colors[i*3] = c.r; colors[i*3+1] = c.g; colors[i*3+2] = c.b; sizes[i] = Math.random() * 0.5 + 0.1; }
+            const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(positions, 3)); geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            const mat = new THREE.PointsMaterial({ size: 0.3, vertexColors: true, transparent: true, opacity: 0.5, sizeAttenuation: true, blending: THREE.AdditiveBlending, depthWrite: false });
+            bgParticles = new THREE.Points(geo, mat); scene.add(bgParticles);
+        }
+
+        function updateCameraPosition() {
+            camera.position.x = cameraTarget.x + cameraRadius * Math.sin(cameraPhi) * Math.cos(cameraTheta);
+            camera.position.y = cameraTarget.y + cameraRadius * Math.cos(cameraPhi);
+            camera.position.z = cameraTarget.z + cameraRadius * Math.sin(cameraPhi) * Math.sin(cameraTheta);
+            camera.lookAt(cameraTarget);
+        }
+
+        function onMouseDown(e) { isMouseDown = true; lastMouseX = e.clientX; lastMouseY = e.clientY; mouseDownX = e.clientX; mouseDownY = e.clientY; lastInteractionTime = Date.now(); }
+        function onMouseMove(e) {
+            const rect = renderer.domElement.getBoundingClientRect();
+            mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1; mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+            if (isMouseDown) { const dx = e.clientX - lastMouseX; const dy = e.clientY - lastMouseY; targetCameraTheta -= dx * 0.005; targetCameraPhi = Math.max(0.1, Math.min(Math.PI - 0.1, targetCameraPhi - dy * 0.005)); lastMouseX = e.clientX; lastMouseY = e.clientY; lastInteractionTime = Date.now(); }
+            raycaster.setFromCamera(mouse, camera); const intersects = raycaster.intersectObjects(nodeMeshes);
+            if (intersects.length > 0) { const nd = intersects[0].object.userData.nodeData; if (hoveredNode !== nd) { hoveredNode = nd; renderer.domElement.style.cursor = 'pointer'; } } else { if (hoveredNode) { hoveredNode = null; renderer.domElement.style.cursor = 'grab'; } }
+        }
+        function onMouseUp(e) { isMouseDown = false; }
+        function onWheel(e) { e.preventDefault(); targetCameraRadius = Math.max(3, Math.min(80, targetCameraRadius + e.deltaY * 0.05)); lastInteractionTime = Date.now(); }
+        function onClick(e) { const dx = Math.abs(e.clientX - mouseDownX); const dy = Math.abs(e.clientY - mouseDownY); if (dx > 5 || dy > 5) return; raycaster.setFromCamera(mouse, camera); const intersects = raycaster.intersectObjects(nodeMeshes); if (intersects.length > 0) { const nd = intersects[0].object.userData.nodeData; selectedNodeId = intersects[0].object.userData.nodeId; playClickSound(); showDetail(nd); speak(nd.speakText, nd.name); } else { selectedNodeId = null; } }
+        let touchStartDist = 0;
+        let touchStartX = 0, touchStartY = 0;
+        function onTouchStart(e) { e.preventDefault(); if (e.touches.length === 1) { isMouseDown = true; lastMouseX = e.touches[0].clientX; lastMouseY = e.touches[0].clientY; touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; mouseDownX = touchStartX; mouseDownY = touchStartY; } else if (e.touches.length === 2) { const dx = e.touches[0].clientX - e.touches[1].clientX; const dy = e.touches[0].clientY - e.touches[1].clientY; touchStartDist = Math.sqrt(dx*dx+dy*dy); } }
+        function onTouchMove(e) { e.preventDefault(); if (e.touches.length === 1 && isMouseDown) { const dx = e.touches[0].clientX - lastMouseX; const dy = e.touches[0].clientY - lastMouseY; targetCameraTheta -= dx * 0.005; targetCameraPhi = Math.max(0.1, Math.min(Math.PI - 0.1, targetCameraPhi - dy * 0.005)); lastMouseX = e.touches[0].clientX; lastMouseY = e.touches[0].clientY; } else if (e.touches.length === 2) { const dx = e.touches[0].clientX - e.touches[1].clientX; const dy = e.touches[0].clientY - e.touches[1].clientY; const dist = Math.sqrt(dx*dx+dy*dy); const delta = touchStartDist - dist; targetCameraRadius = Math.max(3, Math.min(80, targetCameraRadius + delta * 0.1)); touchStartDist = dist; } }
+        function onTouchEnd(e) {
+            if (e.touches.length === 0) {
+                const dx = Math.abs((lastMouseX || touchStartX) - touchStartX);
+                const dy = Math.abs((lastMouseY || touchStartY) - touchStartY);
+                if (dx <= 5 && dy <= 5) {
+                    const rect = renderer.domElement.getBoundingClientRect();
+                    mouse.x = ((touchStartX - rect.left) / rect.width) * 2 - 1;
+                    mouse.y = -((touchStartY - rect.top) / rect.height) * 2 + 1;
+                    raycaster.setFromCamera(mouse, camera);
+                    const intersects = raycaster.intersectObjects(nodeMeshes);
+                    if (intersects.length > 0) {
+                        const nd = intersects[0].object.userData.nodeData;
+                        selectedNodeId = intersects[0].object.userData.nodeId;
+                        playClickSound();
+                        showDetail(nd);
+                        speak(nd.speakText, nd.name);
+                    }
+                }
+            }
+            isMouseDown = false;
+        }
+        function onResize() { const c = document.getElementById('three-container'); camera.aspect = c.clientWidth / c.clientHeight; camera.updateProjectionMatrix(); renderer.setSize(c.clientWidth, c.clientHeight); }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const t = clock.getElapsedTime();
+            const dt = Math.min(clock.getDelta(), 0.05);
+            const timeSinceInteraction = Date.now() - lastInteractionTime;
+            if (timeSinceInteraction > 3000 && !isMouseDown) { targetCameraTheta += 0.001; }
+            cameraTheta += (targetCameraTheta - cameraTheta) * 0.12;
+            cameraPhi += (targetCameraPhi - cameraPhi) * 0.12;
+            cameraRadius += (targetCameraRadius - cameraRadius) * 0.4;
+            cameraTarget.lerp(targetCameraTarget, 0.1);
+            updateCameraPosition();
+            currentSpread += (targetSpread - currentSpread) * 0.08;
+            nodeMeshes.forEach((mesh, i) => {
+                const nd = mesh.userData.nodeData;
+                if (nd.basePosition) { nd.currentTarget = nd.basePosition.clone().multiplyScalar(currentSpread); mesh.position.lerp(nd.currentTarget, 0.08); mesh.position.y += Math.sin(t * 0.5 + i * 0.3) * 0.003; }
+                const pulse = 1 + Math.sin(t * 1.5 + i * 0.7) * 0.08;
+                const isSelected = selectedNodeId === mesh.userData.nodeId;
+                const targetScale = isSelected ? 1.4 : pulse;
+                mesh.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.12);
+                if (isSelected) { mesh.material.emissiveIntensity = 0.6 + Math.sin(t * 3) * 0.2; }
+                else { mesh.material.emissiveIntensity = 0.3 + Math.sin(t * 1.5 + i * 0.7) * 0.1; }
+            });
+            linkLines.forEach((line, i) => {
+                const sNode = graphData.nodes.find(n => n.id === line.userData.sourceId);
+                const tNode = graphData.nodes.find(n => n.id === line.userData.targetId);
+                if (sNode && tNode) { const sMesh = nodeMeshes.find(m => m.userData.nodeId === sNode.id); const tMesh = nodeMeshes.find(m => m.userData.nodeId === tNode.id); if (sMesh && tMesh) { const pos = line.geometry.attributes.position; pos.setXYZ(0, sMesh.position.x, sMesh.position.y, sMesh.position.z); pos.setXYZ(1, tMesh.position.x, tMesh.position.y, tMesh.position.z); pos.needsUpdate = true; } }
+                line.material.opacity = 0.15 + Math.sin(t * 0.8 + i * 0.5) * 0.1;
+            });
+            if (bgParticles) { bgParticles.rotation.y += 0.0002; bgParticles.rotation.x += 0.0001; }
+            nodeLabels.forEach(label => {
+                const pos = label.mesh.position.clone(); pos.project(camera);
+                const c = document.getElementById('three-container'); const w = c.clientWidth; const h = c.clientHeight;
+                const x = (pos.x * 0.5 + 0.5) * w; const y = (-pos.y * 0.5 + 0.5) * h;
+                const dist = camera.position.distanceTo(label.mesh.position);
+                const scale = Math.max(0.5, Math.min(1.2, 25 / dist));
+                const opacity = Math.max(0, Math.min(1, (40 - dist) / 20));
+                label.div.style.left = x + 'px'; label.div.style.top = (y - 20 * scale) + 'px';
+                label.div.style.fontSize = (11 * scale) + 'px';
+                label.div.style.opacity = opacity;
+                label.div.style.display = (pos.z < 1 && opacity > 0.05) ? 'block' : 'none';
+            });
+            renderer.render(scene, camera);
+        }
+
+        // =================== COLOR PICKERS ===================
+        document.getElementById('color-person').addEventListener('input', function() { nodeColors.person = parseInt(this.value.replace('#',''), 16); nodeMeshes.forEach(m => { if (m.userData.nodeData.type === 'person') { m.material.color.setHex(nodeColors.person); m.material.emissive.setHex(nodeColors.person); m.children.forEach(c => { if (c.material) c.material.color.setHex(nodeColors.person); }); } }); });
+        document.getElementById('color-event').addEventListener('input', function() { nodeColors.event = parseInt(this.value.replace('#',''), 16); nodeMeshes.forEach(m => { if (m.userData.nodeData.type === 'event') { m.material.color.setHex(nodeColors.event); m.material.emissive.setHex(nodeColors.event); m.children.forEach(c => { if (c.material) c.material.color.setHex(nodeColors.event); }); } }); });
+        document.getElementById('color-village').addEventListener('input', function() { nodeColors.village = parseInt(this.value.replace('#',''), 16); nodeMeshes.forEach(m => { if (m.userData.nodeData.type === 'village') { m.material.color.setHex(nodeColors.village); m.material.emissive.setHex(nodeColors.village); m.children.forEach(c => { if (c.material) c.material.color.setHex(nodeColors.village); }); } }); });
+        document.getElementById('color-bg').addEventListener('input', function() { bgColor = parseInt(this.value.replace('#',''), 16); scene.background.setHex(bgColor); scene.fog.color.setHex(bgColor); });
+
+        // =================== FULLSCREEN ===================
+        document.getElementById('fullscreen-btn').addEventListener('click', function() { if (!document.fullscreenElement) { document.documentElement.requestFullscreen(); this.textContent = '⛶ 退出全屏'; } else { document.exitFullscreen(); this.textContent = '⛶ 全屏'; } });
+
+        // =================== MEDIAPIPE HANDS ===================
+        document.getElementById('camera-toggle-btn').addEventListener('click', function() {
+            if (cameraActive) { stopHandTracking(); this.textContent = '📷 开启手势'; } else { startHandTracking(); this.textContent = '📷 关闭手势'; }
+        });
+
+        function startHandTracking() {
+            const video = document.getElementById('webcam-video'); const canvas = document.getElementById('webcam-canvas'); const ctx = canvas.getContext('2d');
+            document.getElementById('gesture-container').style.display = 'block';
+            document.getElementById('webcam-overlay').style.display = 'block'; document.getElementById('gesture-status').style.display = 'block'; document.getElementById('gesture-guide').style.display = 'block';
+            try {
+                mediapipeHands = new Hands({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
+                mediapipeHands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.6, minTrackingConfidence: 0.5 });
+                mediapipeHands.onResults((results) => {
+                    canvas.width = video.videoWidth || 200; canvas.height = video.videoHeight || 150;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                        const lm = results.multiHandLandmarks[0];
+                        drawConnectors(ctx, lm, HAND_CONNECTIONS, { color: '#daa520', lineWidth: 2 });
+                        drawLandmarks(ctx, lm, { color: '#ffd700', lineWidth: 1, radius: 3 });
+                        processGesture(lm);
+                    } else {
+                        document.getElementById('gesture-status').textContent = '🖐️ 未检测到手';
+                        prevPalmCenter = null; gestureRotationActive = false; gesturePanActive = false; gestureZoomActive = false; targetSpread = 1.0;
+                    }
+                });
+                mediapipeCamera = new Camera(video, { onFrame: async () => { await mediapipeHands.send({ image: video }); }, width: 320, height: 240 });
+                mediapipeCamera.start(); cameraActive = true;
+            } catch(e) { console.error('MediaPipe init error:', e); document.getElementById('gesture-status').textContent = '❌ 手势初始化失败'; }
+        }
+
+        function stopHandTracking() {
+            if (mediapipeCamera) { mediapipeCamera.stop(); mediapipeCamera = null; }
+            cameraActive = false; document.getElementById('gesture-container').style.display = 'none'; targetSpread = 1.0;
+            prevPalmCenter = null; gestureRotationActive = false; gesturePanActive = false; gestureZoomActive = false; smoothPalmInited = false;
+        }
+
+        function getPalmCenter(lm) {
+            const indices = [0, 5, 9, 13, 17];
+            let cx = 0, cy = 0, cz = 0;
+            indices.forEach(i => { cx += lm[i].x; cy += lm[i].y; cz += lm[i].z; });
+            return { x: cx / 5, y: cy / 5, z: cz / 5 };
+        }
+
+        function detectPointing(lm) {
+            const indexExtended = lm[8].y < lm[6].y;
+            const middleFolded = lm[12].y > lm[10].y;
+            const ringFolded = lm[16].y > lm[14].y;
+            const pinkyFolded = lm[20].y > lm[18].y;
+            return indexExtended && middleFolded && ringFolded && pinkyFolded;
+        }
+
+        function smoothPalm(palm) {
+            if (!smoothPalmInited) { smoothPalmX = palm.x; smoothPalmY = palm.y; smoothPalmInited = true; }
+            smoothPalmX += (palm.x - smoothPalmX) * 0.4;
+            smoothPalmY += (palm.y - smoothPalmY) * 0.4;
+            return { x: smoothPalmX, y: smoothPalmY, z: palm.z };
+        }
+
+        function processGesture(lm) {
+            const now = Date.now();
+            const gs = document.getElementById('gesture-status');
+            const openness = calcHandOpenness(lm);
+            const rawPalm = getPalmCenter(lm);
+            const palm = smoothPalm(rawPalm);
+            const isPinch = detectPinch(lm);
+            const pointing = detectPointing(lm);
+            const isFist = openness < 0.2;
+
+            if (isPinch) {
+                const pinchDist = Math.sqrt(Math.pow(lm[4].x - lm[8].x, 2) + Math.pow(lm[4].y - lm[8].y, 2) + Math.pow(lm[4].z - lm[8].z, 2));
+                if (prevPinchDist > 0 && gestureZoomActive) {
+                    const delta = (pinchDist - prevPinchDist) * 200;
+                    targetCameraRadius = Math.max(3, Math.min(80, targetCameraRadius - delta));
+                    gs.textContent = '🤏 捏合缩放';
+                } else if (!gestureZoomActive && now - lastPinchTime > 1200) {
+                    lastPinchTime = now;
+                    gs.textContent = '🤏 捏合点击 - 选择节点';
+                    pinchSelectNode(lm);
+                }
+                prevPinchDist = pinchDist;
+                gestureZoomActive = true;
+                gestureRotationActive = false;
+                gesturePanActive = false;
+                prevPalmCenter = palm;
+                lastInteractionTime = now;
+                return;
+            } else {
+                gestureZoomActive = false;
+                prevPinchDist = 0;
+            }
+
+            if (isFist && prevPalmCenter) {
+                const dx = (palm.x - prevPalmCenter.x) * 2;
+                const dy = (palm.y - prevPalmCenter.y) * 2;
+                targetCameraTarget.x -= dx * 12;
+                targetCameraTarget.y += dy * 12;
+                targetCameraTarget.x = Math.max(-30, Math.min(30, targetCameraTarget.x));
+                targetCameraTarget.y = Math.max(-20, Math.min(20, targetCameraTarget.y));
+                gs.textContent = '✊ 握拳拖拽 - 平移视角';
+                gesturePanActive = true;
+                gestureRotationActive = false;
+                prevPalmCenter = palm;
+                lastInteractionTime = now;
+                return;
+            } else {
+                gesturePanActive = false;
+            }
+
+            if (pointing && prevPalmCenter) {
+                const dx = (palm.x - prevPalmCenter.x) * 3;
+                const dy = (palm.y - prevPalmCenter.y) * 3;
+                if (Math.abs(dx) > 0.0005 || Math.abs(dy) > 0.0005) {
+                    targetCameraTheta -= dx;
+                    targetCameraPhi = Math.max(0.1, Math.min(Math.PI - 0.1, targetCameraPhi + dy));
+                    gs.textContent = '☝️ 单指指向 - 旋转视角';
+                    gestureRotationActive = true;
+                    prevPalmCenter = palm;
+                    lastInteractionTime = now;
+                    return;
+                }
+            }
+
+            if (openness > 0.5 && prevPalmCenter) {
+                const dx = (palm.x - prevPalmCenter.x) * 3;
+                const dy = (palm.y - prevPalmCenter.y) * 3;
+                if (Math.abs(dx) > 0.001 || Math.abs(dy) > 0.001) {
+                    targetCameraTheta -= dx;
+                    targetCameraPhi = Math.max(0.1, Math.min(Math.PI - 0.1, targetCameraPhi + dy));
+                    targetSpread = 0.3 + openness * 3.5;
+                    gs.textContent = '🖐️ 张开拖拽 - 旋转+扩散 (x' + targetSpread.toFixed(1) + ')';
+                    gestureRotationActive = true;
+                } else {
+                    targetSpread = 0.3 + openness * 3.5;
+                    gs.textContent = '🖐️ 张开 - 扩散 (x' + targetSpread.toFixed(1) + ')';
+                }
+                prevPalmCenter = palm;
+                lastInteractionTime = now;
+                return;
+            }
+
+            if (isFist) {
+                targetSpread = 0.5;
+                gs.textContent = '✊ 握拳 - 聚拢';
+                prevPalmCenter = palm;
+                lastInteractionTime = now;
+                return;
+            }
+
+            targetSpread = 0.3 + openness * 3.5;
+            if (openness > 0.7) gs.textContent = '🖐️ 张开 - 扩散 (x' + targetSpread.toFixed(1) + ')';
+            else if (openness < 0.3) gs.textContent = '✊ 握拳 - 聚拢 (x' + targetSpread.toFixed(1) + ')';
+            else gs.textContent = '🖐️ 张开度 ' + (openness * 100).toFixed(0) + '%';
+            prevPalmCenter = palm;
+            gestureRotationActive = false;
+        }
+
+        function calcHandOpenness(lm) {
+            const wrist = lm[0]; const tips = [lm[4], lm[8], lm[12], lm[16], lm[20]];
+            let totalDist = 0; tips.forEach(tip => { const dx = tip.x - wrist.x; const dy = tip.y - wrist.y; const dz = tip.z - wrist.z; totalDist += Math.sqrt(dx*dx+dy*dy+dz*dz); });
+            const avgDist = totalDist / 5; return Math.max(0, Math.min(1, (avgDist - 0.1) / 0.3));
+        }
+
+        function detectPinch(lm) { const dx = lm[4].x - lm[8].x; const dy = lm[4].y - lm[8].y; const dz = lm[4].z - lm[8].z; return Math.sqrt(dx*dx+dy*dy+dz*dz) < 0.05; }
+
+        function pinchSelectNode(lm) {
+            const pinchX = (lm[4].x + lm[8].x) / 2; const pinchY = (lm[4].y + lm[8].y) / 2;
+            mouse.x = (pinchX - 0.5) * 2; mouse.y = -(pinchY - 0.5) * 2;
+            raycaster.setFromCamera(mouse, camera); const intersects = raycaster.intersectObjects(nodeMeshes);
+            if (intersects.length > 0) { const nd = intersects[0].object.userData.nodeData; selectedNodeId = intersects[0].object.userData.nodeId; playClickSound(); showDetail(nd); speak(nd.speakText, nd.name); }
+        }
+
+        // =================== TIMELINE ===================
+        const timelineItems = [
+            {name:'南阁起义',date:'1927-04-22',year:1927,month:4,type:'event',category:'武装起义',pos:'top',color:'#C41E3A'},
+            {name:'椰子寨战斗',date:'1927-09-23',year:1927,month:9,type:'event',category:'武装起义',pos:'bottom',color:'#C41E3A'},
+            {name:'琼崖讨逆革命军成立',date:'1927-10',year:1927,month:10,type:'event',category:'武装起义',pos:'top',color:'#C41E3A'},
+            {name:'白沙起义',date:'1943-08',year:1943,month:8,type:'event',category:'武装起义',pos:'bottom',color:'#C41E3A'},
+            {name:'抗日反攻',date:'1945-08',year:1945,month:8,type:'event',category:'武装起义',pos:'top',color:'#C41E3A'},
+            {name:'春季攻势',date:'1948-03',year:1948,month:3,type:'event',category:'武装起义',pos:'bottom',color:'#C41E3A'},
+            {name:'夏季攻势',date:'1948-06',year:1948,month:6,type:'event',category:'武装起义',pos:'top',color:'#C41E3A'},
+            {name:'秋季攻势',date:'1948-09',year:1948,month:9,type:'event',category:'武装起义',pos:'bottom',color:'#C41E3A'},
+            {name:'中共琼崖地委成立',date:'1926-03',year:1926,month:3,type:'event',category:'重要会议',pos:'top',color:'#DAA520'},
+            {name:'琼崖第一次党代会',date:'1926-10',year:1926,month:10,type:'event',category:'重要会议',pos:'bottom',color:'#DAA520'},
+            {name:'琼崖地委会议',date:'1927-06',year:1927,month:6,type:'event',category:'重要会议',pos:'top',color:'#DAA520'},
+            {name:'琼崖苏维埃政府成立',date:'1928-05',year:1928,month:5,type:'event',category:'重要会议',pos:'top',color:'#DAA520'},
+            {name:'琼崖纵队成立大会',date:'1947-10',year:1947,month:10,type:'event',category:'重要会议',pos:'bottom',color:'#DAA520'},
+            {name:'母瑞山革命根据地',date:'1928-03',year:1928,month:3,type:'village',category:'革命遗址',pos:'bottom',color:'#228B22'},
+            {name:'美合抗日根据地',date:'1940-01',year:1940,month:1,type:'village',category:'革命遗址',pos:'top',color:'#228B22'},
+            {name:'五指山革命根据地',date:'1947-04',year:1947,month:4,type:'village',category:'革命遗址',pos:'bottom',color:'#228B22'},
+            {name:'六连岭革命根据地',date:'1930-01',year:1930,month:1,type:'village',category:'革命遗址',pos:'top',color:'#228B22'},
+            {name:'临高角解放公园',date:'1950-05',year:1950,month:5,type:'village',category:'革命遗址',pos:'bottom',color:'#228B22'},
+            {name:'红色娘子军纪念园',date:'1985-05',year:1985,month:5,type:'village',category:'革命遗址',pos:'top',color:'#228B22'},
+            {name:'冯白驹故居',date:'1903-01',year:1903,month:1,type:'village',category:'革命遗址',pos:'bottom',color:'#228B22'},
+            {name:'云龙改编',date:'1938-12-05',year:1938,month:12,type:'event',category:'重大胜利',pos:'bottom',color:'#4169E1'},
+            {name:'潭口阻击战',date:'1942-03',year:1942,month:3,type:'event',category:'重大胜利',pos:'bottom',color:'#4169E1'},
+            {name:'海南岛战役',date:'1950-04-16',year:1950,month:4,type:'event',category:'重大胜利',pos:'top',color:'#4169E1'},
+            {name:'海口解放',date:'1950-04-30',year:1950,month:4,type:'event',category:'重大胜利',pos:'bottom',color:'#4169E1'},
+            {name:'海南岛全面解放',date:'1950-05-01',year:1950,month:5,type:'event',category:'重大胜利',pos:'top',color:'#4169E1'},
+            {name:'琼崖红军成立',date:'1928-03',year:1928,month:3,type:'event',category:'武装力量',pos:'bottom',color:'#8B4513'},
+            {name:'琼崖抗日独立总队',date:'1939-02',year:1939,month:2,type:'event',category:'武装力量',pos:'bottom',color:'#8B4513'},
+            {name:'琼崖纵队',date:'1947-10',year:1947,month:10,type:'event',category:'武装力量',pos:'top',color:'#8B4513'}
+        ];
+
+        const personItems = [
+            {name:'冯白驹',birth:'1903',death:'1971',year:1903,type:'person',category:'琼崖革命领袖',color:'#C41E3A'},
+            {name:'王文明',birth:'1894',death:'1930',year:1894,type:'person',category:'琼崖革命先驱',color:'#DAA520'},
+            {name:'杨善集',birth:'1900',death:'1927',year:1900,type:'person',category:'琼崖革命先驱',color:'#DAA520'},
+            {name:'黄学咏',birth:'1887',death:'1930',year:1887,type:'person',category:'琼崖革命先驱',color:'#DAA520'},
+            {name:'王映湘',birth:'1902',death:'1930',year:1902,type:'person',category:'琼崖革命先驱',color:'#DAA520'},
+            {name:'马白山',birth:'1907',death:'1992',year:1907,type:'person',category:'琼崖纵队领导人',color:'#C41E3A'},
+            {name:'庄田',birth:'1906',death:'1992',year:1906,type:'person',category:'琼崖纵队领导人',color:'#C41E3A'},
+            {name:'刘秋菊',birth:'1899',death:'1949',year:1899,type:'person',category:'琼崖革命女性',color:'#C41E3A'},
+            {name:'王国兴',birth:'1894',death:'1975',year:1894,type:'person',category:'黎族领袖',color:'#228B22'},
+            {name:'李硕勋',birth:'1903',death:'1931',year:1903,type:'person',category:'琼崖革命先驱',color:'#DAA520'},
+            {name:'张百龄',birth:'1902',death:'1942',year:1902,type:'person',category:'琼崖革命先驱',color:'#DAA520'}
+        ];
+
+        let currentView = 'graph';
+        function switchView(view) {
+            currentView = view;
+            const tc = document.getElementById('three-container'); const tv = document.getElementById('timeline-view');
+            const bg = document.getElementById('btn-view-graph'); const bt = document.getElementById('btn-view-timeline');
+            const ls = document.getElementById('timeline-layout-selector-top');
+            if (view === 'timeline') { tc.style.display = 'none'; tv.style.display = 'block'; bg.classList.remove('active'); bt.classList.add('active'); ls.style.display = 'flex'; setTimeout(() => { renderTimeline(); }, 100); }
+            else { tc.style.display = 'block'; tv.style.display = 'none'; bg.classList.add('active'); bt.classList.remove('active'); ls.style.display = 'none'; }
+        }
+
+        let currentTimelineFilter = 'all'; let currentTimelineLayout = 'horizontal';
+        let timelineSvg = null, timelineG = null, timelineZoom = null;
+
+        function switchTimelineLayout(layout) { currentTimelineLayout = layout; document.querySelectorAll('.layout-btn').forEach(b => { b.classList.remove('active'); if (b.dataset.layout === layout) b.classList.add('active'); }); renderTimeline(); }
+        let currentTargetNode = null;
+
+        function getD3() { if (typeof d3 !== 'undefined' && d3.version) return d3; return null; }
+
+        function renderTimeline() {
+            const d3 = getD3(); if (!d3) { setTimeout(renderTimeline, 200); return; }
+            const oldC = document.getElementById('timeline-container'); if (oldC) oldC.remove();
+            document.querySelectorAll('.timeline-event-card,.timeline-year-marker,.timeline-path-line').forEach(el => el.remove());
+            const scrollArea = document.getElementById('timeline-scroll-area');
+            const width = scrollArea.clientWidth || 1200; const height = scrollArea.clientHeight || 800;
+            if (!timelineSvg) timelineSvg = d3.select('#timeline-svg');
+            timelineSvg.selectAll('*').remove(); timelineSvg.attr('width', width * 5).attr('height', height * 3);
+            timelineG = timelineSvg.append('g');
+            const zoom = d3.zoom().scaleExtent([0.2, 4]).on('zoom', (event) => { timelineG.attr('transform', event.transform); });
+            timelineZoom = zoom; timelineSvg.call(zoom);
+            const yearStart = 1926, yearEnd = 1950, totalYears = yearEnd - yearStart;
+            let legend = document.getElementById('timeline-filter-panel');
+            if (!legend) {
+                legend = document.createElement('div'); legend.className = 'timeline-category-legend'; legend.id = 'timeline-filter-panel';
+                legend.style.cssText = 'display:flex;flex-wrap:wrap;gap:12px;justify-content:center;padding:12px 16px;background:rgba(26,12,12,0.95);border-radius:10px;margin-bottom:15px;box-shadow:0 2px 12px rgba(0,0,0,0.2);position:absolute;top:10px;left:10px;z-index:100;border:2px solid rgba(218,165,32,0.6);';
+                legend.innerHTML = `<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;padding:2px 6px;"><input type="radio" name="timeline-filter" value="all" ${currentTimelineFilter==='all'?'checked':''} onchange="filterTimeline('all')"><span style="width:12px;height:12px;background:#666;border-radius:50%;"></span><span style="color:#daa520;font-weight:bold;">全部显示</span></label><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;padding:2px 6px;"><input type="radio" name="timeline-filter" value="武装起义" ${currentTimelineFilter==='武装起义'?'checked':''} onchange="filterTimeline('武装起义')"><span style="width:12px;height:12px;background:#C41E3A;border-radius:50%;"></span><span style="color:#c8a870;">武装起义</span></label><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;padding:2px 6px;"><input type="radio" name="timeline-filter" value="重要会议" ${currentTimelineFilter==='重要会议'?'checked':''} onchange="filterTimeline('重要会议')"><span style="width:12px;height:12px;background:#DAA520;border-radius:50%;"></span><span style="color:#c8a870;">重要会议</span></label><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;padding:2px 6px;"><input type="radio" name="timeline-filter" value="革命遗址" ${currentTimelineFilter==='革命遗址'?'checked':''} onchange="filterTimeline('革命遗址')"><span style="width:12px;height:12px;background:#228B22;border-radius:50%;"></span><span style="color:#c8a870;">革命遗址</span></label><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;padding:2px 6px;"><input type="radio" name="timeline-filter" value="重大胜利" ${currentTimelineFilter==='重大胜利'?'checked':''} onchange="filterTimeline('重大胜利')"><span style="width:12px;height:12px;background:#4169E1;border-radius:50%;"></span><span style="color:#c8a870;">重大胜利</span></label><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;padding:2px 6px;"><input type="radio" name="timeline-filter" value="武装力量" ${currentTimelineFilter==='武装力量'?'checked':''} onchange="filterTimeline('武装力量')"><span style="width:12px;height:12px;background:#8B4513;border-radius:50%;"></span><span style="color:#c8a870;">武装力量</span></label><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;padding:2px 6px;"><input type="radio" name="timeline-filter" value="person" ${currentTimelineFilter==='person'?'checked':''} onchange="filterTimeline('person')"><span style="width:12px;height:12px;background:#9b59b6;border-radius:50%;"></span><span style="color:#c8a870;">革命人物</span></label>`;
+                scrollArea.appendChild(legend);
+            }
+            const filteredItems = timelineItems.filter(item => currentTimelineFilter === 'all' || item.category === currentTimelineFilter);
+            if (currentTimelineLayout === 'horizontal') { renderHorizontalTimelineD3(timelineG, filteredItems, yearStart, yearEnd, totalYears, width, height); }
+            else if (currentTimelineLayout === 'zigzag') { renderZigzagTimelineD3(timelineG, filteredItems, yearStart, yearEnd, totalYears); if (currentTimelineFilter === 'all' || currentTimelineFilter === 'person') addPersonCardsD3(timelineG, personItems, 'zigzag', filteredItems.length); }
+            else { renderSpiralTimelineD3(timelineG, filteredItems, yearStart, yearEnd, totalYears); if (currentTimelineFilter === 'all' || currentTimelineFilter === 'person') addPersonCardsD3(timelineG, personItems, 'spiral', filteredItems.length); }
+            if (currentTimelineLayout === 'horizontal') { setTimeout(() => { const tw = width * 6; const nys = 1890; const nye = 1960; const nty = nye - nys; const ty = 1938; const tx = 100 + ((ty - nys) / nty) * (tw - 200); const tX = width / 2 - tx; const tY = height / 2 - (height * 3) / 2; if (timelineSvg && timelineZoom) timelineSvg.transition().duration(800).call(timelineZoom.transform, d3.zoomIdentity.translate(tX, tY).scale(0.8)); }, 100); }
+        }
+
+        function renderHorizontalTimelineD3(g, items, yearStart, yearEnd, totalYears, width, height) {
+            const d3 = getD3(); if (!d3) return;
+            const tw = width * 6; const nys = 1890; const nye = 1960; const nty = nye - nys;
+            g.append('line').attr('x1', 100).attr('y1', height / 2).attr('x2', tw - 100).attr('y2', height / 2).attr('stroke', '#daa520').attr('stroke-width', 4).attr('stroke-opacity', 0.8);
+            const years = []; for (let y = nys; y <= nye; y++) years.push(y);
+            years.forEach(year => { const x = 100 + ((year - nys) / nty) * (tw - 200); const y = height / 2; const isM = year % 5 === 0; g.append('circle').attr('cx', x).attr('cy', y).attr('r', isM ? 10 : 5).attr('fill', isM ? '#ffd700' : '#daa520').attr('stroke', isM ? '#ffd700' : '#daa520').attr('stroke-width', isM ? 3 : 2); g.append('text').attr('x', x).attr('y', y - 25).attr('text-anchor', 'middle').attr('fill', isM ? '#ffd700' : '#daa520').attr('font-size', isM ? '14px' : '10px').attr('font-weight', isM ? 'bold' : 'normal').text(year); });
+            const allItems = []; items.forEach(item => allItems.push({...item, isPerson: false})); personItems.forEach(p => allItems.push({name:p.name,date:p.birth+(p.death?'-'+p.death:''),year:parseInt(p.birth),month:6,type:'person',category:p.category,color:p.color,isPerson:true,birth:p.birth,death:p.death}));
+            const sorted = allItems.sort((a, b) => (a.year * 12 + (a.month || 6)) - (b.year * 12 + (b.month || 6)));
+            let cto = -150, cbo = 50, ly = 0;
+            sorted.forEach((item, idx) => { const yx = 100 + ((item.year - nys) / nty) * (tw - 200); const mp = (item.month || 6) / 12; const nyx = 100 + ((item.year + 1 - nys) / nty) * (tw - 200); const x = yx + (nyx - yx) * mp; if (item.year - ly > 2) { cto = -150; cbo = 50; } ly = item.year; const y = idx % 2 === 0 ? height / 2 + cto : height / 2 + cbo; if (idx % 2 === 0) cto -= 140; else cbo += 140; if (item.isPerson) addPersonCardDirect(g, item, x, y, idx); else addEventCardD3(g, item, x, y, idx); g.append('line').attr('x1', x).attr('y1', y + 50).attr('x2', x).attr('y2', height / 2).attr('stroke', item.color || '#daa520').attr('stroke-width', 2).attr('stroke-opacity', 0.6); });
+            return { timelineWidth: tw, centerYearX: 100 + ((1935 - nys) / nty) * (tw - 200) };
+        }
+
+        function addPersonCardDirect(g, item, x, y, idx) { const d3 = getD3(); if (!d3) return; const fo = g.append('foreignObject').attr('x', x - 90).attr('y', y).attr('width', 180).attr('height', 100); const div = fo.append('xhtml:div').style('background','rgba(26,12,12,0.95)').style('border','1px solid rgba(218,165,32,0.6)').style('border-left','4px solid '+(item.color||'#9b59b6')).style('border-radius','8px').style('padding','10px').style('cursor','pointer').style('transition','all 0.3s').style('box-sizing','border-box').on('mouseover',function(){d3.select(this).style('border-color','#ffd700').style('box-shadow','0 0 15px rgba(218,165,32,0.5)').style('transform','scale(1.05)');}).on('mouseout',function(){d3.select(this).style('border-color','rgba(218,165,32,0.6)').style('box-shadow','none').style('transform','scale(1)');}).on('click',function(){const n=graphData.nodes.find(n=>n.name===item.name);if(n){currentTargetNode=item.name;switchView('graph');showDetail(n);}}); div.append('xhtml:div').style('font-size','10px').style('color','#daa520').style('margin-bottom','3px').text(item.birth+(item.death?'-'+item.death:'')); div.append('xhtml:div').style('font-size','12px').style('font-weight','bold').style('color','#ffd700').style('margin-bottom','3px').style('white-space','nowrap').style('overflow','hidden').style('text-overflow','ellipsis').text(item.name); div.append('xhtml:div').style('font-size','10px').style('color','#c8a870').text(item.category); }
+
+        function addEventCardD3(g, item, x, y, idx) { const d3 = getD3(); if (!d3) return; const fo = g.append('foreignObject').attr('x', x - 90).attr('y', y).attr('width', 180).attr('height', 100); const div = fo.append('xhtml:div').style('background','rgba(26,12,12,0.95)').style('border','1px solid rgba(218,165,32,0.6)').style('border-left','4px solid '+(item.color||'#daa520')).style('border-radius','8px').style('padding','10px').style('cursor','pointer').style('transition','all 0.3s').style('box-sizing','border-box').on('mouseover',function(){d3.select(this).style('border-color','#ffd700').style('box-shadow','0 0 15px rgba(218,165,32,0.5)').style('transform','scale(1.05)');}).on('mouseout',function(){d3.select(this).style('border-color','rgba(218,165,32,0.6)').style('box-shadow','none').style('transform','scale(1)');}).on('click',function(){const n=graphData.nodes.find(n=>n.name===item.name);if(n){currentTargetNode=item.name;switchView('graph');showDetail(n);}}); div.append('xhtml:div').style('font-size','10px').style('color','#daa520').style('margin-bottom','3px').text(item.date||item.year); div.append('xhtml:div').style('font-size','12px').style('font-weight','bold').style('color','#ffd700').style('margin-bottom','3px').style('white-space','nowrap').style('overflow','hidden').style('text-overflow','ellipsis').text(item.name); div.append('xhtml:div').style('font-size','10px').style('color','#c8a870').text(item.category); }
+
+        function renderZigzagTimelineD3(g, items, yearStart, yearEnd, totalYears) { const d3 = getD3(); if (!d3) return; const cw = 1800; const ipr = 5; const rh = 250; const rc = Math.ceil(items.length / ipr); let pathD = ''; for (let i = 0; i <= rc; i++) { const y = i * rh + 120; const x = (i % 2 === 0) ? 100 : cw - 100; if (i === 0) pathD = `M ${x} ${y}`; else { const py = (i - 1) * rh + 120; const px = ((i - 1) % 2 === 0) ? cw - 100 : 100; pathD += ` L ${px} ${py} L ${px} ${(py+y)/2} L ${x} ${(py+y)/2} L ${x} ${y}`; } } g.append('path').attr('d', pathD).attr('stroke', '#daa520').attr('stroke-width', 3).attr('fill', 'none').attr('stroke-opacity', 0.6); const sorted = [...items].sort((a, b) => (a.year * 12 + (a.month || 6)) - (b.year * 12 + (b.month || 6))); sorted.forEach((item, idx) => { const ri = Math.floor(idx / ipr); const pir = idx % ipr; const isE = ri % 2 === 0; const x = isE ? 200 + (pir / (ipr - 1)) * (cw - 400) : cw - 200 - (pir / (ipr - 1)) * (cw - 400); const y = ri * rh + 120 + (isE ? -70 : 20); addEventCardD3(g, item, x, y, idx); }); }
+
+        function renderSpiralTimelineD3(g, items, yearStart, yearEnd, totalYears) { const d3 = getD3(); if (!d3) return; const cx = 500; const cy = 500; const mr = 600; let pathD = `M ${cx} ${cy}`; for (let i = 0; i <= 360 * 3; i += 5) { const a = i * (Math.PI / 180); const r = (i / (360 * 3)) * mr; pathD += ` L ${cx + r * Math.cos(a)} ${cy + r * Math.sin(a)}`; } g.append('path').attr('d', pathD).attr('stroke', '#daa520').attr('stroke-width', 3).attr('fill', 'none').attr('stroke-opacity', 0.6); const sorted = [...items].sort((a, b) => (a.year * 12 + (a.month || 6)) - (b.year * 12 + (b.month || 6))); const cpr = 8; const rs = 150; const sr = 200; sorted.forEach((item, idx) => { const ri = Math.floor(idx / cpr); const pir = idx % cpr; const as = (2 * Math.PI) / cpr; const a = pir * as + (ri * Math.PI / 4); const r = sr + ri * rs; const x = cx + r * Math.cos(a); const y = cy + r * Math.sin(a); const ox = x > cx ? 30 : -210; const oy = y > cy ? 20 : -100; addEventCardD3(g, item, x + ox, y + oy, idx); }); }
+
+        function addPersonCardsD3(g, persons, layout, startIdx) { const d3 = getD3(); if (!d3) return; if (layout === 'horizontal') return; persons.forEach((p, idx) => { let x, y; if (layout === 'zigzag') { const ri = Math.floor((idx + startIdx) / 5); const pir = (idx + startIdx) % 5; const isE = ri % 2 === 0; x = isE ? 200 + (pir / 4) * 1400 : 1600 - (pir / 4) * 1400; y = ri * 250 + 200; } else { const ri = Math.floor(idx / 8); const pir = idx % 8; const a = pir * (2 * Math.PI / 8) + (ri * Math.PI / 4); const r = 200 + ri * 150; x = 500 + r * Math.cos(a); y = 500 + r * Math.sin(a); } const fo = g.append('foreignObject').attr('x', x - 90).attr('y', y).attr('width', 180).attr('height', 100); const div = fo.append('xhtml:div').style('background','rgba(26,12,12,0.95)').style('border','1px solid rgba(218,165,32,0.6)').style('border-left','4px solid '+(p.color||'#9b59b6')).style('border-radius','8px').style('padding','10px').style('cursor','pointer').style('transition','all 0.3s').style('box-sizing','border-box').on('mouseover',function(){d3.select(this).style('border-color','#ffd700').style('box-shadow','0 0 15px rgba(218,165,32,0.5)').style('transform','scale(1.05)');}).on('mouseout',function(){d3.select(this).style('border-color','rgba(218,165,32,0.6)').style('box-shadow','none').style('transform','scale(1)');}).on('click',function(){const n=graphData.nodes.find(n=>n.name===p.name);if(n){currentTargetNode=p.name;switchView('graph');showDetail(n);}}); div.append('xhtml:div').style('font-size','10px').style('color','#daa520').style('margin-bottom','3px').text(p.birth+(p.death?' - '+p.death:'')); div.append('xhtml:div').style('font-size','12px').style('font-weight','bold').style('color','#ffd700').style('margin-bottom','3px').style('white-space','nowrap').style('overflow','hidden').style('text-overflow','ellipsis').text(p.name); div.append('xhtml:div').style('font-size','10px').style('color','#c8a870').text(p.category); }); }
+
+        function filterTimeline(category) { currentTimelineFilter = category; renderTimeline(); }
+
+        function highlightTimelineCard(name) { currentTargetNode = name; switchView('timeline'); setTimeout(() => { const cards = document.querySelectorAll('.timeline-event-card'); cards.forEach(card => { if (card.dataset && card.dataset.name === name) { card.style.transform = 'scale(1.3)'; card.style.boxShadow = '0 0 20px rgba(255,215,0,0.8)'; card.style.zIndex = '1000'; } else { card.style.opacity = '0.4'; } }); }, 300); }
+
+        function initTimelineZoom() {
+            document.getElementById('timeline-zoom-in').addEventListener('click', () => { const d3 = getD3(); if (d3 && timelineSvg && timelineZoom) timelineSvg.transition().duration(300).call(timelineZoom.scaleBy, 1.3); });
+            document.getElementById('timeline-zoom-out').addEventListener('click', () => { const d3 = getD3(); if (d3 && timelineSvg && timelineZoom) timelineSvg.transition().duration(300).call(timelineZoom.scaleBy, 0.7); });
+            document.getElementById('timeline-zoom-reset').addEventListener('click', () => { const d3 = getD3(); if (d3 && timelineSvg && timelineZoom) timelineSvg.transition().duration(500).call(timelineZoom.transform, d3.zoomIdentity); });
+        }
+
+        function renderDetailEnhance(d) {
+            const area = document.getElementById('detail-enhance-area');
+            if (!area) return;
+            let html = '';
+            if (d.type === 'person') {
+                html = '<div class="detail-enhance-section"><div class="detail-enhance-row"><span class="detail-enhance-key">人物类型</span><span class="detail-enhance-val">' + d.category + '</span></div>';
+                if (d.relatedVillages && d.relatedVillages.length > 0) html += '<div class="detail-enhance-row"><span class="detail-enhance-key">关联地点</span><span class="detail-enhance-val">' + d.relatedVillages.join('、') + '</span></div>';
+                html += '<div class="detail-enhance-row"><span class="detail-enhance-key">史料出处</span><span class="detail-enhance-val">《琼崖革命史》</span></div></div>';
+            } else if (d.type === 'event') {
+                html = '<div class="detail-enhance-section"><div class="detail-enhance-row"><span class="detail-enhance-key">事件类型</span><span class="detail-enhance-val">' + d.category + '</span></div>';
+                if (d.relatedVillages && d.relatedVillages.length > 0) html += '<div class="detail-enhance-row"><span class="detail-enhance-key">发生地点</span><span class="detail-enhance-val">' + d.relatedVillages.join('、') + '</span></div>';
+                html += '<div class="detail-enhance-row"><span class="detail-enhance-key">史料出处</span><span class="detail-enhance-val">《琼崖革命史》</span></div></div>';
+            } else if (d.type === 'village') {
+                html = '<div class="detail-enhance-section"><div class="detail-enhance-row"><span class="detail-enhance-key">乡村类型</span><span class="detail-enhance-val">' + d.category + '</span></div>';
+                if (d.relatedFigures && d.relatedFigures.length > 0) html += '<div class="detail-enhance-row"><span class="detail-enhance-key">关联人物</span><span class="detail-enhance-val">' + d.relatedFigures.join('、') + '</span></div>';
+                html += '<div class="detail-enhance-row"><span class="detail-enhance-key">史料出处</span><span class="detail-enhance-val">《琼崖革命史》</span></div></div>';
+                html += '<div class="map-card"><div class="map-card-title">📍 地理位置信息</div><div class="map-card-location">🗺️ ' + d.name + ' — 海南省</div><div class="map-card-desc">' + d.description + '</div><button class="map-card-btn" onclick="alert(\'地图功能开发中，敬请期待！\')">🗺️ 查看地图</button></div>';
+            }
+            area.innerHTML = html;
+        }
+
+        document.addEventListener('fullscreenchange', function() {
+            const btn = document.getElementById('fullscreen-btn');
+            if (btn) btn.textContent = document.fullscreenElement ? '⛶ 退出全屏' : '⛶ 全屏';
+        });
+
+        window.addEventListener('DOMContentLoaded', function() {
+            initVoiceControls();
+            initThreeScene();
+            initTimelineZoom();
+            // 初始化后立即调整尺寸，防止手机端失真
+            setTimeout(onResize, 100);
+            const c = document.getElementById('three-container');
+            if (c) c.style.cursor = 'grab';
+            const panel = document.getElementById('control-panel');
+            const header = document.getElementById('control-panel-header');
+            const minimizeBtn = document.getElementById('panel-minimize-btn');
+            let dragging = false, dragOffsetX = 0, dragOffsetY = 0;
+            let isMinimized = false;
+            // 控制面板最小化/展开功能
+            minimizeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                isMinimized = !isMinimized;
+                if (isMinimized) {
+                    panel.classList.add('minimized');
+                    minimizeBtn.textContent = '+';
+                } else {
+                    panel.classList.remove('minimized');
+                    minimizeBtn.textContent = '−';
+                }
+                // 等待 DOM 更新后重新调整 Three.js 尺寸
+                setTimeout(onResize, 50);
+            });
+            header.addEventListener('mousedown', function(e) { if (e.target !== minimizeBtn) { dragging = true; dragOffsetX = e.clientX - panel.offsetLeft; dragOffsetY = e.clientY - panel.offsetTop; panel.style.cursor = 'grabbing'; e.preventDefault(); } });
+            document.addEventListener('mousemove', function(e) { if (dragging) { panel.style.left = (e.clientX - dragOffsetX) + 'px'; panel.style.top = (e.clientY - dragOffsetY) + 'px'; panel.style.right = 'auto'; } });
+            document.addEventListener('mouseup', function() { dragging = false; panel.style.cursor = 'move'; });
+            header.addEventListener('touchstart', function(e) { if (e.target !== minimizeBtn && e.touches.length === 1) { dragging = true; dragOffsetX = e.touches[0].clientX - panel.offsetLeft; dragOffsetY = e.touches[0].clientY - panel.offsetTop; e.preventDefault(); } }, { passive: false });
+            document.addEventListener('touchmove', function(e) { if (dragging && e.touches.length === 1) { panel.style.left = (e.touches[0].clientX - dragOffsetX) + 'px'; panel.style.top = (e.touches[0].clientY - dragOffsetY) + 'px'; panel.style.right = 'auto'; e.preventDefault(); } }, { passive: false });
+            document.addEventListener('touchend', function() { dragging = false; });
+            // 详情面板最小化/展开功能
+            const detailPanel = document.getElementById('detail-panel');
+            const detailMinimizeBtn = document.getElementById('detail-panel-minimize-btn');
+            let isDetailMinimized = false;
+            detailMinimizeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                isDetailMinimized = !isDetailMinimized;
+                if (isDetailMinimized) {
+                    detailPanel.classList.add('minimized');
+                    detailMinimizeBtn.textContent = '+';
+                } else {
+                    detailPanel.classList.remove('minimized');
+                    detailMinimizeBtn.textContent = '−';
+                }
+                // 等待 DOM 更新后重新调整 Three.js 尺寸
+                setTimeout(onResize, 50);
+            });
+            // 手势容器最小化/展开功能
+            const gestureContainer = document.getElementById('gesture-container');
+            const gestureMinimizeBtn = document.getElementById('gesture-minimize-btn');
+            let isGestureMinimized = false;
+            gestureMinimizeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                isGestureMinimized = !isGestureMinimized;
+                if (isGestureMinimized) {
+                    gestureContainer.classList.add('minimized');
+                    gestureMinimizeBtn.textContent = '+';
+                } else {
+                    gestureContainer.classList.remove('minimized');
+                    gestureMinimizeBtn.textContent = '−';
+                }
+            });
+        });
+    </script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识竞赛 - 红韵智研 - 2026大创赛红旅公益组</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        :root {
+            --primary-color: #C41E3A;
+            --primary-dark: #8B0000;
+            --accent-gold: #D4AF37;
+            --text-dark: #333;
+            --text-light: #666;
+            --bg-light: #f5f5f5;
+            --white: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background-color: var(--bg-light);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        /* Navigation */
+        .navbar {
+            background: var(--white);
+            border-bottom: 2px solid rgba(196, 30, 58, 0.2);
+            padding: 15px 0;
+        }
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .nav-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary-color);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: 40px 20px 30px;
+            background: linear-gradient(135deg, rgba(196, 30, 58, 0.05), rgba(212, 175, 55, 0.1));
+        }
+        .hero-section h1 {
+            color: var(--primary-color);
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .hero-section p {
+            color: var(--text-light);
+            font-size: 14px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .hero-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        /* Quiz Container */
+        .quiz-container {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Progress Bar */
+        .progress-section {
+            background: var(--white);
+            border: 1px solid rgba(196, 30, 58, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .progress-label {
+            color: var(--primary-color);
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .progress-score {
+            color: var(--primary-color);
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-gold));
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        .progress-dots {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .progress-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #eee;
+            border: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .progress-dot.current {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        .progress-dot.answered {
+            background: rgba(196, 30, 58, 0.1);
+            border-color: var(--primary-color);
+        }
+        .progress-dot.correct {
+            background: rgba(76, 175, 80, 0.15);
+            border-color: #4CAF50;
+            color: #4CAF50;
+        }
+        .progress-dot.wrong {
+            background: rgba(244, 67, 54, 0.15);
+            border-color: #f44336;
+            color: #f44336;
+        }
+
+        /* Question Card */
+        .question-card {
+            background: var(--white);
+            border: 1px solid rgba(196, 30, 58, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .question-type {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(196, 30, 58, 0.1);
+            border: 1px solid rgba(196, 30, 58, 0.2);
+            border-radius: 15px;
+            color: var(--primary-color);
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+        .question-text {
+            font-size: 17px;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .question-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* Options */
+        .option-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .option-item {
+            padding: 15px 20px;
+            background: #f8f8f8;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .option-item:hover {
+            border-color: var(--primary-color);
+            background: rgba(196, 30, 58, 0.03);
+        }
+        .option-item.selected {
+            border-color: var(--primary-color);
+            background: rgba(196, 30, 58, 0.08);
+        }
+        .option-item.correct {
+            border-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+        .option-item.wrong {
+            border-color: #f44336;
+            background: rgba(244, 67, 54, 0.1);
+        }
+        .option-item.disabled {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        .option-label {
+            width: 30px;
+            height: 30px;
+            background: #eee;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--text-light);
+            flex-shrink: 0;
+        }
+        .option-item.selected .option-label {
+            background: var(--primary-color);
+            color: white;
+        }
+        .option-item.correct .option-label {
+            background: #4CAF50;
+            color: white;
+        }
+        .option-item.wrong .option-label {
+            background: #f44336;
+            color: white;
+        }
+        .option-text {
+            flex: 1;
+            color: var(--text-dark);
+            font-size: 14px;
+        }
+
+        /* Explanation */
+        .explanation-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f8f8;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-gold);
+        }
+        .explanation-title {
+            color: var(--accent-gold);
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .explanation-text {
+            color: var(--text-light);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* Buttons */
+        .btn-area {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .btn-next {
+            padding: 12px 40px;
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-next:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);
+        }
+        .btn-next:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Start Screen */
+        .start-screen {
+            text-align: center;
+            padding: 40px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .start-icon {
+            font-size: 80px;
+            margin-bottom: 15px;
+        }
+        .start-title {
+            color: var(--primary-color);
+            font-size: 26px;
+            margin-bottom: 12px;
+        }
+        .start-desc {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        .start-btn {
+            display: inline-block;
+            padding: 14px 45px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .start-btn:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);
+        }
+
+        /* Category Section */
+        .category-section {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .category-btn {
+            padding: 10px 20px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            color: var(--text-light);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .category-btn:hover, .category-btn.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Results Screen */
+        .results-screen {
+            text-align: center;
+            padding: 40px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .results-icon {
+            font-size: 80px;
+            margin-bottom: 15px;
+        }
+        .results-score {
+            font-size: 64px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+        .results-total {
+            font-size: 16px;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+        .results-grade {
+            font-size: 24px;
+            color: var(--accent-gold);
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+        .results-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .result-stat {
+            background: #f8f8f8;
+            border-radius: 10px;
+            padding: 18px;
+            border: 1px solid #eee;
+        }
+        .result-stat-num {
+            font-size: 30px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .result-stat-label {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+        .results-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+        .result-btn {
+            padding: 12px 28px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .result-btn-primary {
+            background: var(--primary-color);
+            border: none;
+            color: white;
+        }
+        .result-btn-secondary {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        .result-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--white);
+            border-top: 2px solid rgba(196, 30, 58, 0.2);
+            padding: 25px 20px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        footer p {
+            color: var(--text-light);
+            font-size: 12px;
+            margin: 5px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .results-stats { grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+            .results-actions { flex-direction: column; align-items: center; }
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">🎖️ 红韵智研</div>
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="route.html">AI 研学路线</a></li>
+                <li><a href="knowledgemap.html">知识图谱</a></li>
+                <li><a href="rural.html">乡村振兴</a></li>
+                <li><a href="profile.html">个人中心</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-icon">🏆</div>
+        <h1>琼崖革命知识竞赛</h1>
+        <p>测试你对琼崖革命历史的了解程度，学习红色文化，传承革命精神</p>
+    </section>
+
+    <!-- Quiz Container -->
+    <div class="quiz-container">
+        <!-- Start Screen -->
+        <div id="start-screen" class="start-screen">
+            <div class="start-icon">📝</div>
+            <h2 class="start-title">知识竞赛挑战</h2>
+            <p class="start-desc">
+                本竞赛涵盖琼崖革命人物、历史事件、红色乡村等知识。<br>
+                共15道选择题，答对得分，答题结束后显示成绩和解析。
+            </p>
+            
+            <div class="category-section">
+                <button class="category-btn active" onclick="selectCategory('all', this)">全部</button>
+                <button class="category-btn" onclick="selectCategory('person', this)">革命人物</button>
+                <button class="category-btn" onclick="selectCategory('event', this)">历史事件</button>
+                <button class="category-btn" onclick="selectCategory('village', this)">红色乡村</button>
+            </div>
+            
+            <button class="start-btn" onclick="startQuiz()">▶ 开始挑战</button>
+        </div>
+
+        <!-- Progress Section -->
+        <div id="progress-section" class="progress-section hidden">
+            <div class="progress-header">
+                <span class="progress-label">进度</span>
+                <span class="progress-score">得分: <span id="current-score">0</span> / <span id="total-questions">15</span></span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="progress-dots" id="progress-dots"></div>
+        </div>
+
+        <!-- Question Card -->
+        <div id="question-card" class="question-card hidden">
+            <div class="question-type" id="question-type">单选题</div>
+            <div class="question-text">
+                <span class="question-number" id="question-num">1</span>
+                <span id="question-text">题目内容</span>
+            </div>
+            <div class="option-list" id="option-list"></div>
+            <div class="explanation-box hidden" id="explanation-box">
+                <div class="explanation-title">📖 答案解析</div>
+                <div class="explanation-text" id="explanation-text"></div>
+            </div>
+            <div class="btn-area">
+                <button class="btn-next" id="btn-submit" disabled onclick="submitAnswer()">确认答案</button>
+                <button class="btn-next hidden" id="btn-next" onclick="nextQuestion()">下一题 ▶</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="results-screen hidden">
+            <div class="results-icon" id="results-icon">🏆</div>
+            <div class="results-score" id="results-score">85</div>
+            <div class="results-total">总得分 <span id="final-score">85</span> / 100</div>
+            <div class="results-grade" id="results-grade">优秀!</div>
+            <div class="results-stats">
+                <div class="result-stat">
+                    <div class="result-stat-num" id="correct-count">12</div>
+                    <div class="result-stat-label">答对</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-stat-num" id="wrong-count">3</div>
+                    <div class="result-stat-label">答错</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-stat-num" id="accuracy">80%</div>
+                    <div class="result-stat-label">正确率</div>
+                </div>
+            </div>
+            <div class="results-actions">
+                <button class="result-btn result-btn-primary" onclick="startQuiz()">🔄 再来一次</button>
+                <a href="knowledgemap.html" class="result-btn result-btn-secondary">📊 学习图谱</a>
+                <a href="rural.html" class="result-btn result-btn-secondary">🏠 乡村首页</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>2026大创赛 · 红旅公益组 · 琼崖革命知识图谱与乡村联动平台</p>
+        <p>红韵智研 - AI赋能海南红色文化与乡村振兴</p>
+    </footer>
+
+    <script>
+        // Question Bank (same as before)
+        const questions = [
+            { id: 1, category: 'person', type: '单选题', question: '被誉为"琼崖革命的一面旗帜"的是哪位领导人？', options: ['王文明', '冯白驹', '徐成章', '陈垂央'], correct: 1, explanation: '冯白驹（1903-1971）是琼崖革命二十三年红旗不倒的主要领导者，被誉为"琼崖革命的一面旗帜"。' },
+            { id: 2, category: 'person', type: '单选题', question: '琼崖苏维埃政府的首任主席是谁？', options: ['冯白驹', '王文明', '徐成章', '陈垂央'], correct: 1, explanation: '王文明（1894-1930）于1928年当选为琼崖苏维埃政府首任主席，后在母瑞山根据地坚持斗争。' },
+            { id: 3, category: 'person', type: '单选题', question: '"红色娘子军"的党代表是谁？', options: ['王文明', '冯白驹', '吴琼花', '庞琼花'], correct: 3, explanation: '庞琼花是红色娘子军的党代表，1931年担任中国工农红军第二独立师女子军特务连党代表。' },
+            { id: 4, category: 'person', type: '单选题', question: '母瑞山革命根据地的创建者之一是谁？', options: ['徐成章', '王文明', '陈垂央', '朱云亮'], correct: 1, explanation: '王文明1928年率领部分红军在母瑞山建立革命根据地，被誉为"海南的井冈山"。' },
+            { id: 5, category: 'event', type: '单选题', question: '打响琼崖武装斗争第一枪的事件是？', options: ['椰子寨战斗', '南阁起义', '美合保卫战', '母瑞山突围'], correct: 1, explanation: '1927年4月22日的南阁起义打响了琼崖武装斗争的第一枪，标志着琼崖革命进入武装斗争新阶段。' },
+            { id: 6, category: 'event', type: '单选题', question: '全琼武装总暴动的揭幕之战发生在哪个地方？', options: ['南阁', '椰子寨', '美合', '母瑞山'], correct: 1, explanation: '1927年9月23日，椰子寨战斗打响，标志着全琼武装总暴动的开始。' },
+            { id: 7, category: 'event', type: '单选题', question: '琼崖抗日独立总队成立于哪一年？', options: ['1937年', '1938年', '1939年', '1940年'], correct: 2, explanation: '1939年9月，琼崖抗日��立总队在中共琼崖特别委员会领导下成立，成为琼崖抗战的主力。' },
+            { id: 8, category: 'event', type: '单选题', question: '琼崖纵队正式成立于哪一年？', options: ['1945年', '1946年', '1947年', '1948年'], correct: 2, explanation: '1947年10月，琼崖纵队在五指山正式成立，统一了琼崖革命武装力量。' },
+            { id: 9, category: 'village', type: '单选题', question: '素有"海南的井冈山"之称的革命圣地是？', options: ['五指山', '母瑞山', '美合', '吊罗山'], correct: 1, explanation: '母瑞山位于琼中县和平镇，是琼崖革命根据地的中心，被誉为"海南的井冈山"。' },
+            { id: 10, category: 'village', type: '单选题', question: '1947年琼崖党政军机关进驻的地点是？', options: ['母瑞山', '美合', '五指山', '尖峰岭'], correct: 2, explanation: '1947年4月，琼崖党政军机关进驻五指山，五指山成为琼崖革命的指挥中枢。' },
+            { id: 11, category: 'village', type: '单选题', question: '哪个乡村是琼崖抗日根据地的重要组成部分？', options: ['南阁', '椰子寨', '美合', '加脑'], correct: 2, explanation: '美合位于澄迈县仁兴镇，是琼崖抗日根据地的重要村庄，1940年初冯白驹在此建立根据地。' },
+            { id: 12, category: 'village', type: '单选题', question: '红色娘子军故乡位于海南哪个市县？', options: ['海口', '三亚', '琼海', '万宁'], correct: 2, explanation: '红色娘子军诞生于琼海市（原乐会县），阳江镇是红色娘子军故乡的核心区域。' },
+            { id: 13, category: 'event', type: '单选题', question: '琼崖革命"二十三年红旗不倒"是从哪一年开始计算？', options: ['1927年', '1928年', '1930年', '1939年'], correct: 1, explanation: '1928年3月琼崖苏维埃政府在母瑞山建立根据地，从此时开始计算琼崖革命二十三年红旗不倒的历史。' },
+            { id: 14, category: 'person', type: '单选题', question: '哪位领导人在母瑞山根据地坚持斗争直至病逝？', options: ['冯白驹', '徐成章', '王文明', '陈垂央'], correct: 2, explanation: '王文明1930年在母瑞山病逝，为琼崖革命事业献出了宝贵生命。' },
+            { id: 15, category: 'event', type: '单选题', question: '海南岛解放的时间是？', options: ['1949年12月', '1950年3月', '1950年5月1日', '1950年6月'], correct: 2, explanation: '1950年5月1日，海南岛全部解放，标志着琼崖革命取得了最终胜利。' }
+        ];
+
+        let currentQuestionIndex = 0;
+        let selectedOptionIndex = -1;
+        let score = 0;
+        let answered = false;
+        let currentCategory = 'all';
+        let quizQuestions = [];
+
+        function selectCategory(cat, btn) {
+            currentCategory = cat;
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function shuffleArray(arr) {
+            const shuffled = [...arr];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function startQuiz() {
+            if (currentCategory === 'all') {
+                quizQuestions = shuffleArray(questions).slice(0, 15);
+            } else {
+                quizQuestions = shuffleArray(questions.filter(q => q.category === currentCategory)).slice(0, 10);
+            }
+            currentQuestionIndex = 0;
+            score = 0;
+            answered = false;
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('progress-section').classList.remove('hidden');
+            document.getElementById('question-card').classList.remove('hidden');
+            document.getElementById('total-questions').textContent = quizQuestions.length;
+            createProgressDots();
+            loadQuestion(0);
+        }
+
+        function createProgressDots() {
+            const container = document.getElementById('progress-dots');
+            container.innerHTML = '';
+            quizQuestions.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot';
+                dot.textContent = i + 1;
+                dot.onclick = () => goToQuestion(i);
+                container.appendChild(dot);
+            });
+        }
+
+        function updateProgressDots() {
+            const dots = document.querySelectorAll('.progress-dot');
+            dots.forEach((dot, i) => {
+                dot.className = 'progress-dot';
+                if (i === currentQuestionIndex) dot.classList.add('current');
+            });
+        }
+
+        function goToQuestion(index) {
+            if (index >= 0 && index < quizQuestions.length) {
+                loadQuestion(index);
+            }
+        }
+
+        function loadQuestion(index) {
+            currentQuestionIndex = index;
+            selectedOptionIndex = -1;
+            answered = false;
+            const q = quizQuestions[index];
+            document.getElementById('question-num').textContent = index + 1;
+            document.getElementById('question-text').textContent = q.question;
+            document.getElementById('question-type').textContent = q.type;
+            const optionList = document.getElementById('option-list');
+            optionList.innerHTML = '';
+            const labels = ['A', 'B', 'C', 'D'];
+            q.options.forEach((opt, i) => {
+                const item = document.createElement('div');
+                item.className = 'option-item';
+                item.onclick = () => selectOption(i);
+                item.innerHTML = '<span class="option-label">' + labels[i] + '</span><span class="option-text">' + opt + '</span>';
+                optionList.appendChild(item);
+            });
+            document.getElementById('explanation-box').classList.add('hidden');
+            document.getElementById('btn-submit').classList.remove('hidden');
+            document.getElementById('btn-submit').disabled = true;
+            document.getElementById('btn-next').classList.add('hidden');
+            updateProgressDots();
+            updateProgressBar();
+            document.getElementById('current-score').textContent = score;
+        }
+
+        function selectOption(index) {
+            if (answered) return;
+            selectedOptionIndex = index;
+            const items = document.querySelectorAll('.option-item');
+            items.forEach((item, i) => {
+                item.classList.remove('selected');
+                if (i === index) item.classList.add('selected');
+            });
+            document.getElementById('btn-submit').disabled = false;
+        }
+
+        function submitAnswer() {
+            if (selectedOptionIndex === -1 || answered) return;
+            answered = true;
+            const q = quizQuestions[currentQuestionIndex];
+            const isCorrect = selectedOptionIndex === q.correct;
+            const items = document.querySelectorAll('.option-item');
+            items.forEach((item, i) => {
+                item.classList.add('disabled');
+                if (i === q.correct) {
+                    item.classList.add('correct');
+                } else if (i === selectedOptionIndex && !isCorrect) {
+                    item.classList.add('wrong');
+                }
+            });
+            if (isCorrect) {
+                score += Math.round(100 / quizQuestions.length);
+            }
+            document.getElementById('current-score').textContent = score;
+            document.getElementById('explanation-text').textContent = q.explanation;
+            document.getElementById('explanation-box').classList.remove('hidden');
+            document.getElementById('btn-submit').classList.add('hidden');
+            document.getElementById('btn-next').classList.remove('hidden');
+            updateProgressBar();
+        }
+
+        function updateProgressBar() {
+            const pct = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
+            document.getElementById('progress-fill').style.width = pct + '%';
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < quizQuestions.length - 1) {
+                loadQuestion(currentQuestionIndex + 1);
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('progress-section').classList.add('hidden');
+            document.getElementById('question-card').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+            const pct = (score / 100 * 100).toFixed(0);
+            document.getElementById('results-score').textContent = pct;
+            document.getElementById('final-score').textContent = score;
+            const correctCount = Math.round(score / (100 / quizQuestions.length));
+            const wrongCount = quizQuestions.length - correctCount;
+            document.getElementById('correct-count').textContent = correctCount;
+            document.getElementById('wrong-count').textContent = wrongCount;
+            document.getElementById('accuracy').textContent = Math.round(pct) + '%';
+            let grade, icon;
+            if (pct >= 90) {
+                grade = '🌟 卓越! 革命知识小达人!';
+                icon = '🏆';
+            } else if (pct >= 70) {
+                grade = '👏 优秀! 继续保持!';
+                icon = '🎉';
+            } else if (pct >= 50) {
+                grade = '💪 合格! 再接再厉!';
+                icon = '💪';
+            } else {
+                grade = '📚 继续学习! 革命精神永不忘!';
+                icon = '📖';
+            }
+            document.getElementById('results-grade').innerHTML = grade;
+            document.getElementById('results-icon').innerHTML = icon;
+        }
+    </script>
+</body>
+</html>

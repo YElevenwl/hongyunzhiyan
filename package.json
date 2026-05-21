@@ -1,0 +1,20 @@
+{
+  "name": "zhiyanqiongzhou",
+  "version": "1.0.0",
+  "description": "红韵智研—AI 赋能海南红色文化与乡村振兴综合服务平台",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "ai",
+    "education",
+    "hainan",
+    "study-tour"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "playwright": "^1.59.1"
+  }
+}

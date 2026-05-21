@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乡村振兴—红韵智研—AI 赋能海南红色文化与乡村振兴综合服务平台</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 左侧固定导航栏 */
+        .sidebar-nav {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .sidebar-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            background: white;
+            border: 3px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 18px 15px;
+            color: var(--primary-color);
+            transition: all 0.3s;
+            min-width: 110px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .sidebar-icon {
+            font-size: 32px;
+        }
+
+        .sidebar-text {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 1200px) {
+            .sidebar-nav {
+                left: 10px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar-nav {
+                position: relative;
+                left: 0;
+                top: 0;
+                transform: none;
+                flex-direction: row;
+                justify-content: center;
+                margin: 20px 0;
+            }
+        }
+
+        .revitalization-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .revitalization-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+        }
+
+        .revitalization-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .revitalization-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .revitalization-card h3 {
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .revitalization-card p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .village-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .village-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+        }
+
+        .village-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .village-image {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+        }
+
+        .village-content {
+            padding: 20px;
+        }
+
+        .village-content h3 {
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .village-content p {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .village-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .village-tag {
+            background: var(--bg-color);
+            color: var(--text-color);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            border-radius: 12px;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <!-- 左侧固定导航栏 -->
+    <div class="sidebar-nav">
+        <a href="rural-industry.html" class="sidebar-link">
+            <span class="sidebar-icon">🏭</span>
+            <span class="sidebar-text">产业服务</span>
+        </a>
+        <a href="digital-governance.html" class="sidebar-link">
+            <span class="sidebar-icon">🏛️</span>
+            <span class="sidebar-text">数字治理</span>
+        </a>
+        <a href="rural-talent.html" class="sidebar-link">
+            <span class="sidebar-icon">🎓</span>
+            <span class="sidebar-text">人才帮扶</span>
+        </a>
+    </div>
+
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">红韵智研</div>
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="route.html">AI 研学路线</a></li>
+                <li><a href="knowledgemap.html">知识图谱</a></li>
+                <li><a href="rural.html" class="active">乡村振兴</a></li>
+                <li><a href="profile.html">个人中心</a></li>
+            </ul>
+            <button class="nav-toggle">☰</button>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <h1>🌾 乡村振兴看海南</h1>
+            <p>产业兴旺、生态宜居、乡风文明、治理有效、生活富裕</p>
+            <p style="margin-top: 20px; font-size: 16px; opacity: 0.9;">探索海南美丽乡村，见证乡村振兴伟大成就</p>
+        </div>
+    </header>
+
+    <section class="features">
+        <div class="container">
+            <h2>五大振兴</h2>
+            <div class="revitalization-cards">
+                <div class="revitalization-card">
+                    <div class="revitalization-icon">🏭</div>
+                    <h3>产业振兴</h3>
+                    <p>发展特色农业、乡村旅游、农村电商，壮大乡村产业</p>
+                </div>
+                <div class="revitalization-card">
+                    <div class="revitalization-icon">👥</div>
+                    <h3>人才振兴</h3>
+                    <p>培育新型职业农民，吸引人才返乡创业</p>
+                </div>
+                <div class="revitalization-card">
+                    <div class="revitalization-icon">📚</div>
+                    <h3>文化振兴</h3>
+                    <p>传承优秀传统文化，培育文明乡风</p>
+                </div>
+                <div class="revitalization-card">
+                    <div class="revitalization-icon">🌲</div>
+                    <h3>生态振兴</h3>
+                    <p>建设美丽乡村，推动绿色发展</p>
+                </div>
+                <div class="revitalization-card">
+                    <div class="revitalization-icon">🏛️</div>
+                    <h3>组织振兴</h3>
+                    <p>加强基层党组织建设，提升治理水平</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="themes">
+        <div class="container">
+            <h2>海南美丽乡村展示</h2>
+            <div class="village-cards">
+                <div class="village-card">
+                    <div class="village-image">🚩</div>
+                    <div class="village-content">
+                        <h3>海口市琼山区云龙镇</h3>
+                        <p>红色教育基地，红色旅游助力乡村振兴</p>
+                        <div class="village-tags">
+                            <span class="village-tag">红色旅游</span>
+                            <span class="village-tag">历史文化</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="village-card">
+                    <div class="village-image">🌺</div>
+                    <div class="village-content">
+                        <h3>琼海市阳江镇</h3>
+                        <p>红色娘子军故乡，融合红色文化与黎苗风情</p>
+                        <div class="village-tags">
+                            <span class="village-tag">红色文化</span>
+                            <span class="village-tag">非遗体验</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="village-card">
+                    <div class="village-image">🌴</div>
+                    <div class="village-content">
+                        <h3>万宁市兴隆镇</h3>
+                        <p>华侨文化之乡，东南亚风情特色小镇</p>
+                        <div class="village-tags">
+                            <span class="village-tag">华侨文化</span>
+                            <span class="village-tag">特色农业</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="village-card">
+                    <div class="village-image">🌊</div>
+                    <div class="village-content">
+                        <h3>三亚市博后村</h3>
+                        <p>美丽乡村建设典范，民宿产业蓬勃发展</p>
+                        <div class="village-tags">
+                            <span class="village-tag">民宿经济</span>
+                            <span class="village-tag">乡村旅游</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="village-card">
+                    <div class="village-image">🍃</div>
+                    <div class="village-content">
+                        <h3>五指山市毛纳村</h3>
+                        <p>黎族特色村寨，茶旅融合促发展</p>
+                        <div class="village-tags">
+                            <span class="village-tag">黎族文化</span>
+                            <span class="village-tag">茶产业</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="village-card">
+                    <div class="village-image">🐚</div>
+                    <div class="village-content">
+                        <h3>琼海市潭门镇</h3>
+                        <p>千年渔港，耕海文化与休闲渔业融合发展</p>
+                        <div class="village-tags">
+                            <span class="village-tag">渔业文化</span>
+                            <span class="village-tag">休闲旅游</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2>海南乡村振兴成就</h2>
+            <div class="stat-cards">
+                <div class="stat-card">
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">美丽乡村建设</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">特色产业小镇</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">200+</div>
+                    <div class="stat-label">农业品牌</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">95%</div>
+                    <div class="stat-label">农村公路硬化</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="themes" style="background:white;">
+        <div class="container">
+            <h2>🌾 乡村振兴板块</h2>
+            <p style="text-align:center; color:var(--text-light); margin-bottom:40px;">点击进入各专项服务页面</p>
+            <div class="feature-cards">
+                <div class="feature-card">
+                    <div class="feature-icon">🏭</div>
+                    <h3>乡村产业服务</h3>
+                    <p>一村一品展示、农户/合作社管理、产销对接，公益助农零差价</p>
+                    <a href="rural-industry.html" class="btn btn-primary">进入产业服务</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏛️</div>
+                    <h3>数字乡村治理</h3>
+                    <p>村务公开、政策通知、诉求上报闭环、人居环境积分、文明户评选</p>
+                    <a href="digital-governance.html" class="btn btn-primary">进入数字治理</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎓</div>
+                    <h3>乡村人才与帮扶</h3>
+                    <p>大学生实践、志愿者帮扶报名、农技培训、帮扶项目成果展示</p>
+                    <a href="rural-talent.html" class="btn btn-primary">进入人才帮扶</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="themes">
+        <div class="container">
+            <h2>相关推荐</h2>
+            <div class="feature-cards">
+                <div class="feature-card">
+                    <div class="feature-icon">🗺️</div>
+                    <h3>AI 研学路线</h3>
+                    <p>定制乡村振兴主题研学路线，走进美丽乡村</p>
+                    <a href="route.html" class="btn btn-primary">生成路线</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧬</div>
+                    <h3>知识图谱</h3>
+                    <p>探索红色乡村与革命历史的关联，了解乡村故事</p>
+                    <a href="knowledgemap.html" class="btn btn-primary">探索图谱</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="about">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>红韵智研</h3>
+                    <p>AI赋能海南红色文化与乡村振兴综合服务平台</p>
+                    <p>为海南中小学、研学机构提供一站式解决方案</p>
+                </div>
+                <div class="footer-section">
+                    <h3>联系我们</h3>
+                    <p>📞 XXXXXXXXXXX</p>
+                    <p>📧 XXXXXXXXXX@XX.com</p>
+                    <p>📍 海南省海口市</p>
+                </div>
+                <div class="footer-section">
+                    <h3>合作伙伴</h3>
+                    <p>XXXX 国际贸易有限公司</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 红韵智研—AI 赋能海南红色文化与乡村振兴综合服务平台. 版权所有.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
